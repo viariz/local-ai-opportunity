@@ -45,6 +45,7 @@
     var hovering = false;
     var keyboardFocus = false;
     var inputType = 'pointer';
+    var lastPointerType = 'pointer';
     var holdUntil = 0;
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     var annotationAnimation = null;
@@ -79,7 +80,9 @@
       active = index;
       // Automatic narration remains visual; direct keyboard interaction is announced.
       detail.setAttribute('aria-live', automatic ? 'off' : 'polite');
-      figure.classList.add('is-active');
+      var hasUserFocus =
+        keyboardFocus || (hovering && lastPointerType !== 'touch');
+      figure.classList.toggle('is-active', hasUserFocus);
       groups.forEach(function (group, i) { group.classList.toggle('is-active', i === index); });
       highlights.forEach(function (line, i) { line.classList.toggle('is-active', i === index); });
       annotations.forEach(function (annotation, i) { annotation.classList.toggle('is-active', i === index); });
@@ -297,7 +300,26 @@
         binding.dot = el('circle', { cx: point.x, cy: point.y, r: 3.2, class: 'workload-dot' });
         group.appendChild(binding.dot);
         group.addEventListener('pointerenter', function (e) {
-          if (e.pointerType !== 'touch') { hovering = true; stopCycle(); select(index); }
+          if (e.pointerType !== 'touch') {
+            lastPointerType = e.pointerType;
+            hovering = true;
+            stopCycle();
+            select(index);
+          }
+        });
+        group.addEventListener('pointerleave', function (e) {
+          if (e.pointerType === 'touch') return;
+          if (keyboardFocus) return;
+          var rel = e.relatedTarget;
+          if (rel && svg.contains(rel)) return;
+          hovering = false;
+          figure.classList.remove('is-active');
+          if (active >= 0) {
+            groups[active].classList.remove('is-active');
+            highlights[active].classList.remove('is-active');
+            annotations[active].classList.remove('is-active');
+          }
+          scheduleCycle(1000);
         });
         group.addEventListener('click', function () {
           select(index);
@@ -375,10 +397,25 @@
     }
 
     svg.addEventListener('pointerenter', function (e) {
-      if (e.pointerType !== 'touch') { hovering = true; stopCycle(); }
+      if (e.pointerType !== 'touch') {
+        lastPointerType = e.pointerType;
+        hovering = true;
+        stopCycle();
+      }
     });
     svg.addEventListener('pointerleave', function (e) {
-      if (e.pointerType !== 'touch') { hovering = false; scheduleCycle(1000); }
+      if (e.pointerType === 'touch') return;
+      if (keyboardFocus) return;
+      var rel = e.relatedTarget;
+      if (rel && figure.contains(rel)) return;
+      hovering = false;
+      figure.classList.remove('is-active');
+      if (active >= 0) {
+        groups[active].classList.remove('is-active');
+        highlights[active].classList.remove('is-active');
+        annotations[active].classList.remove('is-active');
+      }
+      scheduleCycle(1000);
     });
     svg.addEventListener('pointerdown', function (e) {
       inputType = e.pointerType === 'touch' ? 'touch' : 'pointer';

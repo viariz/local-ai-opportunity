@@ -1326,19 +1326,19 @@ figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0
 .workload-chart text{font-family:var(--sans);font-weight:400;fill:var(--ink-soft);font-size:12px;}
 .workload-chart .workload-axis{stroke:var(--ink-soft);stroke-width:1;opacity:.55;}
 .workload-chart .workload-threshold{stroke:var(--ink-soft);stroke-width:1;stroke-dasharray:4 5;opacity:.65;}
-.workload-chart .workload-line{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round;transition:opacity .18s ease;}
-.workload-figure.is-active .workload-line{opacity:.28;}
+.workload-chart .workload-line{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-linejoin:round;stroke-linecap:round;transition:opacity .18s ease;}
+.workload-figure.is-active .workload-line{opacity:.55;}
 .workload-chart .workload-cost{opacity:0;transition:opacity .14s ease;pointer-events:none;}
 .workload-chart .workload-cost.is-visible{opacity:1;}
 .workload-chart .workload-cost-area{fill:var(--ink);fill-opacity:.1;}
 .workload-chart .workload-cost-symbol{fill:var(--ink);font-size:15px;font-weight:500;}
-.workload-chart .workload-highlight{fill:none;stroke:var(--ink);stroke-width:2.7;stroke-linecap:round;opacity:0;transition:opacity .18s ease;pointer-events:none;}
-.workload-chart .workload-highlight.is-active{opacity:1;}
-.workload-chart .workload-dot{fill:var(--paper);stroke:var(--ink);stroke-width:1.2;transition:r .18s ease,opacity .18s ease,fill .18s ease;}
-.workload-figure.is-active .workload-event:not(.is-active) .workload-dot{opacity:.35;}
+.workload-chart .workload-highlight{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-linecap:round;opacity:0;transition:opacity .18s ease,stroke .18s ease;pointer-events:none;}
+.workload-chart .workload-highlight.is-active{opacity:1;stroke:var(--ink);}
+.workload-chart .workload-dot{fill:var(--paper);stroke:var(--ink);stroke-width:1;transition:opacity .18s ease,fill .18s ease,stroke .18s ease;}
+.workload-figure.is-active .workload-event:not(.is-active) .workload-dot{opacity:.4;}
 .workload-chart .workload-event{cursor:pointer;outline:none;}
-.workload-chart .workload-event.is-active .workload-dot{r:5;fill:var(--ink);}
-.workload-chart .workload-event:focus-visible .workload-dot{stroke-width:3;}
+.workload-chart .workload-event.is-active .workload-dot{fill:color-mix(in srgb,var(--ink) 14%,var(--paper));stroke:var(--ink);}
+.workload-chart .workload-event:focus-visible .workload-dot{stroke-width:2.4;}
 .workload-chart .workload-spike-label{fill:var(--ink);font-size:12px;}
 .workload-chart .workload-routine-label{font-size:11px;}
 .workload-chart .workload-annotation{transition:opacity .18s ease;}
