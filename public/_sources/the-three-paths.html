@@ -407,16 +407,16 @@ table.worked td:first-child{padding-right:1.4em;}
 }
 .cap-card{
   display:flex; flex-direction:column; align-items:center; gap:12px;
-  padding:12px; border:1px solid rgba(31,33,34,.16); border-radius:4px; background:var(--paper);
+  padding:12px; border:none; border-radius:8px; background:rgba(255,255,255,.5);
   text-align:left; cursor:pointer; color:inherit; font:inherit;
   -webkit-tap-highlight-color:transparent;
-  transition:background-color .18s ease, border-color .18s ease;
+  box-shadow:0 4px 12px rgba(0,0,0,.06);
+  transition:background-color .18s ease, box-shadow .18s ease;
 }
-.cap-card:focus-visible{outline:1px solid rgba(31,33,34,.35); outline-offset:3px;}
 @media (hover:hover){
-  .cap-card:hover{background:color-mix(in srgb, var(--ink) 2.2%, var(--paper)); border-color:rgba(31,33,34,.16);}
+  .cap-card:hover{background:#fff; box-shadow:0 5px 16px rgba(0,0,0,.0825);}
 }
-.cap-card:active{background:color-mix(in srgb, var(--ink) 6.5%, var(--paper));}
+.cap-card:active{background:rgba(255,255,255,.45); box-shadow:0 4px 11px rgba(0,0,0,.0525);}
 .cap-card-art{width:100%; max-width:210px; aspect-ratio:1; display:block; flex-shrink:0;}
 .cap-card-art img{display:block; width:100%; height:100%; object-fit:contain;}
 .cap-card-text{width:100%; display:flex; flex-direction:column; gap:8px; min-height:2.9em;}
@@ -537,14 +537,14 @@ body.cap-article-open{overflow:hidden;}
 
 <nav id="path-cards-nav" class="cap-cards path-cards" aria-label="The two paths">
   <button type="button" class="cap-card" data-cap="just-build-more">
-    <span class="cap-card-art" aria-hidden="true"><img src="/fig/paths/just-build-more.svg" width="210" height="210" alt=""></span>
+    <span class="cap-card-art" aria-hidden="true"><img src="../fig/paths/just-build-more.svg" width="210" height="210" alt=""></span>
     <span class="cap-card-text">
       <span class="cap-card-title">Just Build More, Bro</span>
       <span class="cap-card-sub">Why AI will diffuse through society as a GPU per person.</span>
     </span>
   </button>
   <button type="button" class="cap-card" data-cap="put-them-into-space">
-    <span class="cap-card-art" aria-hidden="true"><img src="/fig/paths/put-them-into-space.svg" width="210" height="210" alt=""></span>
+    <span class="cap-card-art" aria-hidden="true"><img src="../fig/paths/put-them-into-space.svg" width="210" height="210" alt=""></span>
     <span class="cap-card-text">
       <span class="cap-card-title">Put Them Into Space</span>
       <span class="cap-card-sub">Why AI will diffuse through society as a GPU per person.</span>
