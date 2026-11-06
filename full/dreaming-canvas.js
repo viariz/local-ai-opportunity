@@ -1315,8 +1315,13 @@
     var t0 = performance.now();
     var last = t0;
     var raf = 0;
+    var running = true;
 
     function tick(now) {
+      if (document.hidden) {
+        stopLoop();
+        return;
+      }
       var dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       var t = (now - t0) * 0.001;
@@ -1358,12 +1363,49 @@
       }
 
       drawFrame(ctx, ink, paper, inkSoft, dots, iconQueue, cycle, iconImages, t);
-      if (!reduced) raf = requestAnimationFrame(tick);
+      if (!reduced && running) raf = requestAnimationFrame(tick);
+    }
+
+    function startLoop() {
+      if (reduced || running) return;
+      running = true;
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
+    }
+
+    function stopLoop() {
+      running = false;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
     }
 
     raf = requestAnimationFrame(tick);
     loadIconImages(function (cache) {
       iconImages = cache;
+    });
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          var vis = entries[0] && entries[0].isIntersecting;
+          if (vis) startLoop();
+          else stopLoop();
+        },
+        { root: null, rootMargin: '80px 0px', threshold: 0 }
+      );
+      io.observe(shell);
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stopLoop();
+      else if (shell.getBoundingClientRect) {
+        var r = shell.getBoundingClientRect();
+        var vh = window.innerHeight || 0;
+        if (r.bottom > -80 && r.top < vh + 80) {
+          running = false;
+          startLoop();
+        }
+      }
     });
 
     if (typeof ResizeObserver !== 'undefined') {
@@ -1376,7 +1418,7 @@
     }
 
     shell.__dreamStop = function () {
-      if (raf) cancelAnimationFrame(raf);
+      stopLoop();
     };
   }
 

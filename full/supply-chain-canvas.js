@@ -8,8 +8,17 @@
   var ORBIT = 248;
   var HEX_R = 13;
   var CLUSTER_R = 8.5;
+  var ENTITY_HEX_R = HEX_R - 2;
+  /** Radial distance from cluster center where stems begin (just outside cluster hex outline). */
+  var STEM_OUTER_CLUSTER = ENTITY_HEX_R + 1.35;
+  /** Inner radius for vendor photo (inset inside the former hex size). */
+  var ENTITY_FACE_INSET = 0.65;
   var OVERVIEW_SCALE_DESKTOP = 1.14;
   var OVERVIEW_SCALE_MOBILE = 1.46;
+
+  // Truffle logo path from truffle.svg (viewBox 0 0 60 34); drawn centered at hub.
+  var TRUFFLE_HUB_PATH_D =
+    'M29.9733 0.000381872C37.2159 0.0188329 42.4027 0.518861 48.322 2.77829C56.9007 6.05566 61.3379 13.928 59.6433 22.7564C58.1427 30.5812 52.8422 34.6482 45.0715 33.9157C42.1649 33.6891 39.286 33.1762 36.4743 32.384C32.1887 31.0618 27.623 31.0469 23.3292 32.3412C20.5929 33.1022 17.7935 33.5975 14.9675 33.8205C6.34265 34.6672 0.414228 29.3968 0.0217687 20.478C-0.366073 11.74 4.44501 5.03298 13.1391 2.24555C18.6012 0.52362 23.3444 -0.0165062 29.9733 0.000381872Z';
 
   function isMobileOverview() {
     return window.matchMedia('(max-width:700px)').matches;
@@ -24,7 +33,6 @@
   }
 
   function syncSvgViewBox(svg) {
-    // Keep the same viewport while the camera moves through the network.
     svg.setAttribute('viewBox', isMobileOverview() ? VIEW_MOBILE : VIEW);
   }
 
@@ -72,72 +80,136 @@
     {
       id: 'distribution',
       label: 'Distribution',
-      entities: [{ name: 'Arrow', icon: 'arrow', role: 'Distributor', url: 'https://www.arrow.com/' }]
+      entities: [
+        {
+          name: 'Arrow',
+          role: 'Distributor',
+          url: 'https://www.arrow.com/',
+          icon: 'arrow.png'
+        }
+      ]
     },
     {
       id: 'compute',
       label: 'Compute & silicon',
       entities: [
-        { name: 'NVIDIA', icon: 'nvidia', role: 'AGX Orin SOMs · compute today', url: 'https://www.nvidia.com/' },
-        { name: 'Silicon partner', icon: 'silicon-partner', role: 'Compute-in-memory NPUs · the TM50', url: '' }
+        {
+          name: 'NVIDIA',
+          role: 'AGX Orin SOMs · compute today',
+          url: 'https://www.nvidia.com/',
+          icon: 'nvidia.png'
+        },
+        {
+          name: 'Houmo',
+          role: 'AI NPUs, Shanghai · the M50',
+          url: 'https://www.houmo.ai/',
+          icon: 'houmo.png'
+        }
       ]
     },
     {
       id: 'china',
       label: 'China manufacturing',
       entities: [
-        { name: 'SKYSI', icon: 'skysi', role: 'Designs + builds T1 boards', url: 'https://skysi.com.cn/en' },
-        { name: 'Nex PCB', icon: 'nex-pcb', role: 'Manufacturing interface', url: 'https://www.nexpcb.com/' }
+        {
+          name: 'SKYSI',
+          role: 'Designs + builds T1 boards',
+          url: 'https://skysi.com.cn/en',
+          icon: 'skysi.png'
+        },
+        {
+          name: 'Nex PCB',
+          role: 'Manufacturing interface',
+          url: 'https://www.nexpcb.com/',
+          icon: 'nex-pcb.png'
+        }
       ]
     },
     {
       id: 'fab',
       label: 'US fab & thermal',
       entities: [
-        { name: 'Roehr Tool', icon: 'roehr-tool', role: 'Mold tooling · Sterling, MA', url: 'https://www.roehrtool.com/' },
-        { name: 'Boyd', icon: 'boyd', role: 'Thermal · copper heat sinks', url: 'https://www.boydcorp.com/' }
+        {
+          name: 'Roehr Tool',
+          role: 'Mold tooling · Sterling, MA',
+          url: 'https://www.roehrtool.com/',
+          icon: 'roehr-tool.png'
+        },
+        {
+          name: 'Boyd',
+          role: 'Thermal · copper heat sinks',
+          url: 'https://www.boydcorp.com/',
+          icon: 'boyd.png'
+        }
       ]
     },
     {
       id: 'contractors',
       label: 'Contract engineers',
       entities: [
-        { name: 'Kirsch', icon: 'kirsch', role: 'Contract EE · carrier board' },
-        { name: 'Dang · BK', icon: 'dang-bk', role: 'Contract EE · USB-C, LED' },
-        { name: 'Andrew · AJ', icon: 'andrew-aj', role: 'Contract CAD · shell design' }
+        { name: 'Kirsch', role: 'Contract EE · carrier board', icon: 'kirsch.png' },
+        { name: 'Dang · BK', role: 'Contract EE · USB-C, LED', icon: 'dang-bk.png' },
+        { name: 'Andrew · AJ', role: 'Contract CAD · shell design', icon: 'andrew-aj.png' }
       ]
     },
     {
       id: 'design',
       label: 'Design',
       entities: [
-        { name: 'Welcome.JPEG', icon: 'welcome-jpeg', role: 'Creative leadership', url: 'https://www.welcomejpeg.com/' },
-        { name: 'Nuova', icon: 'nuova', role: 'Industrial design lead', url: 'https://nuova.us/' },
-        { name: 'Moniker', icon: 'moniker', role: 'Brand lead', url: 'https://moniker.com/' },
-        { name: 'FNDR', icon: 'fndr', role: 'Narrative lead' },
-        { name: 'X.Ourstudios', icon: 'x-ourstudios', role: 'Metal CNC' },
-        { name: 'SNL Creative', icon: 'snl-creative', role: 'Packaging tooling', url: 'https://snlcreative.com/' },
-        { name: 'FROM Lighting', icon: 'from-lighting', role: 'LED engineering', url: 'https://www.from.lighting/' }
+        {
+          name: 'Welcome.JPEG',
+          role: 'Creative leadership',
+          url: 'https://www.welcomejpeg.com/',
+          icon: 'welcome-jpeg.png'
+        },
+        {
+          name: 'Nuova',
+          role: 'Industrial design lead',
+          url: 'https://nuova.us/',
+          icon: 'nuova.png'
+        },
+        {
+          name: 'Moniker',
+          role: 'Brand lead',
+          url: 'https://moniker.com/',
+          icon: 'moniker.png'
+        },
+        { name: 'FNDR', role: 'Narrative lead', icon: 'fndr.png' },
+        { name: 'X.Ourstudios', role: 'Metal CNC', icon: 'x-ourstudios.png' },
+        {
+          name: 'SNL Creative',
+          role: 'Packaging tooling',
+          url: 'https://snlcreative.com/',
+          icon: 'snl-creative.png'
+        },
+        {
+          name: 'FROM Lighting',
+          role: 'LED engineering',
+          url: 'https://www.from.lighting/',
+          icon: 'from-lighting.png'
+        }
       ]
     },
     {
       id: 'compliance',
       label: 'Compliance & RF',
       entities: [
-        { name: 'SGS', icon: 'sgs', role: 'FCC · EMC · safety', url: 'https://www.sgs.com/' },
-        { name: 'Taoglas', icon: 'taoglas', role: 'Antennas', url: 'https://www.taoglas.com/' },
-        { name: 'CTC Taiwan', icon: 'ctc-taiwan', role: 'EMC lab' }
+        {
+          name: 'SGS',
+          role: 'FCC · EMC · safety',
+          url: 'https://www.sgs.com/',
+          icon: 'sgs.png'
+        },
+        {
+          name: 'Taoglas',
+          role: 'Antennas',
+          url: 'https://www.taoglas.com/',
+          icon: 'taoglas.png'
+        },
+        { name: 'CTC Taiwan', role: 'EMC lab', icon: 'ctc-taiwan.png' }
       ]
     }
   ];
-
-  BRANCHES.forEach(function (b) {
-    b.entities.forEach(function (entity) {
-      var image = new Image();
-      var path = 'icons/vendors/' + entity.icon + '.png';
-      image.src = window.truffleAssetURL ? window.truffleAssetURL(path) : path;
-    });
-  });
 
   BRANCHES.forEach(function (b, i) {
     var a = -Math.PI / 2 + i * ((2 * Math.PI) / BRANCHES.length);
@@ -175,7 +247,7 @@
 
   function branchClusterHex(cx, cy, active) {
     var cls = 'sc-map-hex sc-map-hex-entity' + (active ? ' is-cluster-active' : '');
-    return hexPoly(cx, cy, HEX_R - 2, cls);
+    return hexPoly(cx, cy, ENTITY_HEX_R, cls);
   }
 
   function bundleCurve(x1, y1, x2, y2, bend) {
@@ -230,6 +302,35 @@
     Object.keys(map).forEach(function (k) {
       el.setAttribute(k, map[k]);
     });
+  }
+
+  function vendorIconHref(file) {
+    if (!file) return '';
+    return 'icons/vendors/' + file;
+  }
+
+  function ensureSvgDefs(svg) {
+    var d = svg.querySelector('defs');
+    if (!d) {
+      d = ns('defs');
+      svg.insertBefore(d, svg.firstChild);
+    }
+    return d;
+  }
+
+  var VENDOR_PHOTO_CLIP_ID = 'sc-map-vendor-photo-clip';
+
+  function ensureVendorPhotoClip(defs) {
+    if (!defs || defs.querySelector('#' + VENDOR_PHOTO_CLIP_ID)) return;
+    var cp = ns('clipPath');
+    cp.setAttribute('id', VENDOR_PHOTO_CLIP_ID);
+    cp.setAttribute('clipPathUnits', 'objectBoundingBox');
+    var c = ns('circle');
+    c.setAttribute('cx', '0.5');
+    c.setAttribute('cy', '0.5');
+    c.setAttribute('r', '0.5');
+    cp.appendChild(c);
+    defs.appendChild(cp);
   }
 
   function init(root) {
@@ -330,17 +431,25 @@
     function renderHub(g) {
       var gHub = ns('g');
       gHub.setAttribute('class', 'sc-map-hub');
-      var outline = ns('path');
-      setAttr(outline, {
-        d: 'M29.9733 0.000381872C37.2159 0.0188329 42.4027 0.518861 48.322 2.77829C56.9007 6.05566 61.3379 13.928 59.6433 22.7564C58.1427 30.5812 52.8422 34.6482 45.0715 33.9157C42.1649 33.6891 39.286 33.1762 36.4743 32.384C32.1887 31.0618 27.623 31.0469 23.3292 32.3412C20.5929 33.1022 17.7935 33.5975 14.9675 33.8205C6.34265 34.6672 0.414228 29.3968 0.0217687 20.478C-0.366073 11.74 4.44501 5.03298 13.1391 2.24555C18.6012 0.52362 23.3444 -0.0165062 29.9733 0.000381872Z',
-        transform: 'translate(' + (CX - 24) + ' ' + (CY - 13.6) + ') scale(.8)',
-        class: 'sc-map-hub-ring',
-        fill: 'var(--paper)'
+      var gMark = ns('g');
+      gMark.setAttribute('class', 'sc-map-hub-mark');
+      gMark.setAttribute(
+        'transform',
+        'translate(' + CX + ' ' + CY + ') scale(0.46) translate(-30 -17)'
+      );
+      var logo = ns('path');
+      setAttr(logo, {
+        d: TRUFFLE_HUB_PATH_D,
+        class: 'sc-map-hub-shape',
+        fill: 'var(--paper)',
+        stroke: 'var(--ink)',
+        'stroke-width': '0.85',
+        'vector-effect': 'non-scaling-stroke'
       });
-      outline.style.fill = 'var(--paper)';
-      gHub.appendChild(outline);
+      gMark.appendChild(logo);
+      gHub.appendChild(gMark);
       var t = ns('text');
-      setAttr(t, { x: CX, y: CY + 34, 'text-anchor': 'middle', class: 'sc-map-hub-label' });
+      setAttr(t, { x: CX, y: CY + 22, 'text-anchor': 'middle', class: 'sc-map-hub-label' });
       t.textContent = 'TRUFFLE 1';
       gHub.appendChild(t);
       g.appendChild(gHub);
@@ -374,7 +483,7 @@
 
         var gFocus = ns('g');
         gFocus.setAttribute('class', 'sc-map-branch-focus');
-        gFocus.appendChild(branchClusterHex(b.x, b.y, true));
+        gFocus.appendChild(branchClusterHex(b.x, b.y, false));
         var labelFocus = ns('text');
         setAttr(labelFocus, {
           x: b.x,
@@ -405,14 +514,12 @@
         var ex = bx + ux * ringR;
         var ey = by + uy * ringR;
         var captionR = entityCaptionRadius();
-        var lateral = Math.abs(ux) > .45;
-        var cx = lateral ? ex + (ux < 0 ? -24 : 24) : ex + ux * captionR;
+        var cx = ex + ux * captionR;
         var cy = ey + uy * captionR;
         maxR = Math.max(maxR, Math.hypot(cx - bx, cy - by) + 20);
         slots.push({
           ex: ex,
           ey: ey,
-          anchor: lateral ? (ux < 0 ? 'end' : 'start') : 'middle',
           tx: cx,
           ty: cy + entityCaptionNameDy(),
           rx: cx,
@@ -443,9 +550,16 @@
       chrome.setAttribute('class', 'sc-map-entity-chrome');
       slots.forEach(function (slot) {
         var stem = ns('line');
+        var dx = slot.ex - bx;
+        var dy = slot.ey - by;
+        var dist = Math.hypot(dx, dy) || 1;
+        var ux = dx / dist;
+        var uy = dy / dist;
+        var vendorR = ENTITY_HEX_R;
+        var inner = Math.min(dist - 0.25, Math.max(STEM_OUTER_CLUSTER, vendorR + 0.25));
         setAttr(stem, {
-          x1: branch.x,
-          y1: branch.y,
+          x1: bx + ux * inner,
+          y1: by + uy * inner,
           x2: slot.ex,
           y2: slot.ey,
           class: 'sc-map-entity-stem'
@@ -454,6 +568,9 @@
       });
       renderEntityRing(chrome, branch, slots);
       g.appendChild(chrome);
+
+      var defs = ensureSvgDefs(svg);
+      ensureVendorPhotoClip(defs);
 
       branch.entities.forEach(function (ent, i) {
         var slot = slots[i];
@@ -471,17 +588,15 @@
           e.stopPropagation();
         });
 
-        var icon = ns('image');
-        setAttr(icon, {
-          x: ex - 14, y: ey - 14, width: 28, height: 28,
-          href: window.truffleAssetURL ? window.truffleAssetURL('icons/vendors/' + ent.icon + '.png') : 'icons/vendors/' + ent.icon + '.png',
-          preserveAspectRatio: 'xMidYMid meet',
-          class: 'sc-map-entity-icon',
-          'aria-hidden': 'true'
+        var innerPhotoR = ENTITY_HEX_R - ENTITY_FACE_INSET;
+
+        var face = ns('circle');
+        setAttr(face, {
+          cx: ex,
+          cy: ey,
+          r: ENTITY_HEX_R.toFixed(2),
+          class: 'sc-map-entity-face'
         });
-        var title = ns('title');
-        title.textContent = ent.name + ' — ' + ent.role;
-        row.appendChild(title);
 
         var caption = ns('g');
         caption.setAttribute('class', 'sc-map-entity-caption');
@@ -490,7 +605,7 @@
         setAttr(nameEl, {
           x: slot.tx,
           y: slot.ty,
-          'text-anchor': slot.anchor,
+          'text-anchor': 'middle',
           'dominant-baseline': 'middle',
           class: 'sc-map-entity-name'
         });
@@ -500,7 +615,7 @@
         setAttr(tRole, {
           x: slot.rx,
           y: slot.ry,
-          'text-anchor': slot.anchor,
+          'text-anchor': 'middle',
           'dominant-baseline': 'middle',
           class: 'sc-map-entity-role'
         });
@@ -509,7 +624,31 @@
         caption.appendChild(nameEl);
         caption.appendChild(tRole);
 
-        row.appendChild(icon);
+        row.appendChild(face);
+        var hrefIcon = vendorIconHref(ent.icon);
+        if (hrefIcon) {
+          var side = 2 * innerPhotoR;
+          var img = ns('image');
+          setAttr(img, {
+            href: hrefIcon,
+            x: (ex - innerPhotoR).toFixed(2),
+            y: (ey - innerPhotoR).toFixed(2),
+            width: side.toFixed(2),
+            height: side.toFixed(2),
+            preserveAspectRatio: 'xMidYMid slice',
+            class: 'sc-map-entity-photo'
+          });
+          img.setAttribute('clip-path', 'url(#' + VENDOR_PHOTO_CLIP_ID + ')');
+          row.appendChild(img);
+        }
+        var hit = ns('circle');
+        setAttr(hit, {
+          cx: ex,
+          cy: ey,
+          r: Math.max(ENTITY_HEX_R * 0.92, innerPhotoR * 0.98).toFixed(2),
+          class: 'sc-map-entity-hit'
+        });
+        row.appendChild(hit);
         row.appendChild(caption);
         g.appendChild(row);
       });
@@ -533,7 +672,7 @@
       var b = branchById(state.branch);
       if (!b) return;
       var layout = layoutEntitySlots(b);
-      var maxScale = isMobileOverview() ? 2.35 : 1.42;
+      var maxScale = isMobileOverview() ? 1.95 : 1.42;
       var scale = Math.min(maxScale, (isMobileOverview() ? 1.05 : 0.92) + layout.extent / 118);
       worldTransform(scale, b.x, b.y);
     }
@@ -566,10 +705,11 @@
     var entityLayers = {};
     var worldBuilt = false;
     var animGen = 0;
-    var ZOOM_MS = 380;
-    var NODE_MS = 220;
-    var NODE_STAGGER = 12;
-    var NODE_START_SCALE = 0.7;
+    var isTransitioning = false;
+    var ZOOM_MS = 680;
+    var NODE_MS = 460;
+    var NODE_STAGGER = 26;
+    var NODE_START_SCALE = 0.22;
 
     function resetEntityLayers() {
       Object.keys(entityLayers).forEach(function (id) {
@@ -585,7 +725,7 @@
     }
 
     function entityBurstTransform(bx, by, ex, ey, scale, progress) {
-      var t = .75 + .25 * progress;
+      var t = progress;
       var cx = bx + (ex - bx) * t;
       var cy = by + (ey - by) * t;
       return (
@@ -619,7 +759,7 @@
       rows.forEach(function (row, i) {
         var ex = parseFloat(row.getAttribute('data-ex'));
         var ey = parseFloat(row.getAttribute('data-ey'));
-        var delay = i * NODE_STAGGER;
+        var delay = 50 + i * NODE_STAGGER;
         row.classList.add('is-entering');
         row.__scAnimStart = null;
 
@@ -666,7 +806,7 @@
         var ex = parseFloat(row.getAttribute('data-ex'));
         var ey = parseFloat(row.getAttribute('data-ey'));
         var rev = count - 1 - i;
-        var delay = rev * NODE_STAGGER;
+        var delay = 50 + rev * NODE_STAGGER;
         row.classList.add('is-entering');
         row.__scAnimStart = null;
 
@@ -700,7 +840,6 @@
 
     function updateBranchChrome() {
       root.setAttribute('data-mode', state.mode);
-      syncSvgViewBox(svg);
       if (state.branch) root.setAttribute('data-branch', state.branch);
       else root.removeAttribute('data-branch');
 
@@ -710,14 +849,11 @@
         if (active) gB.setAttribute('data-active', '1');
         else gB.removeAttribute('data-active');
         var hit = gB.querySelector('.sc-map-hex-hit');
-        if (hit) {
-          if (active) hit.setAttribute('pointer-events', 'none');
-          else hit.removeAttribute('pointer-events');
-        }
+        if (hit) hit.removeAttribute('pointer-events');
       });
 
-      backBtn.hidden = state.mode !== 'branch';
-      hint.hidden = state.mode === 'branch';
+      if (backBtn) backBtn.hidden = state.mode !== 'branch';
+      if (hint) hint.hidden = state.mode === 'branch';
     }
 
     function playBranchExit(onDone) {
@@ -734,6 +870,7 @@
         resetEntityLayers();
         applyZoom();
         renderMinimap();
+        isTransitioning = false;
         if (onDone) onDone();
         return;
       }
@@ -763,6 +900,7 @@
             if (token !== animGen) return;
             resetEntityLayers();
             renderMinimap();
+            isTransitioning = false;
             if (onDone) onDone();
           }, ZOOM_MS + 40);
         });
@@ -791,14 +929,13 @@
       layer.classList.add('is-visible');
 
       requestAnimationFrame(function () {
-        if (token !== animGen) return;
         applyZoom();
         requestAnimationFrame(function () {
           if (token !== animGen) return;
           layer.classList.add('nodes-revealed');
-          animateEntitiesFromCenter(layer, branch, token);
-          var stemDelay = 30;
-          var labelsDelay = 50;
+          var n = animateEntitiesFromCenter(layer, branch, token);
+          var stemDelay = Math.min(ZOOM_MS * 0.42, 90 + NODE_MS * 0.5);
+          var labelsDelay = 90 + (n - 1) * NODE_STAGGER + NODE_MS * 0.88;
           window.setTimeout(function () {
             if (token !== animGen) return;
             layer.classList.add('stems-visible');
@@ -857,7 +994,11 @@
           showBranchInstant(state.branch);
           requestAnimationFrame(applyZoom);
         } else {
+          isTransitioning = true;
           playBranchEnter(state.branch);
+          window.setTimeout(function () {
+            isTransitioning = false;
+          }, ZOOM_MS + NODE_MS + 120);
         }
       } else {
         animGen += 1;
@@ -869,20 +1010,23 @@
     }
 
     function openBranch(id) {
+      if (isTransitioning) return;
       animGen += 1;
+      isTransitioning = false;
       state.mode = 'branch';
       state.branch = id;
       syncMode();
     }
 
     function goOverview() {
-      if (state.mode !== 'branch') return;
+      if (state.mode !== 'branch' || isTransitioning) return;
       if (reduced) {
         state.mode = 'overview';
         state.branch = null;
         syncMode();
         return;
       }
+      isTransitioning = true;
       playBranchExit(function () {});
     }
 
@@ -913,7 +1057,7 @@
 
     }
 
-    backBtn.addEventListener('click', goOverview);
+    if (backBtn) backBtn.addEventListener('click', goOverview);
     svg.addEventListener('click', function (e) {
       if (state.mode === 'overview') return;
       if (clickInsideMapInteractive(e.target)) return;

@@ -428,47 +428,25 @@ figure.sc-map{
   width:100%; max-width:none; margin:2.8em 0 2.4em;
   border:none; box-shadow:none; background:transparent;
 }
-.sc-map-shell{position:relative; width:100%; margin:0;}
-.sc-map-chrome{
-  position:absolute; z-index:2; left:0; right:0; top:0;
-  display:flex; align-items:center; justify-content:flex-end; gap:1rem;
-  padding:10px 14px; pointer-events:none;
-}
-.sc-map-chrome > *{pointer-events:auto;}
-.sc-map-back{
-  appearance:none; background:rgba(244,244,244,.92); border:1px solid var(--rule);
-  border-radius:999px; padding:.35em .85em;
-  font-family:var(--sans); font-size:.68em; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--ink-soft); cursor:pointer; font-weight:400;
-  backdrop-filter:blur(6px);
-}
-.sc-map-back[hidden]{display:none;}
-.sc-map-back:hover,.sc-map-back:focus-visible{color:var(--ink); border-color:rgba(31,33,34,.35);}
-.sc-map-back:focus-visible{outline:1px solid rgba(31,33,34,.35); outline-offset:2px;}
-.sc-map-hint{
-  margin-left:auto;
-  font-size:.58em; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--ink-soft); font-weight:400;
-  padding:0;
-  background:none; border:none;
-}
-.sc-map-hint[hidden]{display:none;}
+.sc-map-shell{position:relative; width:100%; margin:0; padding-top:2.5rem;}
 .sc-map-legend{
-  position:absolute; z-index:2; left:14px; top:10px;
+  position:absolute; z-index:2; left:14px; top:14px;
   display:flex; flex-direction:column; gap:5px;
   pointer-events:none;
-  font-family:var(--sans); font-size:9.5px; font-weight:400;
+  font-family:var(--sans); font-size:9.5px; font-weight:300;
   color:var(--ink-soft); line-height:1.2;
 }
-.sc-map-legend-item{display:grid; grid-template-columns:22px auto; align-items:center; gap:8px;}
+.sc-map-legend-item{display:flex; align-items:center; gap:8px;}
 .sc-map-legend-mark{
-  width:22px; height:0;
+  flex:0 0 auto; width:20px; height:0;
   border-top:2px dashed var(--ink-soft);
 }
 .sc-map-legend-mark--lever{border-color:var(--s1); opacity:.95;}
-.sc-map-legend-mark--rivalry{border-color:var(--s2); opacity:.95;}
+.sc-map-legend-mark--rivalry{border-color:var(--s2); width:22px; opacity:.95;}
 .sc-map-viewport{
   border:none;
+  border-top:1px solid color-mix(in srgb,var(--rule) 70%,var(--paper));
+  border-bottom:1px solid color-mix(in srgb,var(--rule) 70%,var(--paper));
   border-radius:0;
   background:var(--paper);
   overflow:hidden;
@@ -491,12 +469,13 @@ figure.sc-map{
 .sc-map-hex{stroke:rgba(31,33,34,.45); stroke-width:.85; vector-effect:non-scaling-stroke;}
 .sc-map-hex-entity{fill:var(--paper); stroke:var(--ink);}
 .sc-map-hex-entity.is-cluster-active{fill:var(--ink); stroke:var(--ink);}
+.sc-map-entity-hit{fill:transparent; stroke:none; pointer-events:all;}
+.sc-map-entity-face{pointer-events:none; fill:var(--paper); stroke:var(--ink); stroke-width:.85; vector-effect:non-scaling-stroke;}
+.sc-map-entity-photo{pointer-events:none;}
+
 .sc-map-layer-hub{pointer-events:none;}
-.sc-map-hub-fill{fill:var(--paper); stroke:none;}
-.sc-map-hub-ring{
-  fill:none; stroke:var(--ink); stroke-width:.85;
-  vector-effect:non-scaling-stroke;
-}
+.sc-map-hub-mark{pointer-events:none;}
+.sc-map-hub-shape{fill:var(--paper); stroke:var(--ink); vector-effect:non-scaling-stroke;}
 .sc-map-hex-hit{fill:transparent; stroke:none; pointer-events:all;}
 .sc-map-hub-label{font-family:var(--sans); font-size:8px; letter-spacing:1.5px; fill:var(--ink-soft); font-weight:400;}
 .sc-map-branch{cursor:pointer; outline:none; transition:opacity .28s ease;}
@@ -507,54 +486,44 @@ figure.sc-map{
   opacity:1; visibility:hidden; pointer-events:none;
 }
 .sc-map-layer-entities.is-visible{visibility:visible; pointer-events:all;}
-.sc-map-entity-chrome{opacity:0; transition:opacity .18s ease-out;}
+.sc-map-entity-chrome{opacity:0; transition:opacity .42s cubic-bezier(.33,1,.32,1);}
 .sc-map-layer-entities.stems-visible .sc-map-entity-chrome{opacity:1;}
 .sc-map-entity{opacity:1;}
 .sc-map-entity.is-entering{pointer-events:none;}
 .sc-map-entity-caption{
   opacity:0;
-  transition:opacity .18s ease-out calc(var(--i,0) * 10ms);
+  transition:opacity .45s cubic-bezier(.33,1,.32,1) calc(var(--i,0) * 28ms);
 }
 .sc-map-layer-entities.labels-visible .sc-map-entity-caption{opacity:1;}
 .sc-map-branch-label-focus{
   opacity:0;
-  transition:opacity .18s ease-out;
+  transition:opacity .45s cubic-bezier(.33,1,.32,1) .08s;
 }
 .sc-map.branch-labels-visible .sc-map-branch-label-focus{opacity:1;}
 .sc-map-entity-name{font-family:var(--sans); font-size:8.5px; font-weight:400; fill:var(--ink);}
 .sc-map-entity-caption{pointer-events:none;}
-.sc-map-entity-icon{pointer-events:none;}
-.sc-map-entity .sc-map-hex-entity{pointer-events:all;}
+.sc-map-entity .sc-map-entity-hit{pointer-events:all;}
 .sc-map-entity-name,.sc-map-entity-role{pointer-events:none;}
-.sc-map[data-mode="branch"] .sc-map-branch[data-active="1"] .sc-map-hex-hit{pointer-events:none;}
-.sc-map-entity-role{font-family:var(--sans); font-size:7.5px; fill:var(--ink-soft); font-weight:400;}
+.sc-map-entity-role{font-family:var(--sans); font-size:7.5px; fill:var(--ink-soft); font-weight:300;}
 .sc-map.sc-map-animated .sc-map-world{
-  transition:transform .38s cubic-bezier(.22,1,.36,1);
+  transition:transform .68s cubic-bezier(.33,1,.32,1);
 }
-.sc-map-fade-bg{transition:opacity .18s ease-out;}
+.sc-map-fade-bg{transition:opacity .62s cubic-bezier(.33,1,.32,1);}
 .sc-map-branch-overview,.sc-map-branch-focus{
-  transition:opacity .18s ease-out;
+  transition:opacity .58s cubic-bezier(.33,1,.32,1);
 }
 .sc-map-branch-focus{opacity:0; pointer-events:none;}
 .sc-map-branch-overview{opacity:1;}
-.sc-map[data-mode="branch"] .sc-map-layer-back,
-.sc-map[data-mode="branch"] .sc-map-layer-hub{opacity:.6;}
-.sc-map[data-mode="branch"] .sc-map-branch:not([data-active="1"]){
-  opacity:.45;
-}
-.sc-map[data-mode="branch"] .sc-map-branch:not([data-active="1"]) .sc-map-branch-label{opacity:.6;}
-.sc-map[data-mode="branch"] .sc-map-branch:not([data-active="1"]):hover{opacity:.85;}
-.sc-map[data-mode="branch"] .sc-map-branch[data-active="1"]{opacity:1; visibility:visible;}
+.sc-map[data-mode="branch"] .sc-map-layer-back.sc-map-fade-bg{opacity:0; pointer-events:none;}
+.sc-map[data-mode="branch"] .sc-map-layer-hub.sc-map-fade-bg{opacity:0; pointer-events:none;}
+.sc-map[data-mode="branch"] .sc-map-layer-front .sc-map-branch:not([data-active="1"]),
+.sc-map[data-mode="branch"] .sc-map-layer-entities:not(.is-visible){opacity:0; visibility:hidden; pointer-events:none;}
+.sc-map[data-mode="branch"] .sc-map-branch:not([data-active="1"]) .sc-map-branch-focus{opacity:0; pointer-events:none;}
 .sc-map[data-mode="branch"] .sc-map-branch[data-active="1"] .sc-map-branch-overview{opacity:0;}
 .sc-map[data-mode="branch"] .sc-map-branch[data-active="1"] .sc-map-branch-focus{opacity:1; pointer-events:none;}
 .sc-map-hud{pointer-events:none;}
-.sc-map-minimap-bg{fill:rgba(244,244,244,.94); stroke:var(--rule); stroke-width:.85;}
-.sc-map-minimap-dot{fill:rgba(31,33,34,.28);}
-.sc-map-minimap-dot.is-hot{fill:var(--ink);}
-.sc-map-minimap-hub{fill:rgba(31,33,34,.5);}
-.sc-map-minimap-label{font-family:var(--sans); font-size:7px; letter-spacing:1.2px; fill:var(--ink-soft);}
 .sc-map-callout-box{fill:rgba(244,244,244,.95); stroke:var(--rule); stroke-width:.85;}
-.sc-map-callout-text{font-family:var(--sans); font-size:8.5px; fill:var(--ink); font-weight:400;}
+.sc-map-callout-text{font-family:var(--sans); font-size:8.5px; fill:var(--ink); font-weight:300;}
 .sc-map.is-hovering .sc-map-branch{opacity:.22;}
 .sc-map.is-hovering .sc-map-spoke{opacity:.35;}
 .sc-map.is-hovering[data-hover="distribution"] .sc-map-branch[data-branch="distribution"],
@@ -565,7 +534,7 @@ figure.sc-map{
 .sc-map.is-hovering[data-hover="fab"] .sc-map-branch[data-branch="fab"],
 .sc-map.is-hovering[data-hover="compliance"] .sc-map-branch[data-branch="compliance"]{opacity:1;}
 @media (hover:hover){
-  .sc-map[data-mode="overview"] .sc-map-branch:hover .sc-map-hex-entity{fill:color-mix(in srgb,var(--ink) 6%,var(--paper));}
+  .sc-map[data-mode="overview"] .sc-map-branch:hover .sc-map-entity-face{fill:color-mix(in srgb,var(--ink) 6%,var(--paper));}
 }
 @media (prefers-reduced-motion: reduce){
   .sc-map.sc-map-animated .sc-map-world,
@@ -573,29 +542,23 @@ figure.sc-map{
   .sc-map-entity-chrome, .sc-map-entity-caption, .sc-map-branch-label-focus{transition:none;}
 }
 @media (max-width:700px){
-  figure.sc-map .sc-map-minimap{display:none;}
-  figure.sc-map .sc-map-viewport{padding:3.9em 0 3.7em; overflow:visible; clip-path:inset(0 -16px);}
+  figure.sc-map .sc-map-viewport{padding:3.9em 0 3.7em; overflow:visible;}
   figure.sc-map .sc-map-shell{overflow:visible;}
   figure.sc-map .sc-map-svg{
-    overflow:visible;
     width:100%;
     min-height:min(78vw, 30rem);
     max-height:none;
     aspect-ratio:900 / 620;
   }
   figure.sc-map .sc-map-viewport{overflow:visible;}
-  figure.sc-map .sc-map-hint{font-size:.72em; letter-spacing:.1em;}
-  figure.sc-map .sc-map-back{font-size:.78em; padding:.45em .95em;}
   figure.sc-map .sc-map-hub-label{font-size:14px!important; letter-spacing:1.35px;}
   figure.sc-map .sc-map-branch-label{font-size:14.5px!important; letter-spacing:1.08px;}
-  figure.sc-map .sc-map-entity-name{font-size:16px!important;}
-  figure.sc-map .sc-map-entity-role{font-size:12.5px!important;}
+  figure.sc-map .sc-map-entity-name{font-size:14px!important;}
+  figure.sc-map .sc-map-entity-role{font-size:11px!important;}
   figure.sc-map .sc-map-branch-label-focus{font-size:14.5px!important;}
   figure.sc-map .sc-map-legend{font-size:12px;}
   figure.sc-map .sc-map-callout-text{font-size:12.5px!important;}
 }
-
-
 .chip-topic-heading{margin:3em 0 1em;font-size:1.02em;line-height:1.35;letter-spacing:.03em;font-weight:400;}
 .chip-paths-figure{margin:var(--chip-figure-gap) 0;}
 .chip-paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
@@ -799,19 +762,15 @@ figure.sc-map{
       <p>A chip is not a computer. Around the T1 sit the casting, the injection molding, the finishes, the thermals, the boards, the compliance work, and the people who do each of those, and two years ago none of them existed for us. We spent that time learning how hard our problem was. Solving it meant building a network of relationships, so we built one.</p>
       <figure class="sc-map" id="sc-map">
         <div class="sc-map-shell">
-          <div class="sc-map-chrome">
-            <button type="button" class="sc-map-back" hidden>Click anywhere to zoom out</button>
-            <span class="sc-map-hint">Click a cluster to zoom in</span>
-          </div>
           <div class="sc-map-viewport">
             <svg class="sc-map-svg" aria-hidden="true"></svg>
             <div class="sc-map-legend" aria-hidden="true">
-              <span class="sc-map-legend-item"><span class="sc-map-legend-mark sc-map-legend-mark--lever"></span>Leverage</span>
-              <span class="sc-map-legend-item"><span class="sc-map-legend-mark sc-map-legend-mark--rivalry"></span>Bidding War</span>
+              <span class="sc-map-legend-item"><span class="sc-map-legend-mark sc-map-legend-mark--lever"></span>Houmo lever</span>
+              <span class="sc-map-legend-item"><span class="sc-map-legend-mark sc-map-legend-mark--rivalry"></span>Mold bidding war</span>
             </div>
           </div>
         </div>
-        <figcaption>Fig.&nbsp;9.&ensp;The T1 vendor network — seven clusters around Truffle; click any cluster to reveal its vendors. Blue: leverage. Orange: bidding war.</figcaption>
+        <figcaption>Fig.&nbsp;9.&ensp;The T1 vendor network — seven hex clusters on a ring around Truffle; click any cluster to zoom in and reveal vendor nodes. Blue spoke: Houmo lever. Orange arc: mold bidding war.</figcaption>
       </figure>
       <p>We went to China and searched for chip vendors, computer manufacturers, and everyone in between: casting, injection molding, CMF, and the rest. We now have working relationships with every vendor we need and a direct path to a million computers in the next five years.</p>
       
