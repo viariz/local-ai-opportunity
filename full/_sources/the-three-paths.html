@@ -339,17 +339,21 @@ figure svg{display:block; width:100%; height:auto;}
 figcaption{margin-top:.95em; font-size:.72em; letter-spacing:.04em; line-height:1.5; color:var(--ink-soft); text-align:left;}
 .figtext, svg text{font-family:var(--sans); font-weight:400;}
 figure.fig-gap-absorb{margin:4rem 0;}
-.gap-motion-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;}
-.gap-motion-heading .fighead{margin:0;}
-.gap-replay{appearance:none;background:none;border:0;padding:0;font:300 .7rem/1.5 var(--sans);color:var(--ink-soft);cursor:pointer;white-space:nowrap;}
-.gap-replay span{display:inline-block;margin-left:.2em;font-size:1.05rem;vertical-align:-.06em;}
-.gap-replay:hover{color:var(--ink);}
-.gap-replay:focus-visible{outline:1px solid var(--ink-soft);outline-offset:5px;}
-.fig-gap-absorb svg{margin-top:1.5rem;overflow:visible;}
-.gap-absorb text{font-family:var(--sans);fill:var(--ink);font-weight:400;}
-.gap-absorb .gap-shimmer-label{font-weight:400;letter-spacing:.04em;fill:var(--ink-soft);}
-@media (prefers-reduced-motion:reduce){.gap-absorb .gap-shimmer-label{letter-spacing:.06em;}}
-@media(max-width:700px){.gap-motion-heading{gap:.75rem;}.gap-motion-heading .figsubtitle{max-width:23em;}.gap-replay{font-size:.65rem;}}
+.fig-gap-absorb .gap-chart-panel{position:relative;margin-top:1.5rem;aspect-ratio:720/420;}
+.fig-gap-absorb .gap-chart-panel > svg{position:absolute;inset:0;display:block;width:100%;height:100%;}
+.fig-gap-absorb canvas.gap-lenia-canvas{display:block;position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;}
+.fig-gap-absorb.gap-lenia-active svg{pointer-events:none;}
+.fig-gap-absorb .gap-chart-heading{transition:opacity .35s ease;}
+.fig-gap-absorb svg{margin-top:0;overflow:visible;}
+.gap-absorb text{font-family:var(--sans); font-weight:400;}
+.gap-chart-heading{margin:0;}
+.fig-gap-absorb .gap-chart-heading{margin:0 0 .85em;}
+.fig-gap-absorb .gap-chart-heading .figtitle{font-family:var(--sans); font-weight:500; font-size:.8125rem; line-height:1.3; color:var(--ink);}
+.fig-gap-absorb .gap-chart-heading .figsubtitle{margin-top:.22em; font-family:var(--sans); font-weight:400; font-size:.65625rem; font-style:italic; line-height:1.35; color:var(--ink-soft);}
+.gap-absorb .gap-chart-title{font-size:.6875rem; letter-spacing:.1em; text-transform:uppercase; font-weight:400; fill:var(--ink-soft);}
+.gap-absorb .gap-axis-year{font-size:.65625rem; letter-spacing:.02em; font-weight:400; font-variant-numeric:tabular-nums; fill:var(--ink-soft);}
+.gap-absorb .gap-legend{font-size:.625rem; letter-spacing:.06em; text-transform:uppercase; font-weight:400;}
+@media(max-width:700px){figure.fig-gap-absorb .figsubtitle{max-width:23em;}}
 
 
 /* ---- worked table ---- */
@@ -653,11 +657,8 @@ body.cap-article-open{overflow:hidden;}
       <div class="fig-motion" style="margin:2.6em 0"><figure><video src="truffle-hand.mp4" width="1920" height="1080" autoplay loop muted playsinline></video></figure></div>
       <p>It works because it stops fighting the constraint. Spread across a billion homes instead of a few hundred giant buildings, the hundred gigawatts comes to about a hundred watts each, roughly what a bright light bulb draws, carried by a grid that was built decades ago for exactly that kind of load. Nothing at that scale needs a permit, a transmission line, a cooling tower, or a county meeting.</p>
       <figure class="fig-gap-absorb" id="distributed-demand">
-        <div class="gap-motion-heading">
-          <div class="fighead fighead-chart"><div class="figtitle">Where the unmet demand goes</div><div class="figsubtitle">From a cloud bottleneck to a billion personal computers.</div></div>
-          <button class="gap-replay" type="button" aria-label="Replay demand distribution animation">Replay <span aria-hidden="true">↻</span></button>
-        </div>
-        <svg class="gap-absorb" viewBox="0 0 720 420" role="img" aria-label="Animation: unmet cloud demand leaves the chart; thin drifting lines and waves of dots move only inside the figure; a shimmering A billion personal computers caption appears; then they dissolve softly back into the gap in a seamless loop."></svg>
+        <div class="fighead fighead-chart gap-chart-heading"><div class="figtitle">Where the unmet demand goes</div><div class="figsubtitle">From a cloud bottleneck to a billion personal computers.</div></div>
+        <svg class="gap-absorb" viewBox="0 0 720 420" role="img" aria-label="Animated chart: token demand (black) and dashed cloud supply; the fill becomes wandering dots that spread across the frame like a network of computers, then the caption appears at the bottom while the chart and title fade. Years 2026 through 2030."></svg>
       </figure>
       <p>A cloud build needs trillions of dollars raised before the first token is served, and repaid on a guess about future utilization. A personal machine is paid for up front by the person who uses it. Supply arrives with demand instead of years ahead of it, and none of it depends on a rate cycle.</p>
       <p>AI will diffuse through the economy as a GPU per person.</p>

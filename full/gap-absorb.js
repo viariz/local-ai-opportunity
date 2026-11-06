@@ -1,177 +1,200 @@
-/* Chart fades (no curve warp); grid stays. Short in/out transitions; long middle field; dots spawn on outline + fill; return lerps home; dot opacity 0 at leave/rejoin. */
+/**
+ * "Where the unmet demand goes"
+ * Chart draws, wedge fill appears, then a quick spread from graph to cloud,
+ * then the dots wander for the remainder of DOTS_SEC before the sequence restarts.
+ */
 (function () {
   'use strict';
-  var svg = document.querySelector('svg.gap-absorb');
-  if (!svg) return;
-  var figure = svg.closest('figure');
+  var figure = document.getElementById('distributed-demand');
   if (!figure) return;
-  var replay = figure.querySelector('.gap-replay');
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var svg = figure.querySelector('svg.gap-absorb');
+  if (!svg) return;
+
   var NS = 'http://www.w3.org/2000/svg';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
   var DEMAND = [[40.0, 360.9], [55.5, 360.1], [71.0, 359.1], [86.5, 358.1], [102.0, 357.0], [117.5, 355.8], [133.0, 354.4], [148.5, 353.0], [164.0, 351.4], [179.5, 349.6], [195.0, 347.7], [210.5, 345.6], [226.0, 343.3], [241.5, 340.8], [257.0, 338.0], [272.5, 335.0], [288.0, 331.7], [303.5, 328.1], [319.0, 324.2], [334.5, 319.9], [350.0, 315.1], [365.5, 310.0], [381.0, 304.3], [396.5, 298.1], [412.0, 291.4], [427.5, 284.0], [443.0, 275.9], [458.5, 267.0], [474.0, 257.3], [489.5, 246.7], [505.0, 235.1], [520.5, 222.4], [536.0, 208.5], [551.5, 193.3], [567.0, 176.6], [582.5, 158.4], [598.0, 138.5], [613.5, 116.7], [629.0, 92.8], [644.5, 66.7], [660.0, 38.2]];
   var SUPPLY = [[40.0, 360.9], [55.5, 359.5], [71.0, 358.2], [86.5, 356.9], [102.0, 355.7], [117.5, 354.5], [133.0, 353.4], [148.5, 352.4], [164.0, 351.4], [179.5, 350.4], [195.0, 349.5], [210.5, 348.7], [226.0, 347.8], [241.5, 347.1], [257.0, 346.3], [272.5, 345.6], [288.0, 345.0], [303.5, 344.3], [319.0, 343.7], [334.5, 343.1], [350.0, 342.6], [365.5, 342.1], [381.0, 341.6], [396.5, 341.1], [412.0, 340.7], [427.5, 340.2], [443.0, 339.8], [458.5, 339.4], [474.0, 339.1], [489.5, 338.7], [505.0, 338.4], [520.5, 338.1], [536.0, 337.8], [551.5, 337.5], [567.0, 337.2], [582.5, 337.0], [598.0, 336.7], [613.5, 336.5], [629.0, 336.3], [644.5, 336.0], [660.0, 335.8]];
 
-  var draw = function () {};
-  var elapsed = 0;
-  var last = null;
-  var raf = 0;
-  var visible = false;
-  /**
-   * Seconds. Dot flight duration (slower = larger FLIGHT_DUR only; path math unchanged).
-   * The restored chart holds before the loop plays again.
-   * Labels are fully gone before either flight, and return only after the flight home finishes.
-   * The caption waits until the outbound flight has landed.
-   */
-  var TEXT_OUT_START = 0.45;
-  var TEXT_OUT_DUR = 0.8;
-  var GAP_AFTER_TEXT = 0.32;
-  var FLIGHT_DUR = 2.35;
-  var CHART_DUR = 1.08;
-  var CAP_DELAY = 0.95;
-  var CAP_FADE = 0.6;
-  var FIELD_AFTER_LEAVE = 12.9;
-  var CAP_OUT_DUR = 0.45;
-  var GAP_BEFORE_RETURN = 0.24;
-  var GAP_BEFORE_TEXT = 0.32;
-  var TEXT_IN_DUR = 0.8;
-  var IDLE_AFTER = 3.5;
-  var textOut0 = TEXT_OUT_START;
-  var textOut1 = textOut0 + TEXT_OUT_DUR;
-  var leave0 = textOut1 + GAP_AFTER_TEXT;
-  var leave1 = leave0 + FLIGHT_DUR;
-  var chartOut0 = leave0;
-  var chartOut1 = leave0 + CHART_DUR;
-  var capIn0 = leave1 + CAP_DELAY;
-  var capIn1 = capIn0 + CAP_FADE;
-  var capOut0 = leave1 + FIELD_AFTER_LEAVE;
-  var capOut1 = capOut0 + CAP_OUT_DUR;
-  var ret0 = capOut1 + GAP_BEFORE_RETURN;
-  var ret1 = ret0 + FLIGHT_DUR;
-  var chartIn0 = ret0;
-  var chartIn1 = ret0 + CHART_DUR;
-  var textIn0 = ret1 + GAP_BEFORE_TEXT;
-  var textIn1 = textIn0 + TEXT_IN_DUR;
-  var LOOP = textIn1 + IDLE_AFTER;
-  var bucketSize = 42;
-  var buckets = {};
-  var particlesRef = [];
+  var X_DATA_MIN = 40;
+  var X_DATA_MAX = 660;
+  var SPLIT_X = 221;
+  var YEARS = [2026, 2027, 2028, 2029, 2030];
+  var Y_DATA_TOP = 30;
+  var Y_DATA_BOTTOM = 365;
+
+  /** Seconds after the wedge fill finishes until the loop restarts (morph + spread + hang). */
+  var DOTS_SEC = 10;
+  var MORPH_IN_DOTS = 0.72;
+  /** Time for the dot wave to fill the frame after morph (shorter = snappier graph→cloud transition). */
+  var SPREAD_WINDOW = 2.15;
+  var hangWindow = Math.max(0, DOTS_SEC - MORPH_IN_DOTS - SPREAD_WINDOW);
+  var SEQ_PRE_DOTS = 4.6;
+  var LINE_SHARE = 0.62;
+  var FILL_SHARE = 0.38;
+  var lineWindow = SEQ_PRE_DOTS * LINE_SHARE;
+  var fillWindow = SEQ_PRE_DOTS * FILL_SHARE;
+  var morphWindow = MORPH_IN_DOTS;
+  var spreadWindow = SPREAD_WINDOW;
+  var lineEnd = lineWindow;
+  var fillEnd = lineEnd + fillWindow;
+  var morphEnd = fillEnd + morphWindow;
+  var spreadEnd = morphEnd + spreadWindow;
+  var cycleEnd = spreadEnd + hangWindow;
+
+  var SUPPLY_DASH = '4 3';
+  var TAU = Math.PI * 2;
+  /** Dots move on a shared spatial field + slow drift; lower = calmer than the old fast jitter. */
+  var FIELD_TIME_SCALE = 0.48;
+
+  var panel = figure.querySelector('.gap-chart-panel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.className = 'gap-chart-panel';
+    svg.parentNode.insertBefore(panel, svg);
+    panel.appendChild(svg);
+  }
+  var canvas = figure.querySelector('canvas.gap-lenia-canvas');
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.className = 'gap-lenia-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    panel.appendChild(canvas);
+  }
+
+  var headingEl = figure.querySelector('.gap-chart-heading');
+
+  var rafId = 0;
+  var t0 = 0;
+  var running = false;
+  var animPaused = true;
+  var futurePaths = [];
+  var supplyFutureEl = null;
+  var fillGroup = null;
+  var chartLayerG = null;
+
+  var fieldDots = null;
+  var fieldSpacing = 5;
+  var fieldMaxDist = 1;
+  var fieldMobileLayout = false;
+  var fieldCaptionBottom = 0;
+  var plotGeom = null;
+  var laidOutW = 0;
+  var laidOutH = 0;
+  var inkColor = '#1F2122';
 
   function node(tag, attrs, text) {
-    var result = document.createElementNS(NS, tag);
-    Object.keys(attrs || {}).forEach(function (key) { result.setAttribute(key, attrs[key]); });
-    if (text) result.textContent = text;
-    return result;
+    var el = document.createElementNS(NS, tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    if (text != null) el.textContent = text;
+    return el;
   }
-  function clamp(t) { return Math.max(0, Math.min(1, t)); }
+
+  function clamp(t, a, b) {
+    return Math.max(a, Math.min(b, t));
+  }
+
   function smootherstep(t) {
-    t = clamp(t);
-    return t * t * t * (t * (t * 6 - 15) + 10);
-  }
-  function smoothrange(u, a, b) { return smootherstep((u - a) / (b - a)); }
-  function softBlend(u, a, b) { return smootherstep((clamp(u) - a) / (b - a)); }
-  /** Same ease as softBlend, for clocks in seconds. softBlend clamps its input to 0–1. */
-  function ramp(t, a, b) { return smootherstep((t - a) / (b - a)); }
-  function structuredDisplacement(px, py, seed, tSec, fLeft, fTop, frameW, frameH, mobile, phase) {
-    var ph = clamp(phase);
-    var s = Math.sin;
-    var c = Math.cos;
-    var lx = (px - fLeft) / Math.max(frameW, 1);
-    var ly = (py - fTop) / Math.max(frameH, 1);
-    var nx = clamp(lx);
-    var ny = clamp(ly);
-    var amp = (mobile ? 0.92 : 1) * (0.35 + 0.65 * ph);
-    var band1 = s(ny * 9.2 - tSec * 1.05 + seed * 0.4);
-    var band2 = c(ny * 14.5 + tSec * 0.72 + seed * 1.1);
-    var shear = s(nx * 6.8 + tSec * 0.55 + seed * 0.6);
-    var ox = (band1 * 28 + band2 * 14 + shear * 18) * amp;
-    var oy = (s(nx * 7.5 + tSec * 0.88 + seed) * 22 + c((nx + ny) * 11 + tSec * 0.65) * 16) * amp;
-    var ridge = s((nx - ny) * 18 + tSec * 1.12);
-    ox += ridge * (10 + 8 * ph) * amp;
-    oy -= ridge * (6 + 5 * ph) * amp;
-    var drift = s(tSec * 0.31 + seed * 2);
-    ox += drift * 7 * ph * amp;
-    oy += c(tSec * 0.27 + seed * 1.7) * 6 * ph * amp;
-    return { ox: ox, oy: oy };
+    t = clamp(t, 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
-  function repulsionShift(p, i, mobile, strength) {
-    if (strength < 0.02) return { rx: 0, ry: 0 };
-    var bx = Math.floor(p.px / bucketSize);
-    var by = Math.floor(p.py / bucketSize);
-    var rx = 0;
-    var ry = 0;
-    var minD2 = (mobile ? 32 : 36) * (mobile ? 32 : 36);
-    for (var ddx = -1; ddx <= 1; ddx++) {
-      for (var ddy = -1; ddy <= 1; ddy++) {
-        var list = buckets[(bx + ddx) + ',' + (by + ddy)];
-        if (!list) continue;
-        for (var k = 0; k < list.length; k++) {
-          var j = list[k];
-          if (j === i) continue;
-          var q = particlesRef[j];
-          var dx = p.px - q.px;
-          var dy = p.py - q.py;
-          var d2 = dx * dx + dy * dy;
-          if (d2 < minD2 && d2 > 0.01) {
-            var inv = 1 / d2;
-            rx += dx * inv;
-            ry += dy * inv;
-          }
-        }
-      }
-    }
-    return { rx: rx * strength * (mobile ? 1.6 : 2.1), ry: ry * strength * (mobile ? 1.6 : 2.1) };
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
   }
 
-  /** Evenly sample { frac } in [0,1) along polyline length (open path). */
-  function outlineFractions(pts, n) {
-    if (pts.length < 2) return [];
-    var segLen = [];
-    var total = 0;
-    for (var i = 1; i < pts.length; i++) {
-      var dx = pts[i].x - pts[i - 1].x;
-      var dy = pts[i].y - pts[i - 1].y;
-      var L = Math.sqrt(dx * dx + dy * dy);
-      segLen.push(L);
-      total += L;
+  function parseHexColor(hex) {
+    if (typeof hex !== 'string' || hex[0] !== '#') return null;
+    var s = hex.slice(1);
+    if (s.length === 3) {
+      return {
+        r: parseInt(s[0] + s[0], 16),
+        g: parseInt(s[1] + s[1], 16),
+        b: parseInt(s[2] + s[2], 16)
+      };
     }
-    var fracs = [];
-    if (total < 1e-6) {
-      for (var z = 0; z < n; z++) fracs.push(z / Math.max(1, n));
-      return fracs;
+    if (s.length === 6) {
+      return {
+        r: parseInt(s.slice(0, 2), 16),
+        g: parseInt(s.slice(2, 4), 16),
+        b: parseInt(s.slice(4, 6), 16)
+      };
     }
-    for (var k = 0; k < n; k++) {
-      var dist = ((k + 0.5) / n) * total;
-      var acc = 0;
-      var si = 0;
-      while (si < segLen.length && acc + segLen[si] < dist) {
-        acc += segLen[si];
-        si++;
-      }
-      var segFrac = si < segLen.length && segLen[si] > 1e-6 ? (dist - acc) / segLen[si] : 0;
-      fracs.push((si + segFrac) / (pts.length - 1));
-    }
-    return fracs;
+    return null;
   }
 
-  function pointOnPolyline(pts, frac) {
-    if (pts.length < 2) return { x: pts[0].x, y: pts[0].y };
-    var f = clamp(frac) * (pts.length - 1);
-    var i0 = Math.floor(f);
-    var i1 = Math.min(pts.length - 1, i0 + 1);
-    var t = f - i0;
+  function dataToScreen(plotL, plotT, plotW, plotH) {
     return {
-      x: pts[i0].x + (pts[i1].x - pts[i0].x) * t,
-      y: pts[i0].y + (pts[i1].y - pts[i0].y) * t
+      x: function (xd) {
+        return plotL + ((xd - X_DATA_MIN) / (X_DATA_MAX - X_DATA_MIN)) * plotW;
+      },
+      y: function (yd) {
+        return plotT + ((yd - Y_DATA_TOP) / (Y_DATA_BOTTOM - Y_DATA_TOP)) * plotH;
+      }
     };
   }
 
-  /** Ray-cast; poly is open ring, last != first. */
+  function splitIndicesAtX(pts, splitX) {
+    var si = -1;
+    var i;
+    for (i = 0; i < pts.length; i++) {
+      if (pts[i][0] >= splitX) {
+        si = i;
+        break;
+      }
+    }
+    if (si < 0) return { past: [], future: [] };
+    var past = [];
+    var future = [];
+    for (i = 0; i <= si; i++) past.push(i);
+    for (i = si; i < pts.length; i++) future.push(i);
+    return { past: past, future: future };
+  }
+
+  function pathFromIndices(pts, indices, map) {
+    var s = '';
+    var k;
+    for (k = 0; k < indices.length; k++) {
+      var p = pts[indices[k]];
+      s += (k === 0 ? 'M ' : ' L ') + map.x(p[0]).toFixed(2) + ' ' + map.y(p[1]).toFixed(2);
+    }
+    return s;
+  }
+
+  function envelopeSlice(ptsD, ptsS, i0, i1, map) {
+    if (i1 <= i0) return '';
+    var s = '';
+    var i;
+    for (i = i0; i <= i1; i++) {
+      var pd = ptsD[i];
+      s += (i === i0 ? 'M ' : ' L ') + map.x(pd[0]).toFixed(2) + ' ' + map.y(pd[1]).toFixed(2);
+    }
+    for (i = i1; i >= i0; i--) {
+      var ps = ptsS[i];
+      s += ' L ' + map.x(ps[0]).toFixed(2) + ' ' + map.y(ps[1]).toFixed(2);
+    }
+    s += ' Z';
+    return s;
+  }
+
+  function buildScreenPoly(map) {
+    var poly = [];
+    var i;
+    for (i = 0; i < DEMAND.length; i++) {
+      poly.push({ x: map.x(DEMAND[i][0]), y: map.y(DEMAND[i][1]) });
+    }
+    for (i = SUPPLY.length - 1; i >= 0; i--) {
+      poly.push({ x: map.x(SUPPLY[i][0]), y: map.y(SUPPLY[i][1]) });
+    }
+    return poly;
+  }
+
   function pointInPolygon(px, py, poly) {
-    if (!poly.length) return false;
     var inside = false;
     var n = poly.length;
-    for (var i = 0, j = n - 1; i < n; j = i++) {
+    var i;
+    var j;
+    for (i = 0, j = n - 1; i < n; j = i++) {
       var xi = poly[i].x;
       var yi = poly[i].y;
       var xj = poly[j].x;
@@ -181,431 +204,539 @@
     return inside;
   }
 
-  function polygonBounds(poly) {
-    var minX = Infinity;
-    var minY = Infinity;
-    var maxX = -Infinity;
-    var maxY = -Infinity;
-    for (var i = 0; i < poly.length; i++) {
-      var q = poly[i];
-      minX = Math.min(minX, q.x);
-      minY = Math.min(minY, q.y);
-      maxX = Math.max(maxX, q.x);
-      maxY = Math.max(maxY, q.y);
+  function polyCentroid(poly) {
+    var a = 0;
+    var cx = 0;
+    var cy = 0;
+    var i;
+    var j = poly.length - 1;
+    for (i = 0; i < poly.length; j = i++) {
+      var f = poly[j].x * poly[i].y - poly[i].x * poly[j].y;
+      a += f;
+      cx += (poly[j].x + poly[i].x) * f;
+      cy += (poly[j].y + poly[i].y) * f;
     }
-    return { minX: minX, minY: minY, maxX: maxX, maxY: maxY };
+    a *= 0.5;
+    if (Math.abs(a) < 1e-6) return { x: poly[0].x, y: poly[0].y };
+    return { x: cx / (6 * a), y: cy / (6 * a) };
+  }
+
+  function captionBandPx(cssH, mobile) {
+    return mobile ? 52 : 58;
+  }
+
+  function cloudFalloff(px, py, w, h, capBottom) {
+    if (py >= capBottom - 2) return 0;
+    var cx = w * 0.5;
+    var cy = h * 0.34 + (capBottom / h) * 0.06 * h;
+    var rx = w * 0.39;
+    var ry = Math.max((capBottom - h * 0.06) * 0.5, h * 0.22);
+    var dx = (px - cx) / rx;
+    var dy = (py - cy) / ry;
+    var e = dx * dx + dy * dy;
+    var blob = Math.exp(-e * 0.72);
+    var tEdge = clamp((py - h * 0.05) / (h * 0.14), 0, 1);
+    var topFade = smootherstep(tEdge);
+    var lEdge = clamp((px - w * 0.06) / (w * 0.1), 0, 1);
+    var rEdge = clamp((w * 0.94 - px) / (w * 0.1), 0, 1);
+    var bottomFade = smootherstep((capBottom - py - 6) / (h * 0.14));
+    return blob * topFade * smootherstep(lEdge) * smootherstep(rEdge) * bottomFade;
+  }
+
+  function buildFieldDots(w, h, poly, cx, cy, capBottom) {
+    var spacing = clamp(Math.sqrt((w * h) / 7200), 4.4, 7.4);
+    var rowH = spacing * 0.8660254;
+    var dots = [];
+    var row = 0;
+    var y;
+    var maxDist = 1;
+    var seed = 0;
+    function rnd() {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed / 0x7fffffff;
+    }
+    var yMin = h * 0.07;
+    var yMax = Math.min(capBottom - spacing * 1.1, h - spacing * 0.4);
+    var xMin = w * 0.07;
+    var xMax = w * 0.93;
+    for (y = yMin; y < yMax; y += rowH) {
+      var xoff = (row % 2) * spacing * 0.5;
+      var x;
+      for (x = xMin + xoff; x < xMax; x += spacing) {
+        var jx = (rnd() - 0.5) * spacing * 0.6;
+        var jy = (rnd() - 0.5) * spacing * 0.55;
+        var px = clamp(x + jx, xMin, xMax);
+        var py = clamp(y + jy, yMin, yMax);
+        var mask = cloudFalloff(px, py, w, h, capBottom);
+        if (mask < 0.07 && rnd() > 0.18) continue;
+        if (mask < 0.04) continue;
+        var inside = pointInPolygon(px, py, poly);
+        var dist = Math.hypot(px - cx, py - cy);
+        if (dist > maxDist) maxDist = dist;
+        var nx = px / w;
+        var ny = py / h;
+        dots.push({
+          bx: px,
+          by: py,
+          nx: nx,
+          ny: ny,
+          inFill: inside,
+          dist: dist,
+          mask0: mask,
+          phase: rnd() * TAU,
+          ax: 0.28 + rnd() * 0.45,
+          ay: 0.26 + rnd() * 0.48,
+          fx: 0.65 + rnd() * 1.15,
+          fy: 0.62 + rnd() * 1.1,
+          slowx: 0.16 + rnd() * 0.26,
+          slowy: 0.15 + rnd() * 0.27
+        });
+      }
+      row++;
+    }
+    return { dots: dots, spacing: spacing, maxDist: maxDist };
+  }
+
+  function fieldMotion(dot, t, w, h, capBottom) {
+    var nx = dot.nx;
+    var ny = dot.ny;
+    var p = dot.phase;
+    var ft = t * FIELD_TIME_SCALE;
+    var sx = nx * 5.9;
+    var sy = ny * 5.9;
+    function flowAngle(px, py, seed) {
+      return Math.sin(px * 2.05 + seed) * Math.cos(py * 1.78 - seed * 0.34)
+        + 0.52 * Math.sin(px * 4.12 - py * 3.04 + seed * 0.53);
+    }
+    var seed = 0.71;
+    var eps = 0.052;
+    var a0 = flowAngle(sx, sy, seed);
+    var aPx = flowAngle(sx + eps, sy, seed);
+    var aMx = flowAngle(sx - eps, sy, seed);
+    var aPy = flowAngle(sx, sy + eps, seed);
+    var aMy = flowAngle(sx, sy - eps, seed);
+    var gAx = (aPx - aMx) * 0.5;
+    var gAy = (aPy - aMy) * 0.5;
+    var a1 = flowAngle(sx * 1.9 + 0.38, sy * 1.9 - 0.31, 2.05);
+    var theta = a0 * 2.32 + ft * 0.52 + a1 * 0.79 + p * 0.11;
+    var amp = fieldSpacing * 1.05;
+    var ox = amp * (Math.cos(theta) + 0.3 * Math.cos(theta * 2.06 - ft * 0.22));
+    var oy = amp * (Math.sin(theta) + 0.3 * Math.sin(theta * 2.06 + ft * 0.2));
+    var glen = Math.hypot(gAx, gAy) + 1e-6;
+    var pxN = -gAy / glen;
+    var pyN = gAx / glen;
+    var curl = fieldSpacing * 0.28 * Math.sin(ft * 0.38 + a0 * 1.55);
+    ox += pxN * curl;
+    oy += pyN * curl;
+    var slow = fieldSpacing * 0.165;
+    ox += slow * Math.sin(ft * dot.slowx + ny * 2.35 + p);
+    oy += slow * Math.cos(ft * dot.slowy - nx * 2.15 + p * 0.72);
+    var grain = fieldSpacing * 0.092;
+    ox += grain * dot.ax * Math.sin(ft * 0.55 + nx * 8.2 + p);
+    oy += grain * dot.ay * Math.cos(ft * 0.52 + ny * 7.9 - p * 0.4);
+    var px = dot.bx + ox;
+    var py = dot.by + oy;
+    var padX = w * 0.05;
+    px = clamp(px, padX, w - padX);
+    py = clamp(py, h * 0.06, capBottom - 10);
+    return { x: px, y: py };
+  }
+
+  function drawField(ctx, cssW, cssH, elapsed) {
+    ctx.setTransform(plotGeom.dpr, 0, 0, plotGeom.dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
+    if (!fieldDots) return;
+
+    var morphEase = elapsed <= fillEnd ? 0 : (elapsed >= morphEnd ? 1 : smootherstep((elapsed - fillEnd) / morphWindow));
+    var spreadEase = elapsed <= morphEnd ? 0 : (elapsed >= spreadEnd ? 1 : smootherstep((elapsed - morphEnd) / spreadWindow));
+    if (morphEase <= 0) return;
+
+    var fieldT = Math.max(0, elapsed - fillEnd);
+    var baseR = fieldSpacing * 0.1;
+    var capBottom = fieldCaptionBottom || cssH - captionBandPx(cssH, fieldMobileLayout);
+    var capOp = smootherstep(clamp((spreadEase - 0.22) / 0.5, 0, 1));
+
+    ctx.fillStyle = inkColor;
+
+    var i;
+    var dot;
+    var appear;
+    var pos;
+    var drew = false;
+    for (i = 0; i < fieldDots.length; i++) {
+      dot = fieldDots[i];
+      if (dot.inFill) {
+        appear = morphEase;
+      } else {
+        appear = smootherstep(clamp((spreadEase - (dot.dist / fieldMaxDist) * 0.72) / 0.28, 0, 1));
+        if (appear < 0.05) continue;
+      }
+      pos = fieldMotion(dot, fieldT, cssW, cssH, capBottom);
+      var cf = cloudFalloff(pos.x, pos.y, cssW, cssH, capBottom);
+      if (cf < 0.03) continue;
+      var wander = dot.inFill ? spreadEase : appear;
+      var r = baseR * (0.75 + 0.5 * wander);
+      var alpha = (0.12 + 0.88 * appear) * (0.5 + 0.5 * wander) * cf * (0.65 + 0.35 * (dot.mask0 || 1));
+      if (alpha < 0.035) continue;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, r, 0, TAU);
+      ctx.fill();
+      drew = true;
+    }
+    ctx.globalAlpha = 1;
+
+    if (drew && capOp > 0.02) {
+      var capY = cssH - (fieldMobileLayout ? 24 : 28);
+      ctx.save();
+      var sansStack = getComputedStyle(document.documentElement).getPropertyValue('--sans').trim() || 'system-ui, sans-serif';
+      ctx.font = '500 ' + (fieldMobileLayout ? '15px' : '16px') + ' ' + sansStack;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      var capText = 'A billion personal computers';
+      var cx = cssW * 0.5;
+      var baseA = 0.55 * capOp;
+
+      if (reduced.matches) {
+        ctx.fillStyle = inkColor;
+        ctx.globalAlpha = baseA;
+        ctx.fillText(capText, cx, capY);
+      } else {
+        var tw = ctx.measureText(capText).width;
+        var rgb = parseHexColor(inkColor) || { r: 31, g: 33, b: 34 };
+        function mixRgb(bright) {
+          return 'rgb(' +
+            Math.round(lerp(rgb.r, 255, bright)) + ',' +
+            Math.round(lerp(rgb.g, 255, bright)) + ',' +
+            Math.round(lerp(rgb.b, 255, bright)) + ')';
+        }
+        var sweep = elapsed * 1.1 + fieldT * 0.42;
+        var u = (Math.sin(sweep) * 0.5 + 0.5);
+        var span = Math.max(tw * 1.35, cssW * 0.38);
+        var gCap = ctx.createLinearGradient(cx - span, capY, cx + span, capY);
+        var w0 = clamp(u - 0.2, 0, 1);
+        var w1 = clamp(u - 0.06, 0, 1);
+        var w2 = clamp(u + 0.08, 0, 1);
+        var w3 = clamp(u + 0.22, 0, 1);
+        gCap.addColorStop(0, mixRgb(0.02));
+        gCap.addColorStop(w0, mixRgb(0.06));
+        gCap.addColorStop(w1, mixRgb(0.22));
+        gCap.addColorStop(w2, mixRgb(0.55));
+        gCap.addColorStop(w3, mixRgb(0.2));
+        gCap.addColorStop(1, mixRgb(0.05));
+        var twinkle = 0.92 + 0.08 * Math.sin(elapsed * 2.85 + 0.4);
+        ctx.fillStyle = gCap;
+        ctx.globalAlpha = baseA * twinkle;
+        ctx.fillText(capText, cx, capY);
+      }
+      ctx.restore();
+    }
+  }
+
+  var STROKE = {
+    supply: { stroke: 'var(--ink-soft)', 'stroke-width': '1', 'stroke-opacity': '0.72', 'stroke-dasharray': SUPPLY_DASH },
+    demand: { stroke: 'var(--ink)', 'stroke-width': '1.08', 'stroke-opacity': '0.92' }
+  };
+
+  var FILL_BASE = { fill: 'var(--ink)', 'fill-opacity': '0.055', stroke: 'none' };
+
+  function applyFillPhase(fillEase) {
+    var op = reduced.matches ? 1 : clamp(fillEase, 0, 1);
+    if (fillGroup) fillGroup.setAttribute('opacity', op.toFixed(3));
+  }
+
+  function tick(now) {
+    if (animPaused || reduced.matches) {
+      rafId = 0;
+      return;
+    }
+    rafId = requestAnimationFrame(tick);
+    if (!plotGeom) return;
+
+    if (!t0) t0 = now;
+    var elapsed = (now - t0) / 1000;
+
+    if (elapsed >= cycleEnd) {
+      startAnim();
+      return;
+    }
+
+    var lineEase = elapsed < lineEnd ? smootherstep(elapsed / lineWindow) : 1;
+    var fillEase = elapsed <= lineEnd ? 0 : (elapsed >= fillEnd ? 1 : smootherstep((elapsed - lineEnd) / fillWindow));
+    var morphEase = elapsed <= fillEnd ? 0 : (elapsed >= morphEnd ? 1 : smootherstep((elapsed - fillEnd) / morphWindow));
+    var spreadEase = elapsed <= morphEnd ? 0 : (elapsed >= spreadEnd ? 1 : smootherstep((elapsed - morphEnd) / spreadWindow));
+
+    futurePaths.forEach(function (item) {
+      var L = item.len;
+      if (!L) return;
+      if (lineEase >= 1) {
+        if (item.el === supplyFutureEl) {
+          item.el.setAttribute('stroke-dasharray', SUPPLY_DASH);
+          item.el.removeAttribute('stroke-dashoffset');
+        } else {
+          item.el.removeAttribute('stroke-dasharray');
+          item.el.removeAttribute('stroke-dashoffset');
+        }
+        return;
+      }
+      item.el.setAttribute('stroke-dasharray', L.toFixed(2));
+      item.el.setAttribute('stroke-dashoffset', (L * (1 - lineEase)).toFixed(2));
+    });
+
+    var fillOp = fillEase * (1 - morphEase);
+    if (fillGroup) fillGroup.setAttribute('opacity', (reduced.matches ? 1 : fillOp).toFixed(3));
+
+    var chartFade = smootherstep(clamp((spreadEase - 0.42) / 0.58, 0, 1));
+    if (svg) svg.style.opacity = chartFade > 0 ? String(1 - chartFade) : '';
+    if (chartFade > 0.98) figure.classList.add('gap-lenia-active');
+    else figure.classList.remove('gap-lenia-active');
+
+    if (morphEase > 0) {
+      canvas.style.opacity = '1';
+      var ctx = canvas.getContext('2d');
+      drawField(ctx, plotGeom.cssW, plotGeom.cssH, elapsed);
+    } else if (canvas.style.opacity !== '0') {
+      canvas.style.opacity = '0';
+    }
+  }
+
+  function startAnim() {
+    if (reduced.matches) return;
+    cancelAnimationFrame(rafId);
+    t0 = performance.now();
+    running = true;
+    figure.classList.remove('gap-lenia-active');
+    if (headingEl) headingEl.style.opacity = '';
+    if (svg) svg.style.opacity = '';
+    canvas.style.opacity = '0';
+    futurePaths.forEach(function (item) {
+      var L = item.len;
+      if (!L) return;
+      item.el.setAttribute('stroke-dasharray', L.toFixed(2));
+      item.el.setAttribute('stroke-dashoffset', L.toFixed(2));
+    });
+    applyFillPhase(0);
+    rafId = requestAnimationFrame(tick);
   }
 
   function prepare() {
-    var width = Math.max(250, Math.round(figure.getBoundingClientRect().width));
-    var mobile = width < 500;
-    var height = mobile ? 460 : 420;
-    var left = mobile ? 20 : 40;
-    var right = width - left;
-    var top = 42;
-    var base = height - 70;
-    var font = mobile ? 11 : 12;
-    var padX = mobile ? 10 : 14;
-    var padY = mobile ? 8 : 10;
-    var fLeft = left + padX;
-    var fRight = right - padX;
-    var fTop = top + padY;
-    var fBase = base - padY;
-    var frameW = fRight - fLeft;
-    var frameH = fBase - fTop;
+    var rect = panel.getBoundingClientRect();
+    var w = Math.round(rect.width);
+    var h = Math.round(rect.height);
+    if (w < 8) return;
+    if (h < 8) h = Math.round(w * 420 / 720);
+    if (fieldDots && w === laidOutW && h === laidOutH) return;
 
-    svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+    cancelAnimationFrame(rafId);
+    rafId = 0;
+    running = false;
+    futurePaths = [];
+    supplyFutureEl = null;
+    fillGroup = null;
+    chartLayerG = null;
+    fieldDots = null;
+    plotGeom = null;
+    figure.classList.remove('gap-lenia-active');
+    if (headingEl) headingEl.style.opacity = '';
+    if (svg) svg.style.opacity = '';
+    canvas.style.opacity = '0';
+
+    laidOutW = w;
+    laidOutH = h;
+    var mobile = w < 520;
+    fieldMobileLayout = mobile;
+    var padL = mobile ? 44 : 56;
+    var padR = mobile ? 88 : 100;
+    var padT = mobile ? 48 : 52;
+    var padB = mobile ? 64 : 72;
+
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+
+    var plotL = padL;
+    var plotR = w - padR;
+    var plotT = padT;
+    var plotB = h - padB;
+    var plotW = plotR - plotL;
+    var plotH = plotB - plotT;
+    var map = dataToScreen(plotL, plotT, plotW, plotH);
+
+    function xfYear(yr) {
+      return plotL + ((yr - YEARS[0]) / (YEARS[YEARS.length - 1] - YEARS[0])) * plotW;
+    }
+
+    var dIdx = splitIndicesAtX(DEMAND, SPLIT_X);
+    var fillD = envelopeSlice(DEMAND, SUPPLY, 0, DEMAND.length - 1, map);
+    var poly = buildScreenPoly(map);
+    var centroid = polyCentroid(poly);
+    if (!pointInPolygon(centroid.x, centroid.y, poly)) {
+      centroid = { x: (plotL + plotR) * 0.5, y: (plotT + plotB) * 0.55 };
+    }
+    var capBand = captionBandPx(h, mobile);
+    fieldCaptionBottom = h - capBand;
+    var built = buildFieldDots(w, h, poly, centroid.x, centroid.y, fieldCaptionBottom);
+    fieldDots = built.dots;
+    fieldSpacing = built.spacing;
+    fieldMaxDist = built.maxDist;
+
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    plotGeom = { cssW: w, cssH: h, dpr: dpr };
+
+    inkColor = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#1F2122';
+
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+
     svg.replaceChildren();
 
-    var defs = node('defs');
-    var grad = node('linearGradient', {
-      id: 'gap-shimmer-grad',
-      x1: '0%',
-      y1: '0%',
-      x2: '100%',
-      y2: '0%',
-      gradientUnits: 'objectBoundingBox'
-    });
-    grad.appendChild(node('stop', { offset: '0%', 'stop-color': 'var(--ink-soft)', 'stop-opacity': '0.55' }));
-    grad.appendChild(node('stop', { offset: '45%', 'stop-color': 'var(--ink)', 'stop-opacity': '1' }));
-    grad.appendChild(node('stop', { offset: '100%', 'stop-color': 'var(--ink-soft)', 'stop-opacity': '0.55' }));
-    defs.appendChild(grad);
-    svg.appendChild(defs);
+    chartLayerG = node('g', { class: 'gap-chart-layer' });
 
-    function xMap(x) { return left + (x - 40) / 620 * (right - left); }
-    function yMap(y) { return top + (y - 25) / 345 * (base - top); }
-    function linePath(points) {
-      return points.map(function (p, i) { return (i ? 'L ' : 'M ') + xMap(p[0]) + ' ' + yMap(p[1]); }).join(' ');
-    }
-    function text(parent, x, y, content, size, attrs) {
-      var result = node('text', Object.assign({ x: x, y: y, 'font-size': size }, attrs || {}), content);
-      parent.appendChild(result);
-      return result;
-    }
+    fillGroup = node('g', { class: 'gap-fill-layer' });
+    if (fillD) fillGroup.appendChild(node('path', Object.assign({ class: 'gap-fill-unmet' }, FILL_BASE, { d: fillD })));
+    chartLayerG.appendChild(fillGroup);
 
-    /** Static: grid + axis labels (axis labels fade with motion). */
-    var staticBackdrop = node('g', { class: 'gap-chart-static' });
-    svg.appendChild(staticBackdrop);
-    [0, 0.5, 1].forEach(function (t) {
-      staticBackdrop.appendChild(node('line', {
-        x1: left,
-        x2: right,
-        y1: top + t * (base - top),
-        y2: top + t * (base - top),
-        stroke: 'var(--rule)',
-        'stroke-width': 0.7,
-        opacity: 0.4
+    var gg = node('g', { class: 'gap-grid' });
+    var g;
+    for (g = 0; g <= 4; g++) {
+      var gy = plotT + (g / 4) * plotH;
+      gg.appendChild(node('line', {
+        x1: plotL, x2: plotR, y1: gy, y2: gy,
+        stroke: 'var(--rule)', 'stroke-width': 0.65, opacity: 0.38
       }));
-    });
-    var axisLabels = node('g', { class: 'gap-axis-labels' });
-    staticBackdrop.appendChild(axisLabels);
-    text(axisLabels, right, top - 8, 'Token demand', font, { 'text-anchor': 'end', fill: 'var(--ink-soft)' });
-    text(axisLabels, right, base + 15, 'Cloud supply', font, { 'text-anchor': 'end', fill: 'var(--ink-soft)' });
+    }
+    chartLayerG.appendChild(gg);
 
-    /** Animated curves only. */
-    var curvesGroup = node('g', { class: 'gap-chart-curves' });
-    svg.appendChild(curvesGroup);
-    var wedge = DEMAND.filter(function (p) { return p[0] >= 221; }).concat(SUPPLY.filter(function (p) { return p[0] >= 221; }).slice().reverse());
-    var wedgePtsOpen = wedge.map(function (p) { return { x: xMap(p[0]), y: yMap(p[1]) }; });
-    var wedgeBbox = polygonBounds(wedgePtsOpen);
+    var legLx = plotL + 6;
+    var legY0 = plotT + 10;
+    var legends = [
+      { label: 'Token demand', line: { stroke: 'var(--ink)', 'stroke-width': '1.05', 'stroke-opacity': '0.9' }, y: legY0 },
+      { label: 'Cloud supply', line: Object.assign({ 'stroke-dasharray': SUPPLY_DASH }, STROKE.supply), y: legY0 + 15 }
+    ];
+    var legG = node('g', { class: 'gap-legend-wrap' });
+    var li;
+    for (li = 0; li < legends.length; li++) {
+      var lg = legends[li];
+      legG.appendChild(node('line', Object.assign({
+        x1: legLx, x2: legLx + 18, y1: lg.y, y2: lg.y,
+        'stroke-linecap': 'round', fill: 'none'
+      }, lg.line)));
+      legG.appendChild(node('text', {
+        class: 'gap-legend',
+        x: legLx + 24,
+        y: lg.y + 3.5,
+        'text-anchor': 'start',
+        fill: 'var(--ink-soft)'
+      }, lg.label));
+    }
+    chartLayerG.appendChild(legG);
 
-    var gap = node('path', {
-      d: linePath(wedge) + ' Z',
-      fill: 'var(--ink)',
-      'fill-opacity': 0.1,
-      stroke: 'none',
-      class: 'gap-area'
-    });
-    curvesGroup.appendChild(gap);
-    var demandPath = node('path', { fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.3, opacity: 0.55, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
-    var supplyPath = node('path', { fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.1, opacity: 0.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
-    curvesGroup.appendChild(demandPath);
-    curvesGroup.appendChild(supplyPath);
-    var demandD = linePath(DEMAND);
-    var supplyD = linePath(SUPPLY);
-    var gapD = linePath(wedge) + ' Z';
-    demandPath.setAttribute('d', demandD);
-    supplyPath.setAttribute('d', supplyD);
-    gap.setAttribute('d', gapD);
+    var common = { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' };
 
-    /** Streaks: connect pairs of particles each frame. */
-    var lineLayer = node('g', {
-      class: 'gap-cosmos-lines',
-      fill: 'none',
-      stroke: 'var(--ink)',
-      'stroke-linecap': 'round',
-      'stroke-linejoin': 'round',
-      pointerEvents: 'none'
-    });
-    svg.appendChild(lineLayer);
-
-    var title = node('g', { class: 'gap-source-label' });
-    svg.appendChild(title);
-    text(title, left + 8, top + 54, '100 GW', mobile ? 25 : 29);
-    text(title, left + 8, top + 76, 'of unmet cloud demand', font, { fill: 'var(--ink-soft)' });
-
-    var summary = node('g', { class: 'gap-destination-label' });
-    svg.appendChild(summary);
-    var captionSize = mobile ? 11 : 13;
-    var capY = height - (mobile ? 22 : 26);
-    var capEl = text(summary, width / 2, capY, 'A billion personal computers', captionSize, {
-      'text-anchor': 'middle',
-      class: 'gap-shimmer-label',
-      fill: reduced.matches ? 'var(--ink-soft)' : 'url(#gap-shimmer-grad)'
-    });
-
-    var particleLayer = node('g', { class: 'gap-particles', fill: 'var(--ink)' });
-    svg.appendChild(particleLayer);
-
-    var seed = 17;
-    function random() { seed = seed * 16807 % 2147483647; return (seed - 1) / 2147483646; }
-
-    var nParticles = mobile ? 360 : 500;
-    var outlineFracs = outlineFractions(wedgePtsOpen, nParticles);
-    var gridPoints = [];
-    var cols = mobile ? 14 : 22;
-    var rows = mobile ? 18 : 28;
-    for (var gr = 0; gr < rows; gr++) {
-      for (var gc = 0; gc < cols; gc++) {
-        gridPoints.push({
-          tx: fLeft + (gc + 0.5 + (random() - 0.5) * 0.12) * frameW / cols,
-          ty: fTop + (gr + 0.5 + (random() - 0.5) * 0.12) * frameH / rows
-        });
+    var sIdx = splitIndicesAtX(SUPPLY, SPLIT_X);
+    var supplyPast = sIdx.past.length > 1 ? pathFromIndices(SUPPLY, sIdx.past, map) : '';
+    var supplyFuture = sIdx.future.length > 1 ? pathFromIndices(SUPPLY, sIdx.future, map) : '';
+    if (supplyPast) {
+      chartLayerG.appendChild(node('path', Object.assign({}, common, STROKE.supply, { d: supplyPast, class: 'gap-series gap-series-supply' })));
+    }
+    if (supplyFuture) {
+      var sFut = node('path', Object.assign({}, common, STROKE.supply, { d: supplyFuture, class: 'gap-series gap-series-supply gap-future-line' }));
+      chartLayerG.appendChild(sFut);
+      supplyFutureEl = sFut;
+      try {
+        futurePaths.push({ el: sFut, len: sFut.getTotalLength() });
+      } catch (e) {
+        futurePaths.push({ el: sFut, len: 0 });
       }
     }
 
-    var particles = [];
-    var connectors = [];
-    var nConn = mobile ? 28 : 44;
-
-    for (var pi = 0; pi < nParticles; pi++) {
-      var fromFill = pi >= Math.floor(nParticles * 0.42);
-      var fracI = pi % outlineFracs.length;
-      var orig;
-      var homeFrac = outlineFracs[fracI];
-      var onOutline = true;
-      if (fromFill) {
-        orig = { x: 0, y: 0 };
-        var tries = 0;
-        var ins = false;
-        while (tries < 28 && !ins) {
-          orig.x = wedgeBbox.minX + random() * (wedgeBbox.maxX - wedgeBbox.minX);
-          orig.y = wedgeBbox.minY + random() * (wedgeBbox.maxY - wedgeBbox.minY);
-          ins = pointInPolygon(orig.x, orig.y, wedgePtsOpen);
-          tries++;
-        }
-        if (ins) {
-          onOutline = false;
-        } else {
-          orig = pointOnPolyline(wedgePtsOpen, homeFrac);
-        }
-      } else {
-        orig = pointOnPolyline(wedgePtsOpen, homeFrac);
-      }
-      var gIdx = Math.min(gridPoints.length - 1, Math.floor((pi + 0.5) / nParticles * gridPoints.length));
-      var g = gridPoints[gIdx];
-      var rScale = 0.52 + random() * 1.15;
-      particles.push({
-        outlineFrac: homeFrac,
-        spawnOnOutline: onOutline,
-        seed: random() * 6.28318,
-        bendOut: 10 + random() * 18,
-        r: ((mobile ? 0.95 : 1) + random() * 0.2) * rScale,
-        hx0: orig.x,
-        hy0: orig.y,
-        tx: g.tx,
-        ty: g.ty,
-        sx: orig.x,
-        sy: orig.y
-      });
+    var demandPast = dIdx.past.length > 1 ? pathFromIndices(DEMAND, dIdx.past, map) : '';
+    var demandFuture = dIdx.future.length > 1 ? pathFromIndices(DEMAND, dIdx.future, map) : '';
+    if (demandPast) {
+      chartLayerG.appendChild(node('path', Object.assign({}, common, STROKE.demand, { d: demandPast, class: 'gap-series gap-series-demand' })));
     }
-
-    var orderAlongOutline = [];
-    for (var oi0 = 0; oi0 < particles.length; oi0++) {
-      if (particles[oi0].spawnOnOutline) orderAlongOutline.push(oi0);
-    }
-    orderAlongOutline.sort(function (a, b) {
-      return particles[a].outlineFrac - particles[b].outlineFrac;
-    });
-    var connStride = Math.max(2, Math.floor(orderAlongOutline.length / Math.max(1, nConn + 1)));
-    if (orderAlongOutline.length >= 2) {
-      for (var ci = 0; ci < nConn; ci++) {
-        var oi = Math.min(ci * connStride, orderAlongOutline.length - 2);
-        connectors.push({
-          i: orderAlongOutline[oi],
-          j: orderAlongOutline[oi + 1],
-          node: node('path', { d: 'M0 0', stroke: 'var(--ink)', fill: 'none', 'stroke-width': 0.35 + random() * 0.25, opacity: 0 })
-        });
-        lineLayer.appendChild(connectors[connectors.length - 1].node);
+    if (demandFuture) {
+      var dFut = node('path', Object.assign({}, common, STROKE.demand, { d: demandFuture, class: 'gap-series gap-series-demand gap-future-line' }));
+      chartLayerG.appendChild(dFut);
+      try {
+        futurePaths.push({ el: dFut, len: dFut.getTotalLength() });
+      } catch (e) {
+        futurePaths.push({ el: dFut, len: 0 });
       }
     }
 
-    particles.forEach(function (p) {
-      p.node = node('circle', { r: p.r, cx: p.sx, cy: p.sy, opacity: 0 });
-      particleLayer.appendChild(p.node);
-    });
-    particlesRef = particles;
-
-    function bezier(a, b, c, d, t) {
-      var q = 1 - t;
-      return q * q * q * a + 3 * q * q * t * b + 3 * q * t * t * c + t * t * t * d;
+    var yearsG = node('g', { class: 'gap-x-axis' });
+    var yi;
+    for (yi = 0; yi < YEARS.length; yi++) {
+      yearsG.appendChild(node('text', {
+        class: 'gap-axis-year',
+        x: xfYear(YEARS[yi]),
+        y: h - (mobile ? 22 : 26),
+        'text-anchor': 'middle'
+      }, String(YEARS[yi])));
     }
+    chartLayerG.appendChild(yearsG);
+    svg.appendChild(chartLayerG);
 
-    draw = function (time, still) {
-      var sec = still ? 0 : (time % LOOP);
-      var tSec = still ? 2 : time;
-
-      /** One eased flight out, the same eased flight home. No second clock on the return. */
-      var spread = ramp(sec, leave0, leave1);
-      var collapse = ramp(sec, ret0, ret1);
-      var travel = clamp(spread * (1 - collapse));
-      var tChartOut = ramp(sec, chartOut0, chartOut1);
-      var tChartIn = ramp(sec, chartIn0, chartIn1);
-      var curvesOp = (1 - 0.97 * tChartOut) * (1 - tChartIn) + tChartIn;
-
-      var fieldPhase = ramp(sec, leave0, leave0 + 7.2);
-      var cosmosPulse = ramp(sec, capIn1, capIn1 + 2.6) * (1 - ramp(sec, capIn1 + 4.2, capIn1 + 8.2));
-      var fieldStrength = (0.38 + 0.42 * cosmosPulse) * fieldPhase;
-
-      /** Shimmer: slide only (no rotate — avoids “3d” look on caption). */
-      if (!still && !reduced.matches) {
-        grad.setAttribute('gradientTransform', 'translate(' + (Math.sin(tSec * 1.65) * 0.42).toFixed(3) + ' 0)');
-      }
-
-      staticBackdrop.setAttribute('opacity', '1');
-
-      curvesGroup.setAttribute('opacity', curvesOp.toFixed(4));
-      gap.setAttribute('fill-opacity', (0.1 * curvesOp).toFixed(4));
-
-      function homeOnOutline(frac) {
-        return pointOnPolyline(wedgePtsOpen, frac);
-      }
-
-      /** Labels finish leaving before the flight, and come back only after the flight home. */
-      var textOut = ramp(sec, textOut0, textOut1);
-      var textIn = ramp(sec, textIn0, textIn1);
-      var titleShow = clamp((1 - textOut) * (1 - textIn) + textIn);
-      title.setAttribute('opacity', titleShow.toFixed(3));
-      axisLabels.setAttribute('opacity', titleShow.toFixed(3));
-
-      /** Caption only after the outbound flight has landed, gone again before the return. */
-      var capVisible = ramp(sec, capIn0, capIn1) * (1 - ramp(sec, capOut0, capOut1));
-      summary.setAttribute('opacity', capVisible.toFixed(3));
-      capEl.setAttribute('fill', reduced.matches ? 'var(--ink-soft)' : 'url(#gap-shimmer-grad)');
-
-      var linePresence = fieldStrength * travel;
-      if (reduced.matches) linePresence = 0;
-
-      var outlineBreath = 0.14 * fieldStrength * (1 - travel);
-
-      buckets = {};
-      for (var bi = 0; bi < particles.length; bi++) {
-        var pb = particles[bi];
-        var hp = pb.spawnOnOutline ? homeOnOutline(pb.outlineFrac) : { x: pb.hx0, y: pb.hy0 };
-        var str0 = structuredDisplacement(hp.x, hp.y, pb.seed, tSec, fLeft, fTop, frameW, frameH, mobile, outlineBreath);
-        pb.homeX = hp.x;
-        pb.homeY = hp.y;
-        var pBaseX = hp.x + str0.ox * outlineBreath;
-        var pBaseY = hp.y + str0.oy * outlineBreath;
-        pb.px = pBaseX;
-        pb.py = pBaseY;
-        var bx0 = Math.floor(pBaseX / bucketSize);
-        var by0 = Math.floor(pBaseY / bucketSize);
-        var key0 = bx0 + ',' + by0;
-        if (!buckets[key0]) buckets[key0] = [];
-        buckets[key0].push(bi);
-      }
-
-      var repStrength = travel * fieldPhase * 0.22;
-      for (var rep = 0; rep < particles.length; rep++) {
-        var pr = particles[rep];
-        var rs = repulsionShift(pr, rep, mobile, repStrength);
-        pr.repX = rs.rx;
-        pr.repY = rs.ry;
-      }
-
-      var pxArr = [];
-      var pyArr = [];
-
-      for (var pidx = 0; pidx < particles.length; pidx++) {
-        var p = particles[pidx];
-        var hx = p.homeX;
-        var hy = p.homeY;
-        var strG = structuredDisplacement(hx, hy, p.seed, tSec, fLeft, fTop, frameW, frameH, mobile, outlineBreath);
-        var gapX = hx + strG.ox * outlineBreath + p.repX * (1 - travel * 0.92) * 0.35;
-        var gapY = hy + strG.oy * outlineBreath + p.repY * (1 - travel * 0.92) * 0.35;
-
-        var strF = structuredDisplacement(p.tx, p.ty, p.seed + 1.1, tSec, fLeft, fTop, frameW, frameH, mobile, fieldStrength * 0.72);
-        var fX = p.tx + strF.ox * fieldStrength + p.repX * travel * 0.55;
-        var fY = p.ty + strF.oy * fieldStrength + p.repY * travel * 0.55;
-
-        /**
-         * Outbound keeps the original steer (the flight you already like).
-         * The trip home follows that same cubic the whole way, with a smoothstep
-         * settle into the field offset — no second ease and no clamped handoff,
-         * which is what made the return hitch.
-         */
-        var s = travel;
-        var mxMid = (hx + p.tx) * 0.5;
-        var myMid = (hy + p.ty) * 0.5;
-        var bx = bezier(hx, hx + (mxMid - hx) * 0.45 + p.bendOut * 0.25, p.tx + (mxMid - p.tx) * 0.35, p.tx, s);
-        var by = bezier(hy, hy + (myMid - hy) * 0.5 - 8, p.ty + (myMid - p.ty) * 0.4 - 6, p.ty, s);
-        var kField = clamp((s - 0.12) / 0.55);
-        var legacyX = (1 - s) * gapX + s * ((1 - kField) * bx + kField * fX);
-        var legacyY = (1 - s) * gapY + s * ((1 - kField) * by + kField * fY);
-        var settle = s * s * (3 - 2 * s);
-        var curveX = (1 - s) * gapX + s * bx + (fX - p.tx) * settle;
-        var curveY = (1 - s) * gapY + s * by + (fY - p.ty) * settle;
-        var openX = collapse > 0 ? curveX : legacyX;
-        var openY = collapse > 0 ? curveY : legacyY;
-
-        var px = openX;
-        var py = openY;
-
-        p.node.setAttribute('r', p.r.toFixed(2));
-        p.node.setAttribute('cx', px.toFixed(2));
-        p.node.setAttribute('cy', py.toFixed(2));
-        pxArr[pidx] = px;
-        pyArr[pidx] = py;
-
-        var stagger = (p.seed * 0.4131) % 1;
-        var pIn = ramp(sec, leave0 + stagger * 0.12, leave0 + 1.05 + stagger * 0.35);
-        var emergeVis = Math.max(softBlend(travel, 0, 0.08), softBlend(tChartOut, 0.04, 0.2) * 0.55 * (1 - collapse));
-        var twinkle = 0.88 + 0.12 * Math.sin(tSec * 2.2 + p.seed * 4);
-        var bright = 0.38 + 0.38 * fieldStrength + 0.24 * travel;
-        var dotVis = clamp(pIn * 1.05) * (0.55 + 0.45 * pIn) * emergeVis * twinkle * bright;
-        p.node.setAttribute('opacity', clamp(dotVis).toFixed(3));
-      }
-
-      /** Connector streaks between dot pairs, with midpoint bend from field */
-      for (var ci = 0; ci < connectors.length; ci++) {
-        var c = connectors[ci];
-        var ia = c.i % particles.length;
-        var jb = c.j % particles.length;
-        var ax = pxArr[ia];
-        var ay = pyArr[ia];
-        var bx = pxArr[jb];
-        var by = pyArr[jb];
-        var mx = (ax + bx) * 0.5;
-        var my = (ay + by) * 0.5;
-        var ld = structuredDisplacement(mx, my, ci + tSec * 0.2, tSec, fLeft, fTop, frameW, frameH, mobile, fieldStrength);
-        mx += ld.ox * 0.22 * linePresence;
-        my += ld.oy * 0.22 * linePresence;
-        var dStr = 'M ' + ax.toFixed(2) + ' ' + ay.toFixed(2) + ' Q ' + mx.toFixed(2) + ' ' + my.toFixed(2) + ' ' + bx.toFixed(2) + ' ' + by.toFixed(2);
-        c.node.setAttribute('d', dStr);
-        var cVis = linePresence * (0.45 + 0.55 * Math.sin(tSec * 1.8 + ci));
-        c.node.setAttribute('opacity', clamp(cVis * 0.45).toFixed(3));
-      }
-
-      var phase = 'demand';
-      if (sec >= textOut0 && sec < leave0) phase = 'copy-out';
-      else if (sec >= leave0 && sec < leave1) phase = 'opening';
-      else if (sec >= leave1 && sec < ret0) phase = 'field';
-      else if (sec >= ret0 && sec < ret1) phase = 'returning';
-      else if (sec >= ret1 && sec < textIn1) phase = 'chart-in';
-      svg.setAttribute('data-motion-phase', phase);
-    };
-
-    draw(reduced.matches ? 0 : elapsed, reduced.matches);
-  }
-
-  function frame(now) {
-    if (!visible || document.hidden || reduced.matches) {
-      raf = 0;
-      last = null;
-      return;
-    }
-    if (last !== null) elapsed = (elapsed + Math.min(0.1, (now - last) / 1000)) % LOOP;
-    last = now;
-    draw(elapsed, false);
-    raf = requestAnimationFrame(frame);
-  }
-  function stop() {
-    cancelAnimationFrame(raf);
-    raf = 0;
-    last = null;
-  }
-  function run() {
     if (reduced.matches) {
-      draw(0, true);
-      return;
+      futurePaths.forEach(function (item) {
+        if (item.el === supplyFutureEl) {
+          item.el.setAttribute('stroke-dasharray', SUPPLY_DASH);
+          item.el.removeAttribute('stroke-dashoffset');
+        } else {
+          item.el.removeAttribute('stroke-dasharray');
+          item.el.removeAttribute('stroke-dashoffset');
+        }
+      });
+      applyFillPhase(1);
+    } else if (!animPaused) {
+      startAnim();
+    } else {
+      futurePaths.forEach(function (item) {
+        var L = item.len;
+        if (!L) return;
+        item.el.setAttribute('stroke-dasharray', L.toFixed(2));
+        item.el.setAttribute('stroke-dashoffset', L.toFixed(2));
+      });
+      applyFillPhase(0);
     }
-    if (visible && !document.hidden && !raf) raf = requestAnimationFrame(frame);
   }
-  if (replay) {
-    replay.addEventListener('click', function () {
-      elapsed = 0;
-      last = null;
-      draw(0, reduced.matches);
-      run();
-    });
+
+  function armIfVisible() {
+    var r = figure.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    var on = r.width > 0 && r.bottom > 40 && r.top < vh - 20;
+    animPaused = !on;
+    if (!on || reduced.matches) return;
+    if (!running) startAnim();
+    else if (!rafId) rafId = requestAnimationFrame(tick);
   }
-  new ResizeObserver(prepare).observe(figure);
+
+  var io = new IntersectionObserver(function (ents) {
+    var on = !!(ents[0] && ents[0].isIntersecting);
+    animPaused = !on;
+    if (!on || reduced.matches) return;
+    if (!running) startAnim();
+    else if (!rafId) rafId = requestAnimationFrame(tick);
+  }, { threshold: 0.12, rootMargin: '40px 0px' });
+  io.observe(figure);
+
+  var resizeTimer = 0;
+  new ResizeObserver(function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(prepare, 80);
+  }).observe(panel);
   prepare();
-  new IntersectionObserver(function (entries) {
-    visible = entries[0].isIntersecting;
-    if (visible) run(); else stop();
-  }, { threshold: 0.25 }).observe(svg);
-  document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else run(); });
-  reduced.addEventListener('change', function () { stop(); prepare(); run(); });
+  requestAnimationFrame(armIfVisible);
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    } else if (running && !animPaused && !reduced.matches && !rafId) {
+      rafId = requestAnimationFrame(tick);
+    }
+  });
+  reduced.addEventListener('change', prepare);
 })();

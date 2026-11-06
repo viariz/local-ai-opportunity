@@ -1026,17 +1026,21 @@ figure svg{display:block; width:100%; height:auto;}
 figcaption{margin-top:.95em; font-size:.72em; letter-spacing:.04em; line-height:1.5; color:var(--ink-soft); text-align:left;}
 .figtext, svg text{font-family:var(--sans); font-weight:400;}
 figure.fig-gap-absorb{margin:4rem 0;}
-.gap-motion-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;}
-.gap-motion-heading .fighead{margin:0;}
-.gap-replay{appearance:none;background:none;border:0;padding:0;font:300 .7rem/1.5 var(--sans);color:var(--ink-soft);cursor:pointer;white-space:nowrap;}
-.gap-replay span{display:inline-block;margin-left:.2em;font-size:1.05rem;vertical-align:-.06em;}
-.gap-replay:hover{color:var(--ink);}
-.gap-replay:focus-visible{outline:1px solid var(--ink-soft);outline-offset:5px;}
-.fig-gap-absorb svg{margin-top:1.5rem;overflow:visible;}
-.gap-absorb text{font-family:var(--sans);fill:var(--ink);font-weight:400;}
-.gap-absorb .gap-shimmer-label{font-weight:400;letter-spacing:.04em;fill:var(--ink-soft);}
-@media (prefers-reduced-motion:reduce){.gap-absorb .gap-shimmer-label{letter-spacing:.06em;}}
-@media(max-width:700px){.gap-motion-heading{gap:.75rem;}.gap-motion-heading .figsubtitle{max-width:23em;}.gap-replay{font-size:.65rem;}}
+.fig-gap-absorb .gap-chart-panel{position:relative;margin-top:1.5rem;aspect-ratio:720/420;}
+.fig-gap-absorb .gap-chart-panel > svg{position:absolute;inset:0;display:block;width:100%;height:100%;}
+.fig-gap-absorb canvas.gap-lenia-canvas{display:block;position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;}
+.fig-gap-absorb.gap-lenia-active svg{pointer-events:none;}
+.fig-gap-absorb .gap-chart-heading{transition:opacity .35s ease;}
+.fig-gap-absorb svg{margin-top:0;overflow:visible;}
+.gap-absorb text{font-family:var(--sans); font-weight:400;}
+.gap-chart-heading{margin:0;}
+.fig-gap-absorb .gap-chart-heading{margin:0 0 .85em;}
+.fig-gap-absorb .gap-chart-heading .figtitle{font-family:var(--sans); font-weight:500; font-size:.8125rem; line-height:1.3; color:var(--ink);}
+.fig-gap-absorb .gap-chart-heading .figsubtitle{margin-top:.22em; font-family:var(--sans); font-weight:400; font-size:.65625rem; font-style:italic; line-height:1.35; color:var(--ink-soft);}
+.gap-absorb .gap-chart-title{font-size:.6875rem; letter-spacing:.1em; text-transform:uppercase; font-weight:400; fill:var(--ink-soft);}
+.gap-absorb .gap-axis-year{font-size:.65625rem; letter-spacing:.02em; font-weight:400; font-variant-numeric:tabular-nums; fill:var(--ink-soft);}
+.gap-absorb .gap-legend{font-size:.625rem; letter-spacing:.06em; text-transform:uppercase; font-weight:400;}
+@media(max-width:700px){figure.fig-gap-absorb .figsubtitle{max-width:23em;}}
 
 
 /* ---- worked table ---- */
@@ -1395,8 +1399,8 @@ figcaption{margin-top:.95em; font-size:.72em; letter-spacing:.04em; line-height:
 figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0;}
 
 .workload-anchor{display:block;height:0;}
-.workload-tabs{display:flex;justify-content:center;gap:2.5rem;margin:0 0 2.5rem;}
-.workload-tabs button{appearance:none;border:0;border-bottom:2px solid transparent;background:none;padding:.5rem .8rem .8rem;color:var(--ink-soft);font-family:var(--sans);font-size:.95rem;font-weight:400;line-height:1.4;cursor:pointer;transition:color .15s ease,border-color .15s ease;}
+.workload-tabs{display:flex;justify-content:center;gap:2.5rem;margin:0 0 2.5rem;border-bottom:1px solid var(--rule);flex-wrap:wrap;}
+.workload-tabs button{appearance:none;border:0;border-bottom:2px solid transparent;background:none;margin-bottom:-1px;padding:.55em .8rem .75rem;color:var(--ink-soft);font-family:var(--sans);font-size:.95rem;font-weight:400;line-height:1.4;cursor:pointer;transition:color .15s ease,border-color .15s ease;}
 .workload-tabs button span{display:block;font-size:.68rem;margin-top:.2rem;letter-spacing:.025em;}
 .workload-tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink);}
 .workload-tabs button:hover{color:var(--ink);}
@@ -1414,7 +1418,7 @@ figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0
 .workload-chart .workload-cost-symbol{fill:var(--ink);font-size:15px;font-weight:500;}
 .workload-chart .workload-highlight{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-linecap:round;opacity:0;transition:opacity .18s ease,stroke .18s ease;pointer-events:none;}
 .workload-chart .workload-highlight.is-active{opacity:1;stroke:var(--ink);}
-.workload-chart .workload-dot{fill:var(--paper);stroke:var(--ink);stroke-width:1;transition:opacity .18s ease,fill .18s ease,stroke .18s ease;}
+.workload-chart .workload-dot{fill:var(--paper);stroke:var(--ink);stroke-width:1;pointer-events:none;transition:opacity .18s ease,fill .18s ease,stroke .18s ease;}
 .workload-figure.is-active .workload-event:not(.is-active) .workload-dot{opacity:.4;}
 .workload-chart .workload-event{cursor:pointer;outline:none;}
 .workload-chart .workload-event.is-active .workload-dot{fill:color-mix(in srgb,var(--ink) 14%,var(--paper));stroke:var(--ink);}
@@ -1425,10 +1429,10 @@ figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0
 .workload-figure.is-active .workload-annotation:not(.is-active){opacity:.38;}
 .workload-chart .workload-annotation.is-active text{fill:var(--ink);font-weight:500;}
 .workload-chart .workload-label-leader{stroke:var(--ink-soft);stroke-width:1;opacity:.45;}
-.workload-detail{min-height:4.35em;margin:0 0 0 6%;font-size:.8em;line-height:1.45;opacity:0;transition:opacity .14s ease;}
-.workload-detail strong{font-weight:500;color:var(--ink);}
-.workload-detail span{display:block;color:var(--ink-soft);}
-.workload-figure.is-active .workload-detail{opacity:1;}
+.workload-chart-tooltip{position:fixed;z-index:30;max-width:min(18em,calc(100vw - 24px));padding:.55em .75em;border-radius:8px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:.8125rem;line-height:1.35;box-shadow:0 4px 24px rgba(31,33,34,.12),0 0 0 1px var(--rule);pointer-events:none;opacity:0;visibility:hidden;transition:opacity .12s ease,visibility .12s ease;}
+.workload-chart-tooltip.is-visible{opacity:1;visibility:visible;}
+.workload-chart-tooltip .workload-tip-title{font-weight:500;display:block;}
+.workload-chart-tooltip .workload-tip-sub{display:block;margin-top:.28em;font-size:.9em;font-style:italic;color:color-mix(in srgb,var(--ink-soft) 62%,var(--paper));}
 @media(max-width:700px){
   figure.workload-figure{margin:3rem 0;width:100%;}
   .workload-chart{width:calc(100% + 26px);max-width:none;margin-left:-26px;}
@@ -1437,9 +1441,8 @@ figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0
   .workload-chart .workload-routine-label{font-size:11px;}
   .workload-chart .workload-cost-symbol{font-size:12px;}
   .workload-chart .workload-threshold-label{font-size:10px;}
-  .workload-detail{font-size:.8em;margin-left:0;}
 }
-@media(prefers-reduced-motion:reduce){.workload-chart .workload-dot,.workload-chart .workload-highlight,.workload-chart .workload-cost,.workload-chart .workload-line,.workload-chart .workload-annotation,.workload-detail{transition:none;}}
+@media(prefers-reduced-motion:reduce){.workload-chart .workload-dot,.workload-chart .workload-highlight,.workload-chart .workload-cost,.workload-chart .workload-line,.workload-chart .workload-annotation{transition:none;}}
 .fig-cross .cross-wrap{margin:0 0 1.4em;}
 .fig-cross svg.fig-mobile{display:none;}
 .fig-cross svg.fig-desktop{display:block;}
@@ -3666,11 +3669,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
       <div class="fig-motion" style="margin:2.6em 0"><figure><video src="truffle-hand.mp4" width="1920" height="1080" autoplay loop muted playsinline></video></figure></div>
       <p>It works because it stops fighting the constraint. Spread across a billion homes instead of a few hundred giant buildings, the hundred gigawatts comes to about a hundred watts each, roughly what a bright light bulb draws, carried by a grid that was built decades ago for exactly that kind of load. Nothing at that scale needs a permit, a transmission line, a cooling tower, or a county meeting.</p>
       <figure class="fig-gap-absorb" id="distributed-demand">
-        <div class="gap-motion-heading">
-          <div class="fighead fighead-chart"><div class="figtitle">Where the unmet demand goes</div><div class="figsubtitle">From a cloud bottleneck to a billion personal computers.</div></div>
-          <button class="gap-replay" type="button" aria-label="Replay demand distribution animation">Replay <span aria-hidden="true">↻</span></button>
-        </div>
-        <svg class="gap-absorb" viewBox="0 0 720 420" role="img" aria-label="Animation: unmet cloud demand leaves the chart; thin drifting lines and waves of dots move only inside the figure; a shimmering A billion personal computers caption appears; then they dissolve softly back into the gap in a seamless loop."></svg>
+        <div class="fighead fighead-chart gap-chart-heading"><div class="figtitle">Where the unmet demand goes</div><div class="figsubtitle">From a cloud bottleneck to a billion personal computers.</div></div>
+        <svg class="gap-absorb" viewBox="0 0 720 420" role="img" aria-label="Animated chart: token demand (black) and dashed cloud supply; the fill becomes wandering dots that spread across the frame like a network of computers, then the caption appears at the bottom while the chart and title fade. Years 2026 through 2030."></svg>
       </figure>
       <p>A cloud build needs trillions of dollars raised before the first token is served, and repaid on a guess about future utilization. A personal machine is paid for up front by the person who uses it. Supply arrives with demand instead of years ahead of it, and none of it depends on a rate cycle.</p>
       <p>AI will diffuse through the economy as a GPU per person.</p>
@@ -3738,7 +3738,6 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
     </div>
       <figure class="workload-figure" id="fig-today" data-workload="computing" aria-label="Computer workloads are usually local, with occasional spikes into cloud services.">
         <svg class="workload-chart" viewBox="0 0 704 320" role="group" aria-label="Computer workloads are usually local, with occasional spikes into cloud services."></svg>
-        <div class="workload-detail" role="status" aria-live="polite" aria-atomic="true"></div>
       </figure>
     <div class="prose">
       <p>The chart draws that day as one line. The dashed line across the middle is the on-device threshold. Below it, the work can be done on your own machine. Above it, the work needs a server somewhere else. Most of the day sits below the line. The three spikes are the moments you reached for the cloud, and each one lasted a fraction of a second. Hover over a spike, or tap it, and the chart shades the part above the line and marks it with a dollar sign. That is the part somebody has to pay for, every time it happens. Everything below the line is already paid for.</p>
@@ -3752,7 +3751,6 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
         </div>
         <div id="ai-inference-panel" role="tabpanel" aria-labelledby="ai-cloud-tab">
           <svg class="workload-chart" viewBox="0 0 704 320" role="group" aria-label="Today’s cloud AI serves even routine tasks above the on-device threshold."></svg>
-          <div class="workload-detail" role="status" aria-live="polite" aria-atomic="true"></div>
         </div>
       </figure>
     <div class="prose">

@@ -9,8 +9,9 @@
   var spine = root.querySelector('.arc-tl-spine');
   var spineCursor = root.querySelector('.arc-tl-spine-cursor');
   var buttons = Array.from(root.querySelectorAll('.arc-tl-hit'));
+  var spineHits = Array.from(root.querySelectorAll('.arc-tl-spine-hit'));
   var ticks = Array.from(arc.querySelectorAll('.tick'));
-  var stems = Array.from(root.querySelectorAll('.stem'));
+  var stems = Array.from(arc.querySelectorAll('.stem'));
   var out = root.querySelector('.arc-tl-detail');
   var photo = root.querySelector('.arc-tl-photo');
   var mobile = window.matchMedia('(max-width:760px)');
@@ -50,10 +51,16 @@
     return Math.max(0, Math.min(1, value));
   }
 
-  // This is the same circle used to draw the arc and position every label.
+  // Circle matching the Fig. 10 arc in viewBox 0 0 70 338 (curved horizontal segments only).
+  var arcCx = -548.6789959016393;
+  var arcCy = -168.62499999999997;
+  var arcR = 629.9350902358387;
+  var arcA0 = Math.atan2(10.6 - arcCy, 63 - arcCx);
+  var arcA1 = Math.atan2(326.6 - arcCy, 63 - arcCx);
+
   function point(progress) {
-    var radians = (-20 + 40 * progress) * Math.PI / 180;
-    return [620 - 420 * Math.cos(radians), 180 + 420 * Math.sin(radians)];
+    var radians = arcA0 + (arcA1 - arcA0) * progress;
+    return [arcCx + arcR * Math.cos(radians), arcCy + arcR * Math.sin(radians)];
   }
 
   function paint() {
@@ -158,9 +165,11 @@
 
   function fromArc(event) {
     var bounds = arc.getBoundingClientRect();
-    var y = (event.clientY - bounds.top) / bounds.height * 360;
-    var radians = Math.asin(Math.max(-1, Math.min(1, (y - 180) / 420)));
-    return (radians * 180 / Math.PI + 20) / 40;
+    var x = (event.clientX - bounds.left) / bounds.width * 70;
+    var y = (event.clientY - bounds.top) / bounds.height * 338;
+    var angle = Math.atan2(y - arcCy, x - arcCx);
+    var progress = (angle - arcA0) / (arcA1 - arcA0);
+    return clamp(progress);
   }
 
   function fromSpine(event) {
@@ -229,6 +238,9 @@
     button.addEventListener('click', function () {selectState(i);});
     button.addEventListener('focus', function () {selectState(i);});
     button.addEventListener('keydown', keyboard);
+  });
+  spineHits.forEach(function (btn, i) {
+    btn.addEventListener('click', function () {selectState(i);});
   });
   arc.addEventListener('keydown', keyboard);
   spine.addEventListener('keydown', keyboard);

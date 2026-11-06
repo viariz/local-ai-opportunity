@@ -26,9 +26,40 @@
     return node;
   }
 
+  var tipHost = document.createElement('div');
+  tipHost.className = 'workload-chart-tooltip';
+  tipHost.setAttribute('aria-hidden', 'true');
+  var tipTitle = document.createElement('span');
+  tipTitle.className = 'workload-tip-title';
+  var tipSub = document.createElement('span');
+  tipSub.className = 'workload-tip-sub';
+  tipHost.appendChild(tipTitle);
+  tipHost.appendChild(tipSub);
+  document.body.appendChild(tipHost);
+
+  function positionTipGlobal(clientX, clientY) {
+    tipHost.style.left = '0';
+    tipHost.style.top = '0';
+    var pad = 10;
+    var tw = tipHost.offsetWidth;
+    var th = tipHost.offsetHeight;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var x = clientX + pad;
+    var y = clientY + pad;
+    if (x + tw > vw - 8) x = Math.max(8, clientX - tw - pad);
+    if (y + th > vh - 8) y = Math.max(8, clientY - th - pad);
+    tipHost.style.left = x + 'px';
+    tipHost.style.top = y + 'px';
+  }
+
+  function hideTipGlobal() {
+    tipHost.classList.remove('is-visible');
+    tipHost.setAttribute('aria-hidden', 'true');
+  }
+
   document.querySelectorAll('[data-workload]').forEach(function (figure) {
     var svg = figure.querySelector('svg');
-    var detail = figure.querySelector('.workload-detail');
     var kind = figure.dataset.workload;
     var events = kind === 'computing' ? computing : ai;
     var comparison = kind === 'ai-comparison';
@@ -48,8 +79,29 @@
     var lastPointerType = 'pointer';
     var holdUntil = 0;
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    var annotationAnimation = null;
     var DWELL = 3600;
+
+    function tipLines(event) {
+      if (comparison) {
+        var desc = description(event);
+        return { title: event.title, sub: desc.where };
+      }
+      return {
+        title: event.title,
+        sub: event.cloud
+          ? (kind === 'computing' ? 'Needs a cloud service.' : 'Needs a frontier model for deeper reasoning.')
+          : 'Can run locally.'
+      };
+    }
+
+    function showTip(clientX, clientY, event) {
+      var lines = tipLines(event);
+      tipTitle.textContent = lines.title;
+      tipSub.textContent = lines.sub;
+      tipHost.classList.add('is-visible');
+      tipHost.setAttribute('aria-hidden', 'false');
+      positionTipGlobal(clientX, clientY);
+    }
 
     function stopCycle() {
       clearTimeout(cycleTimer);
@@ -76,30 +128,13 @@
     }
 
     function select(index, automatic) {
-      var changed = active !== index;
       active = index;
-      // Automatic narration remains visual; direct keyboard interaction is announced.
-      detail.setAttribute('aria-live', automatic ? 'off' : 'polite');
       var hasUserFocus =
         keyboardFocus || (hovering && lastPointerType !== 'touch');
       figure.classList.toggle('is-active', hasUserFocus);
       groups.forEach(function (group, i) { group.classList.toggle('is-active', i === index); });
       highlights.forEach(function (line, i) { line.classList.toggle('is-active', i === index); });
       annotations.forEach(function (annotation, i) { annotation.classList.toggle('is-active', i === index); });
-      var title = document.createElement('strong');
-      title.textContent = events[index].title;
-      var explanation = document.createElement('span');
-      explanation.textContent = events[index].cloud
-        ? (kind === 'computing' ? 'Needs a cloud service.' : 'Needs a frontier model for deeper reasoning.')
-        : 'Can run locally.';
-      detail.replaceChildren(title, explanation);
-      if (changed && !reducedMotion.matches) {
-        if (annotationAnimation) annotationAnimation.cancel();
-        annotationAnimation = detail.animate([
-          { opacity: 0, transform: 'translateY(3px)' },
-          { opacity: 1, transform: 'translateY(0)' }
-        ], { duration: 220, easing: 'ease-out' });
-      }
       updateCost();
     }
 
@@ -115,8 +150,9 @@
         ? 'AI today: every task runs in the cloud, including routine work.'
         : 'Optimized AI: routine work runs locally; difficult tasks call the cloud.');
       if (groups) groups.forEach(function (group, index) {
-        var info = description(events[index]);
-        group.setAttribute('aria-label', events[index].title + '. ' + info.where + '. ' + info.copy);
+        var ev = events[index];
+        var info = description(ev);
+        group.setAttribute('aria-label', ev.title + '. ' + info.where + '. ' + info.copy);
       });
       if (active >= 0) select(active);
     }
@@ -294,25 +330,37 @@
           routineIndex++;
         }
         var info = description(event);
-        var group = el('g', { class: 'workload-event', tabindex: '0', role: 'button', 'aria-label': event.title + '. ' + info.where + '. ' + info.copy });
+        var group = el('g', {
+          class: 'workload-event',
+          tabindex: '0',
+          role: 'button',
+          'aria-label': event.title + '. ' + info.where + '. ' + info.copy
+        });
         var hitTop = mobile && (allCloud || comparison) ? 12 : 38;
-        group.appendChild(el('rect', { x: left + start * plotWidth, y: hitTop, width: (end - start) * plotWidth, height: bottom - hitTop + (mobile ? 38 : 0), fill: 'transparent' }));
+        var hitRect = el('rect', { x: left + start * plotWidth, y: hitTop, width: (end - start) * plotWidth, height: bottom - hitTop + (mobile ? 38 : 0), fill: 'transparent' });
+        group.appendChild(hitRect);
         binding.dot = el('circle', { cx: point.x, cy: point.y, r: 3.2, class: 'workload-dot' });
         group.appendChild(binding.dot);
-        group.addEventListener('pointerenter', function (e) {
-          if (e.pointerType !== 'touch') {
-            lastPointerType = e.pointerType;
-            hovering = true;
-            stopCycle();
-            select(index);
-          }
-        });
-        group.addEventListener('pointerleave', function (e) {
+        function onHitPointerEnter(e) {
+          if (e.pointerType === 'touch') return;
+          lastPointerType = e.pointerType;
+          hovering = true;
+          stopCycle();
+          select(index);
+          showTip(e.clientX, e.clientY, event);
+        }
+        function onHitPointerMove(e) {
+          if (e.pointerType === 'touch') return;
+          if (!tipHost.classList.contains('is-visible')) return;
+          positionTipGlobal(e.clientX, e.clientY);
+        }
+        function onHitPointerLeave(e) {
           if (e.pointerType === 'touch') return;
           if (keyboardFocus) return;
           var rel = e.relatedTarget;
           if (rel && svg.contains(rel)) return;
           hovering = false;
+          hideTipGlobal();
           figure.classList.remove('is-active');
           if (active >= 0) {
             groups[active].classList.remove('is-active');
@@ -320,16 +368,38 @@
             annotations[active].classList.remove('is-active');
           }
           scheduleCycle(1000);
-        });
+        }
+        hitRect.addEventListener('pointerenter', onHitPointerEnter);
+        hitRect.addEventListener('pointermove', onHitPointerMove);
+        hitRect.addEventListener('pointerleave', onHitPointerLeave);
         group.addEventListener('click', function () {
           select(index);
-          if (inputType === 'touch') holdUntil = Date.now() + 5000;
+          if (inputType === 'touch') {
+            holdUntil = Date.now() + 5000;
+            var lines = tipLines(event);
+            tipTitle.textContent = lines.title;
+            tipSub.textContent = lines.sub;
+            tipHost.classList.add('is-visible');
+            tipHost.setAttribute('aria-hidden', 'false');
+            var box = binding.dot.getBoundingClientRect();
+            positionTipGlobal(box.left + box.width / 2, box.top + box.height / 2);
+          }
           scheduleCycle();
         });
         group.addEventListener('focus', function () {
           keyboardFocus = inputType === 'keyboard';
           if (keyboardFocus) stopCycle();
           select(index);
+          var lines = tipLines(event);
+          tipTitle.textContent = lines.title;
+          tipSub.textContent = lines.sub;
+          tipHost.classList.add('is-visible');
+          tipHost.setAttribute('aria-hidden', 'false');
+          var box = binding.dot.getBoundingClientRect();
+          positionTipGlobal(box.left + box.width / 2, box.top);
+        });
+        group.addEventListener('blur', function () {
+          if (!keyboardFocus) hideTipGlobal();
         });
         group.addEventListener('keydown', function (e) {
           inputType = 'keyboard';
@@ -340,7 +410,7 @@
             e.preventDefault();
             groups[(index + (e.key === 'ArrowRight' ? 1 : events.length - 1)) % events.length].focus();
           }
-          if (e.key === 'Escape') { keyboardFocus = false; group.blur(); scheduleCycle(1000); }
+          if (e.key === 'Escape') { keyboardFocus = false; hideTipGlobal(); group.blur(); scheduleCycle(1000); }
         });
         svg.appendChild(group);
         groups.push(group);
@@ -409,6 +479,7 @@
       var rel = e.relatedTarget;
       if (rel && figure.contains(rel)) return;
       hovering = false;
+      hideTipGlobal();
       figure.classList.remove('is-active');
       if (active >= 0) {
         groups[active].classList.remove('is-active');
@@ -423,11 +494,20 @@
       if (inputType === 'touch') { holdUntil = Date.now() + 5000; scheduleCycle(); }
     });
     svg.addEventListener('focusout', function (e) {
-      if (!svg.contains(e.relatedTarget)) { keyboardFocus = false; scheduleCycle(1000); }
+      if (!svg.contains(e.relatedTarget)) {
+        keyboardFocus = false;
+        hideTipGlobal();
+        scheduleCycle(1000);
+      }
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Tab') inputType = 'keyboard'; }, true);
     document.addEventListener('pointerdown', function (e) {
-      if (!figure.contains(e.target)) { keyboardFocus = false; holdUntil = 0; scheduleCycle(1000); }
+      if (!figure.contains(e.target)) {
+        keyboardFocus = false;
+        holdUntil = 0;
+        hideTipGlobal();
+        scheduleCycle(1000);
+      }
     });
     var lastWidth = 0;
     new ResizeObserver(function (entries) {

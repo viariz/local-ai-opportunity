@@ -344,8 +344,8 @@ figcaption{margin-top:.95em; font-size:.72em; letter-spacing:.04em; line-height:
 figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0;}
 
 .workload-anchor{display:block;height:0;}
-.workload-tabs{display:flex;justify-content:center;gap:2.5rem;margin:0 0 2.5rem;}
-.workload-tabs button{appearance:none;border:0;border-bottom:2px solid transparent;background:none;padding:.5rem .8rem .8rem;color:var(--ink-soft);font-family:var(--sans);font-size:.95rem;font-weight:400;line-height:1.4;cursor:pointer;transition:color .15s ease,border-color .15s ease;}
+.workload-tabs{display:flex;justify-content:center;gap:2.5rem;margin:0 0 2.5rem;border-bottom:1px solid var(--rule);flex-wrap:wrap;}
+.workload-tabs button{appearance:none;border:0;border-bottom:2px solid transparent;background:none;margin-bottom:-1px;padding:.55em .8rem .75rem;color:var(--ink-soft);font-family:var(--sans);font-size:.95rem;font-weight:400;line-height:1.4;cursor:pointer;transition:color .15s ease,border-color .15s ease;}
 .workload-tabs button span{display:block;font-size:.68rem;margin-top:.2rem;letter-spacing:.025em;}
 .workload-tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink);}
 .workload-tabs button:hover{color:var(--ink);}
@@ -363,7 +363,7 @@ figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0
 .workload-chart .workload-cost-symbol{fill:var(--ink);font-size:15px;font-weight:500;}
 .workload-chart .workload-highlight{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-linecap:round;opacity:0;transition:opacity .18s ease,stroke .18s ease;pointer-events:none;}
 .workload-chart .workload-highlight.is-active{opacity:1;stroke:var(--ink);}
-.workload-chart .workload-dot{fill:var(--paper);stroke:var(--ink);stroke-width:1;transition:opacity .18s ease,fill .18s ease,stroke .18s ease;}
+.workload-chart .workload-dot{fill:var(--paper);stroke:var(--ink);stroke-width:1;pointer-events:none;transition:opacity .18s ease,fill .18s ease,stroke .18s ease;}
 .workload-figure.is-active .workload-event:not(.is-active) .workload-dot{opacity:.4;}
 .workload-chart .workload-event{cursor:pointer;outline:none;}
 .workload-chart .workload-event.is-active .workload-dot{fill:color-mix(in srgb,var(--ink) 14%,var(--paper));stroke:var(--ink);}
@@ -374,10 +374,10 @@ figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0
 .workload-figure.is-active .workload-annotation:not(.is-active){opacity:.38;}
 .workload-chart .workload-annotation.is-active text{fill:var(--ink);font-weight:500;}
 .workload-chart .workload-label-leader{stroke:var(--ink-soft);stroke-width:1;opacity:.45;}
-.workload-detail{min-height:4.35em;margin:0 0 0 6%;font-size:.8em;line-height:1.45;opacity:0;transition:opacity .14s ease;}
-.workload-detail strong{font-weight:500;color:var(--ink);}
-.workload-detail span{display:block;color:var(--ink-soft);}
-.workload-figure.is-active .workload-detail{opacity:1;}
+.workload-chart-tooltip{position:fixed;z-index:30;max-width:min(18em,calc(100vw - 24px));padding:.55em .75em;border-radius:8px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:.8125rem;line-height:1.35;box-shadow:0 4px 24px rgba(31,33,34,.12),0 0 0 1px var(--rule);pointer-events:none;opacity:0;visibility:hidden;transition:opacity .12s ease,visibility .12s ease;}
+.workload-chart-tooltip.is-visible{opacity:1;visibility:visible;}
+.workload-chart-tooltip .workload-tip-title{font-weight:500;display:block;}
+.workload-chart-tooltip .workload-tip-sub{display:block;margin-top:.28em;font-size:.9em;font-style:italic;color:color-mix(in srgb,var(--ink-soft) 62%,var(--paper));}
 @media(max-width:700px){
   figure.workload-figure{margin:3rem 0;width:100%;}
   .workload-chart{width:calc(100% + 26px);max-width:none;margin-left:-26px;}
@@ -386,9 +386,8 @@ figure.workload-figure{position:relative;margin:clamp(4rem,8vw,6rem) 0;padding:0
   .workload-chart .workload-routine-label{font-size:11px;}
   .workload-chart .workload-cost-symbol{font-size:12px;}
   .workload-chart .workload-threshold-label{font-size:10px;}
-  .workload-detail{font-size:.8em;margin-left:0;}
 }
-@media(prefers-reduced-motion:reduce){.workload-chart .workload-dot,.workload-chart .workload-highlight,.workload-chart .workload-cost,.workload-chart .workload-line,.workload-chart .workload-annotation,.workload-detail{transition:none;}}
+@media(prefers-reduced-motion:reduce){.workload-chart .workload-dot,.workload-chart .workload-highlight,.workload-chart .workload-cost,.workload-chart .workload-line,.workload-chart .workload-annotation{transition:none;}}
 .fig-cross .cross-wrap{margin:0 0 1.4em;}
 .fig-cross svg.fig-mobile{display:none;}
 .fig-cross svg.fig-desktop{display:block;}
@@ -580,7 +579,6 @@ table.worked td:first-child{padding-right:1.4em;}
     </div>
       <figure class="workload-figure" id="fig-today" data-workload="computing" aria-label="Computer workloads are usually local, with occasional spikes into cloud services.">
         <svg class="workload-chart" viewBox="0 0 704 320" role="group" aria-label="Computer workloads are usually local, with occasional spikes into cloud services."></svg>
-        <div class="workload-detail" role="status" aria-live="polite" aria-atomic="true"></div>
       </figure>
     <div class="prose">
       <p>The chart draws that day as one line. The dashed line across the middle is the on-device threshold. Below it, the work can be done on your own machine. Above it, the work needs a server somewhere else. Most of the day sits below the line. The three spikes are the moments you reached for the cloud, and each one lasted a fraction of a second. Hover over a spike, or tap it, and the chart shades the part above the line and marks it with a dollar sign. That is the part somebody has to pay for, every time it happens. Everything below the line is already paid for.</p>
@@ -594,7 +592,6 @@ table.worked td:first-child{padding-right:1.4em;}
         </div>
         <div id="ai-inference-panel" role="tabpanel" aria-labelledby="ai-cloud-tab">
           <svg class="workload-chart" viewBox="0 0 704 320" role="group" aria-label="Today’s cloud AI serves even routine tasks above the on-device threshold."></svg>
-          <div class="workload-detail" role="status" aria-live="polite" aria-atomic="true"></div>
         </div>
       </figure>
     <div class="prose">
