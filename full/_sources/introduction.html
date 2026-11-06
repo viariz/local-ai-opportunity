@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Local AI Opportunity</title>
+<meta name="description" content="Why AI will diffuse through society as a GPU per person.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#f4f4f4">
+<meta name="application-name" content="The Local AI Opportunity">
+<meta name="author" content="@iamgingertrash">
+<meta name="apple-mobile-web-app-title" content="Local AI">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="The Local AI Opportunity">
+<meta property="og:title" content="The Local AI Opportunity">
+<meta property="og:description" content="Why AI will diffuse through society as a GPU per person.">
+<meta property="og:url" content="https://thesis.deepshard.org/introduction">
+<link rel="canonical" href="https://thesis.deepshard.org/introduction">
+<meta property="og:image" content="https://thesis.deepshard.org/og/introduction.png?v=0ced27db1d8f">
+<meta property="og:image:secure_url" content="https://thesis.deepshard.org/og/introduction.png?v=0ced27db1d8f">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Local AI Opportunity. Why AI will diffuse through society as a GPU per person. Rising token demand leaves a shaded gap above constrained cloud supply: unmet demand, served locally.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@iamgingertrash">
+<meta name="twitter:title" content="The Local AI Opportunity">
+<meta name="twitter:description" content="Why AI will diffuse through society as a GPU per person.">
+<meta name="twitter:image" content="https://thesis.deepshard.org/og/introduction.png?v=0ced27db1d8f">
+<meta name="twitter:image:alt" content="The Local AI Opportunity. Why AI will diffuse through society as a GPU per person. Rising token demand leaves a shaded gap above constrained cloud supply: unmet demand, served locally.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+@font-face{
+  font-family:"Neue Haas Unica Pro";
+  src:url("fonts/NeueHaasUnicaPro-Light.ttf") format("truetype");
+  font-weight:300;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:"Neue Haas Unica Pro";
+  src:url("fonts/NeueHaasUnicaPro-Regular.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+/* Layout: a single long reading page — centered 38em measure, fixed left timeline rail that fills as you scroll. */
+:root{
+  --paper:#F4F4F4;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#e34948;
+  --ink:#1F2122;
+  --ink-soft:#5c6164;
+  --rule:rgba(31,33,34,.28);
+  --wash:rgba(31,33,34,.06);
+  --sans:"Neue Haas Unica Pro","Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+
+html{background:var(--paper); scrollbar-gutter:stable both-edges;}
+
+/* Leave breathing room when following contents or section links. */
+html{scroll-padding-top:clamp(40px,5vh,64px);}
+@media(max-width:999px){
+  html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px);}
+}
+
+body{
+  margin:0;
+  background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-weight:300; font-synthesis:weight; font-size:16px; line-height:1.7;
+  padding-left:max(40px, env(safe-area-inset-left, 0px));
+  padding-right:max(40px, env(safe-area-inset-right, 0px));
+  padding-block:0;
+  -webkit-font-smoothing:antialiased;
+}
+.book{max-width:44em; margin:0 auto;}
+.legacy-anchor{display:block; height:0;}
+p{margin:0 0 1em; text-align:left;}
+a{color:inherit; text-decoration:none;}
+.prose a{text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px; text-decoration-color:var(--ink-soft);}
+.sc{text-transform:uppercase; letter-spacing:.14em; font-size:.82em; font-weight:300;}
+em{font-style:italic;}
+strong, b{font-weight:400;}
+sup.fn{font-size:.6em; line-height:0; vertical-align:super;}
+sup.fn a{text-decoration:none; color:var(--ink-soft); font-weight:300;}
+
+/* ---- left rail ---- */
+#rail{
+  position:fixed; left:max(22px, env(safe-area-inset-left, 0px)); top:50%;
+  transform:translateY(-50%); z-index:8;
+  width:44px; padding:12px 0;
+  opacity:0; pointer-events:none; transition:opacity .15s ease;
+}
+#rail.show{opacity:1; pointer-events:auto;}
+#rail ol{list-style:none; margin:0; padding:0; position:relative;}
+#rail li{
+  position:relative; height:13px; margin:0; padding:0;
+  font-size:12px; line-height:1.4; font-weight:300; white-space:nowrap;
+  color:var(--ink-soft);
+}
+#rail .rail-track{position:absolute;left:0;overflow:visible;pointer-events:none;}
+#rail .rail-track path{fill:none;vector-effect:non-scaling-stroke;}
+#rail .dot{display:none;}
+#rail li a, #rail li > .rail-label{
+  display:block; width:44px; height:13px; color:inherit; text-decoration:none;
+}
+#rail .rail-title{
+  position:absolute; left:52px; top:50%; padding:8px 12px;
+  background:rgba(255,255,255,.5); border:1px solid rgba(31,33,34,.08); border-radius:999px;
+  box-shadow:0 4px 20px rgba(31,33,34,.08), 0 1px 3px rgba(31,33,34,.04);
+  color:#1F2122; font-size:12px; line-height:1.35; font-weight:300;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transform:translate(4px,-50%) scale(.98); transform-origin:left center;
+  transition:opacity .12s ease, transform .18s cubic-bezier(.2,.8,.2,1), visibility 0s linear .18s;
+}
+#rail li.preview .rail-title, #rail:not(.is-previewing) li:hover .rail-title, #rail li:has(a:focus-visible) .rail-title{
+  opacity:1; visibility:visible; pointer-events:auto;
+  transform:translate(0,-50%) scale(1);
+  transition:opacity .12s ease, transform .18s cubic-bezier(.2,.8,.2,1), visibility 0s;
+}
+#rail:has(a:focus-visible) li.preview:not(:has(a:focus-visible)) .rail-title{
+  opacity:0; visibility:hidden; pointer-events:none;
+}
+#rail li.here .rail-title{font-weight:400;}
+#rail li.soon .rail-title{color:var(--ink-soft);}
+#rail li a::before{content:"";position:absolute;left:-8px;top:0;width:calc(100% + 8px);height:100%;}
+#rail li a:focus-visible{outline:none;}
+@media (prefers-reduced-motion: reduce){
+  #rail, #rail li::before, #rail .rail-tick, #rail .rail-title{transition:none!important;}
+}
+@media (max-width:999px){ #rail{display:none;} }
+
+/* ---- top bar (narrow screens) ---- */
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); z-index:10; background:var(--paper);}
+#topbar{
+  position:fixed; top:env(safe-area-inset-top, 0px); left:0; right:0; z-index:9;
+  background:var(--paper);
+  border-bottom:1px solid var(--rule);
+  font-size:14px;
+  padding-left:max(40px, env(safe-area-inset-left, 0px));
+  padding-right:max(40px, env(safe-area-inset-right, 0px));
+  opacity:0; pointer-events:none; transition:opacity .25s ease;
+}
+@media (prefers-reduced-motion: reduce){ #topbar{transition:none;} }
+#topbar.show{opacity:1; pointer-events:auto;}
+@media (min-width:1000px){ #topbar{display:none;} }
+#topbar .inner{max-width:44em; margin:0 auto; display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding-block:9px;}
+#topbar .where{color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; text-transform:uppercase; letter-spacing:.12em;}
+#topbar .toc-link{text-transform:uppercase; letter-spacing:.1em; font-size:11px; font-weight:300; color:var(--ink-soft); white-space:nowrap;}
+
+/* ---- interactive hovers ---- */
+@media (hover:hover){
+  #topbar .toc-link{transition:color .2s ease;}
+  #topbar .toc-link:hover{color:var(--ink);}
+  .titlepage .eyebrow a{transition:color .2s ease;}
+  .titlepage .eyebrow a:hover{color:var(--ink);}
+  .readline a{transition:color .2s ease, border-color .2s ease;}
+  .readline a:hover{color:var(--ink); border-bottom-color:var(--ink);}
+  .captabs button{transition:color .2s ease, border-color .2s ease;}
+  .captabs button:hover:not(.active){color:var(--ink);}
+  .prose a{transition:text-decoration-color .2s ease, color .2s ease;}
+  .prose a:hover{text-decoration-color:var(--ink); color:var(--ink);}
+}
+@media (prefers-reduced-motion: reduce){
+  #topbar .toc-link, .titlepage .eyebrow a, .readline a, .captabs button, .prose a{transition:none;}
+}
+
+/* ---- title page ---- */
+.titlepage{box-sizing:border-box; min-height:100vh; min-height:100svh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding-block:8vh;}
+.titlepage .eyebrow{text-transform:uppercase; letter-spacing:.26em; font-size:13px; font-weight:300; color:var(--ink-soft); margin:0 0 1.35em;}
+.titlepage .eyebrow a{text-decoration:none; color:inherit;}
+.titlepage .eyebrow + h1{margin-top:0;}
+.titlepage h1{font-weight:300; font-size:clamp(1.55em,3.6vw,2.05em); line-height:1.22; letter-spacing:.16em; text-transform:uppercase; margin:.15em 0 0; white-space:nowrap; text-wrap:nowrap;}
+.titlepage h1.titlepage-h1-multiline{white-space:normal; text-wrap:balance;}
+.thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
+.thesis em{font-style:normal; font-weight:300; color:var(--ink);}
+.byline{margin-top:3.4em; line-height:1.45;}
+.byline .names{font-weight:300; letter-spacing:.01em;}
+.author-link{display:inline-flex;align-items:center;gap:.55em;color:var(--ink-soft);transition:color .15s ease;}
+.author-link:hover,.author-link:focus-visible{color:var(--ink);}
+.author-link:focus-visible{outline:1px solid currentColor;outline-offset:5px;}
+.titlepage .dateline{margin:0 0 1.35em; font-size:.9em; color:var(--ink-soft);}
+.dateline{margin-top:1.6em; font-size:.9em; color:var(--ink-soft);}
+.readline{margin-top:4.2em;}
+.readline a{text-transform:uppercase; letter-spacing:.22em; font-size:12px; font-weight:300; border-bottom:1px solid var(--rule); padding-bottom:3px;}
+
+/* ---- chapters ---- */
+.part{margin-top:7em;}
+.part header{text-align:center; margin-bottom:2.6em;}
+.part header .kicker{text-transform:uppercase; letter-spacing:.24em; font-size:12px; font-weight:300; color:var(--ink-soft);}
+.part header h2{font-weight:300; font-size:.82em; letter-spacing:.18em; text-transform:uppercase; line-height:1.35; margin:0; text-align:center; text-wrap:balance;}
+.sect{margin-top:3.2em;}
+.sect h4{font-weight:400; font-size:1.02em; letter-spacing:.03em; line-height:1.35; margin:0 0 1em; text-align:left; padding-top:1.5em; border-top:1px solid var(--rule);}
+.sect > h4:first-child{margin-top:.4em;}
+.part .sect:not(:first-of-type) > h4{margin-top:3.8em;}
+.sect .prose > p.callline:first-child{font-weight:400; font-size:1.02em; letter-spacing:.03em; line-height:1.35; margin:0 0 1em; padding-top:1.5em; border-top:1px solid var(--rule);}
+.part .sect:not(:first-of-type) .prose > p.callline:first-child{margin-top:3.8em;}
+.sect.sect-display{margin:0;}
+.sect.sect-display.sect-display-break{margin:22vh 0;}
+.sect.sect-display + .sect{margin-top:0;}
+.cutouts + .prose{margin-top:2.2em;}
+.sect h4.display-title + .cutouts{margin-top:1.15em;}
+figure.fig-chart{margin:3.2em 0 2.8em;}
+figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
+.part.part-lede{margin-top:3.2em;}
+.part.part-lede > blockquote.bigquote:first-child{margin:0 0 10vh;}
+.part.part-lede .sect.sect-display{margin-top:14vh;}
+.sect.sect-display h4,.sect h4.display-title{font-weight:300; font-size:1.54em; letter-spacing:.015em; line-height:1.35; margin:1.15em 0; text-align:center; padding-top:0; border-top:none;}
+.sect h4.display-title{margin-bottom:2.4em;}
+.asterism{text-align:center; letter-spacing:1.1em; padding-left:1.1em; margin:2.6em 0; color:var(--ink-soft);}
+.prose > p:last-child{margin-bottom:0;}
+
+/* ---- scrollytelling intro ---- */
+.scrolly{display:grid; grid-template-columns:1fr 1.25fr; gap:2.5em; margin:2.5em 0 3em; align-items:start;}
+.scrolly-steps{display:flex; flex-direction:column; min-width:0;}
+.step-content{display:flex; flex-direction:column;}
+.step{min-height:80vh; display:flex; flex-direction:column; justify-content:center; opacity:.3; transition:opacity .35s ease;}
+.step .when{text-transform:uppercase; letter-spacing:.16em; font-size:11px; font-weight:300; color:var(--ink-soft); margin-bottom:.6em;}
+.step p{margin:0;}
+.step p + p{margin-top:.85em;}
+.chat{margin:2.5em 0 3em; display:flex; flex-direction:column; gap:1.05em; font-size:.84em; line-height:1.45; --chat-stroke:color-mix(in srgb, var(--ink) 40%, transparent); --chat-fill:color-mix(in srgb, var(--ink) 4%, transparent); --chat-r:20px; --chat-pad-x:14px;}
+.chat .msg{min-width:0; display:flex;}
+.chat .msg.user{justify-content:flex-end; padding-left:1.25em;}
+.chat .msg.bot{justify-content:flex-start; padding-right:1.25em;}
+.chat .bubble-shell{display:inline-block; position:relative; max-width:min(100%, 32em); vertical-align:top;}
+.chat .bubble{display:block; position:relative; min-width:0; padding:9px var(--chat-pad-x); box-sizing:border-box;}
+.chat .bot .bubble{border:none; background:var(--chat-fill); border-radius:var(--chat-r) var(--chat-r) var(--chat-r) 4px;}
+.chat .user .bubble-shell{padding-right:8px;}
+.chat .user .bubble{position:relative; z-index:1; border:0.7px solid var(--chat-stroke); background:var(--paper); border-radius:var(--chat-r); border-bottom-right-radius:4px;}
+.chat .user .user-bubble-tail{position:absolute; z-index:0; right:1px; bottom:0; width:12px; height:14px; pointer-events:none; overflow:visible;}
+.chat .user .user-bubble-tail path{fill:var(--paper); stroke:none;}
+.chat .bot{min-width:0; font-weight:400;}
+.chat .trunc{display:inline-block; margin-left:.35em; padding:.12em .45em; border-radius:4px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.72em; font-style:normal; font-weight:400; letter-spacing:.05em; text-transform:lowercase; color:var(--ink-soft); background:color-mix(in srgb, var(--ink) 6%, transparent); border:0.7px solid color-mix(in srgb, var(--ink) 11%, transparent); vertical-align:.1em;}
+.chat .tools{display:flex; flex-direction:column; gap:.28em; padding:0; margin:0; border:none; background:transparent;}
+.chat .tc{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.82em; line-height:1.55; color:color-mix(in srgb, var(--ink) 70%, transparent); font-weight:400; min-width:0; overflow-wrap:break-word;}
+.chat .tc b{color:var(--ink); font-weight:500;}
+.chat .tc.res{color:var(--ink); margin-top:.15em; font-family:var(--sans); font-size:.88em; line-height:1.5;}
+.chat .tc.res b{font-weight:400;}
+.callline{font-weight:300; font-size:1.05em; letter-spacing:.01em; margin-block:1.1em;}
+.bigquote{margin:2.1em 0; max-width:none; text-align:left; font-style:italic; font-size:1.02em; line-height:1.65; padding-left:1em; border-left:1px solid var(--ink);}
+.bigquote .attr{display:block; margin-top:.8em; font-style:normal; font-size:.72em; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-soft);}
+.step.active{opacity:1;}
+.scrolly-chart{position:sticky; top:14vh; height:72vh; display:flex; align-items:center; min-width:0;}
+.scrolly-chart svg{width:100%; height:auto; max-height:100%;}
+@media (min-width:1000px){
+  #scrolly .step:last-child .step-content{
+    position:sticky; top:var(--scrolly-copy-top, 14vh);
+  }
+}
+.scrolly-chart #tokcurve{stroke-width:1.92; stroke-opacity:0.4;}
+.chart-grid line{stroke:color-mix(in srgb, var(--ink) 22%, transparent); stroke-width:1;}
+#mini-chart #tokcurve-m{stroke-width:1.76; stroke-opacity:0.4;}
+.scrolly-chart .marker,
+#mini-chart .marker{opacity:0; transition:opacity .35s ease;}
+.scrolly-chart .marker.on,
+#mini-chart .marker.on{opacity:.26;}
+.scrolly-chart .marker.on.active,
+#mini-chart .marker.on.active{opacity:1;}
+@media (prefers-reduced-motion: reduce){
+  .step, .scrolly-chart .marker, #mini-chart .marker{transition:none;}
+  .step{opacity:1;}
+}
+#mini-chart{display:none;}
+@media (max-width:700px){
+  body{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+  body.scrolly-mini-active{padding-bottom:calc(100px + env(safe-area-inset-bottom, 0px));}
+  #topbar{
+    font-size:16px;
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+  #topbar .toc-link{font-size:13px;}
+  .step .when, .part header .kicker{font-size:13px;}
+  .chat{font-size:1em; margin:3.5em 0 4em; gap:1.55em;}
+  .chat .tools{gap:.45em;}
+  .titlepage h1{white-space:normal; text-wrap:balance;}
+  .scrolly{display:block; margin-bottom:4em;}
+  .scrolly-chart{display:none;}
+  #scrolly .step{min-height:auto; opacity:1; padding:4.5rem 0 5rem; box-sizing:border-box;}
+  #scrolly .step + .step{margin-top:3.5rem; padding-top:6rem; border-top:1px solid color-mix(in srgb, var(--rule) 55%, transparent);}
+  #scrolly .step .when{margin-bottom:1.15em;}
+  #scrolly .step > p, #scrolly .step-content > p{margin-top:1em;}
+  #mini-chart{display:block; position:fixed; left:0; right:0; bottom:0; width:100%; z-index:30; background:var(--paper); border-top:1px solid var(--rule); padding:6px max(18px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); box-sizing:border-box; transform:translateY(110%); transition:transform .3s ease;}
+  #mini-chart.show{transform:none;}
+  #mini-chart svg{display:block; width:100%; max-width:100%; height:auto; min-height:88px; max-height:28vh; margin-inline:0;}
+  #mini-chart #stage-name-m{font-size:18px!important; font-weight:400!important;}
+  #mini-chart #stage-chip-m{font-size:16px!important; letter-spacing:1px!important;}
+  #mini-chart svg text.figtext{dominant-baseline:middle;}
+}
+@media (prefers-reduced-motion: reduce){ #mini-chart{transition:none;} }
+
+/* ---- news cutouts ---- */
+.cutouts{display:flex; flex-wrap:wrap; gap:1.2em; margin:2.2em 0; align-items:flex-start;}
+.cutouts figure{margin:0; flex:1 1 240px; min-width:0;}
+.cutouts img{width:100%; height:auto; display:block; border:none; outline:none; border-radius:12px;}
+.cutouts figcaption{margin-top:.78em; font-size:.72em; color:var(--ink-soft); text-align:left; line-height:1.45;}
+
+/* ---- figures ---- */
+figure{margin:2.8em 0; padding:0; max-width:100%;}
+.book figure:not(.arc-tl) img, .book figure:not(.arc-tl) video, img.quoteface, img.arc-tl-photo{border:none; outline:none; border-radius:12px; box-shadow:0 12px 40px rgba(31,33,34,.05), 0 4px 14px rgba(31,33,34,.025);}
+.fig-motion{max-width:100%; filter:drop-shadow(0 12px 40px rgba(31,33,34,.05)) drop-shadow(0 4px 14px rgba(31,33,34,.024));}
+.book figure:not(.arc-tl):has(> video){line-height:0; margin:0; overflow:visible; border-radius:0; box-shadow:none; background:transparent;}
+.book figure:not(.arc-tl):has(> video) video{display:block; width:100%; max-width:100%; height:auto; margin:0; padding:0; border:0; border-radius:12px; box-shadow:none; background:var(--paper);}
+.book figure.no-img-shadow img{border-radius:0; box-shadow:none;}
+.book figure img, .book figure video{display:block; width:100%; max-width:100%; height:auto;}
+figure svg{display:block; width:100%; height:auto;}
+figcaption{margin-top:.95em; font-size:.72em; letter-spacing:.04em; line-height:1.5; color:var(--ink-soft); text-align:left;}
+.figtext, svg text{font-family:var(--sans); font-weight:300;}
+.supply-demand-chart .curve-demand{fill:none; stroke:var(--ink); stroke-width:1.92; stroke-opacity:.4; stroke-linecap:round;}
+.supply-demand-chart .curve-supply{fill:none; stroke:var(--ink); stroke-width:1.6; stroke-opacity:.4; stroke-linecap:round;}
+.supply-demand-chart .curve-counter{stroke:var(--ink-soft); stroke-width:1; stroke-opacity:.45; stroke-dasharray:2 5;}
+.supply-demand-chart .layer-fill-unmet{fill:var(--wash); fill-opacity:.85;}
+.supply-demand-chart .layer-fill-caps{fill:url(#hatch1); fill-opacity:.55;}
+.supply-demand-chart .fig-layer{cursor:pointer; outline:none; transition:opacity .3s ease;}
+.supply-demand-chart .fig-layer .fig-label{transition:fill .3s ease, opacity .3s ease;}
+.supply-demand-chart .fig-layer .layer-fill,
+.supply-demand-chart .fig-layer .layer-stroke{transition:opacity .3s ease, fill-opacity .3s ease, stroke-opacity .3s ease;}
+.supply-demand-chart.is-hovering .fig-layer:not(.is-active){opacity:.3;}
+.supply-demand-chart .fig-layer.is-active .layer-fill-unmet{fill-opacity:1;}
+.supply-demand-chart .fig-layer.is-active .layer-fill-caps{fill-opacity:.85;}
+.supply-demand-chart .fig-layer.is-active .curve-demand,
+.supply-demand-chart .fig-layer.is-active .curve-supply,
+.supply-demand-chart .fig-layer.is-active .curve-counter{stroke-opacity:1;}
+.supply-demand-chart .fig-layer.is-active .fig-label{fill:var(--ink); opacity:1;}
+.supply-demand-chart .fig-layer.is-active .fig-label-served{opacity:.55;}
+.supply-demand-chart .fig-label-served{opacity:.55;}
+.supply-demand-chart .fig-label{font-family:var(--sans); font-weight:300; font-size:13px; letter-spacing:.02em;}
+.supply-demand-chart .fig-caps-tooltip text.figtext{font-size:14px!important;font-weight:400!important;fill:var(--ink)!important;font-style:normal!important;letter-spacing:.01em;}
+.supply-demand-chart .fig-label tspan{font-family:inherit; font-weight:inherit; font-size:inherit;}
+.supply-demand-chart .fig-caps-tooltip{opacity:0; pointer-events:none; transition:opacity .2s ease;}
+.supply-demand-chart.show-caps-tooltip .fig-caps-tooltip{opacity:1;}
+.supply-demand-chart .fig-caps-tooltip-box{fill:var(--paper); stroke:var(--rule); stroke-width:1;}
+.supply-demand-chart .hit-line{fill:none; stroke:transparent; stroke-width:20; pointer-events:stroke;}
+.supply-demand-chart .fig-label-hit{fill:transparent; cursor:pointer;}
+@media (prefers-reduced-motion: reduce){
+  .supply-demand-chart .fig-layer,
+  .supply-demand-chart .fig-layer .layer-fill,
+  .supply-demand-chart .fig-layer .layer-stroke,
+  .supply-demand-chart .fig-layer .fig-label{transition:none;}
+}
+
+/* ---- worked table ---- */
+table.worked{width:100%; border-collapse:collapse; margin:2.2em 0; font-size:.9em; line-height:1.5; font-variant-numeric:tabular-nums;}
+table.worked td{padding:.6em .2em; vertical-align:baseline; border-bottom:1px solid var(--rule);}
+table.worked tr:first-child td,table.worked tr:first-child th{border-top:1px solid var(--rule);}
+table.worked th{font-weight:300; font-size:.72em; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); text-align:left; padding:.6em .2em .5em; border-bottom:1px solid var(--rule);}
+table.worked th+th, table.worked.cmp td+td{text-align:right;}
+.figrow{display:flex; gap:1.4em; flex-wrap:wrap; align-items:flex-start;}
+.figrow svg{flex:1 1 260px; min-width:0; height:auto;}
+table.worked td:last-child{text-align:right; white-space:nowrap; font-weight:300;}
+table.worked td:first-child{padding-right:1.4em;}
+
+/* ---- endnotes ---- */
+.endnotes{margin-top:7em; border-top:1px solid var(--rule); padding-top:2.4em; font-size:.8em; line-height:1.6; color:var(--ink-soft);}
+.endnotes .label{text-align:left; text-transform:uppercase; letter-spacing:.2em; font-size:11px; font-weight:300; color:var(--ink-soft); margin-bottom:2em;}
+.endnotes ol{margin:0; padding-left:1.6em;}
+.endnotes li{margin-bottom:.9em;}
+.endnotes a{text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:2px; text-decoration-color:var(--ink-soft);}
+
+/* ---- end mark ---- */
+.endmark{margin:5em 0 6em; text-align:left; color:var(--ink-soft); line-height:2;}
+.endmark-nav{display:flex; justify-content:space-between; align-items:baseline; gap:1.5em 2.5em; flex-wrap:wrap;}
+.endmark-nav .readline{margin-top:4.2em;}
+.endmark-nav .readline-next{margin-left:auto; text-align:right;}
+@media (max-width:700px){
+  .endmark-nav{flex-direction:column; align-items:stretch; gap:.4em;}
+  .endmark-nav .readline-prev + .readline-next{margin-top:0;}
+  .endmark-nav .readline-next{margin-left:0; text-align:right;}
+}
+
+.endmark .sc{color:var(--ink);}
+@media (min-width:701px) and (max-width:999px){
+  .scrolly{display:block;}
+  .scrolly-chart{position:relative; top:auto; height:auto; margin-bottom:1.5em;}
+  .step{min-height:0; opacity:1;}
+}
+
+@media (max-width:480px){
+  body{font-size:16px;}
+  table.worked{font-size:.9em;}
+  table.worked td:last-child{white-space:normal;}
+  .chat .tc{font-size:.86em;}
+  .cutouts{gap:1em;}
+}
+@media (max-width:700px){
+  #introduction figure:has(> svg.supply-demand-chart){width:100%; max-width:100%; margin-inline:0;}
+  #introduction svg.supply-demand-chart{display:block; width:100%; max-width:100%; height:auto;}
+  #introduction svg.supply-demand-chart .fig-label{font-size:15.5px;}
+  #introduction svg.supply-demand-chart .fig-label-served{font-size:12.5px!important;}
+  #introduction svg.supply-demand-chart .fig-caps-label-wrap .fig-label,
+  #introduction svg.supply-demand-chart .fig-caps-label-wrap text{font-size:12px!important;}
+  #introduction svg.supply-demand-chart .fig-layer-unmet .fig-label:nth-of-type(1){transform:translate(12px,-6px);}
+  #introduction svg.supply-demand-chart .fig-layer-unmet .fig-label:nth-of-type(2){transform:translate(12px,-4px);}
+  #introduction svg.supply-demand-chart .fig-layer-demand .fig-label{transform:translate(-8px,4px);}
+  #introduction svg.supply-demand-chart .fig-layer-supply .fig-label{transform:translate(-6px,-8px);}
+  #introduction svg.supply-demand-chart .fig-caps-label-wrap .fig-label text{transform:translate(-4px,-2px);}
+  #introduction svg.supply-demand-chart > .figtext text{font-size:13px;}
+  .supply-demand-chart .fig-caps-label-wrap{cursor:pointer;}
+  #introduction svg.supply-demand-chart .fig-caps-tooltip text.figtext{font-size:15px!important;font-weight:400!important;fill:var(--ink)!important;}
+  #introduction svg.supply-demand-chart .fig-caps-tooltip text.figtext:nth-of-type(1){transform:translate(0,-2px);}
+  #introduction svg.supply-demand-chart .fig-caps-tooltip text.figtext:nth-of-type(2){transform:translate(0,2px);}
+}
+</style>
+<script src="navigation.js"></script>
+<script src="reading-rail.js"></script>
+<script>
+(function(){
+  try{
+    var KEY='truffle-loc', NAV='truffle-nav';
+    var PAGES=["introduction","the-three-caps","the-three-paths","precedents","a-new-computer","next-gen-chips","a-million-new-computers","endnotes"];
+    var LEGACY={"":"introduction","home":"introduction","introduction":"introduction","introduction.html":"introduction","index":"introduction","index.html":"introduction","caps":"the-three-caps","caps.html":"the-three-caps","the-three-caps":"the-three-caps","the-three-caps.html":"the-three-caps","two":"the-three-paths","two.html":"the-three-paths","the-three-paths":"the-three-paths","the-three-paths.html":"the-three-paths","precedents":"precedents","precedents.html":"precedents","a-new-computer":"a-new-computer","a-new-computer.html":"a-new-computer","computer":"a-new-computer","computer.html":"a-new-computer","the-roadmap":"next-gen-chips","the-roadmap.html":"next-gen-chips","roadmap":"next-gen-chips","roadmap.html":"next-gen-chips","next-gen-chips":"next-gen-chips","next-gen-chips.html":"next-gen-chips","million":"a-million-new-computers","million.html":"a-million-new-computers","a-million-new-computers":"a-million-new-computers","a-million-new-computers.html":"a-million-new-computers","endnotes":"endnotes","endnotes.html":"endnotes","notes":"endnotes","notes.html":"endnotes"};
+    var path=location.pathname.replace(/^\/|\/$/g,'');
+    var here=LEGACY[path] || path;
+    if(PAGES.indexOf(here)<0) here='introduction';
+    var nav=sessionStorage.getItem(NAV); sessionStorage.removeItem(NAV);
+    var saved=null; try{ saved=JSON.parse(sessionStorage.getItem(KEY)||'null'); }catch(e){}
+    if(saved) saved.p=LEGACY[saved.p] || saved.p;
+    if(!nav && saved){
+      if(saved.p===here && saved.y && !location.hash && !window.__essayAnchorNavigation && performance.getEntriesByType('navigation')[0]?.type === 'reload'){
+        window.addEventListener('load', function(){ setTimeout(function(){ window.scrollTo({top: saved.y, behavior: 'instant'}); }, 0); });
+      }
+    }
+    function save(){ try{ sessionStorage.setItem(KEY, JSON.stringify({p:here, y:Math.round(window.scrollY)})); }catch(e){} }
+    window.addEventListener('scroll', save, {passive:true});
+    window.addEventListener('pagehide', save);
+    document.addEventListener('DOMContentLoaded', function(){
+      save();
+      document.addEventListener('click', function(e){
+        var t=e.target, a=null;
+        while(t && t!==document){ if(t.tagName==='A'){ a=t; break; } t=t.parentNode; }
+        if(a){ var h=a.getAttribute('href')||''; if(h && h.charAt(0)!=='#'){ try{ sessionStorage.setItem(NAV,'1'); }catch(e2){} } }
+      }, true);
+    });
+  }catch(e){}
+})();
+</script>
+<meta name="robots" content="noindex,nofollow,noarchive">
+</head>
+<body>
+<div class="book" lang="en">
+
+<!-- ============ TITLE PAGE ============ -->
+<section class="titlepage" id="top">
+  <div class="dateline">November 1, 2026</div>
+  <h1 class="titlepage-h1-multiline">The Local AI<br>Opportunity</h1>
+  <p class="thesis">Why AI will diffuse through society as a GPU per person.</p>
+  <div class="byline">
+    <div class="names"><a class="author-link" href="https://x.com/iamgingertrash" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.3-8.5L.8 2h6.5l4.4 6.8L18.9 2Zm-1.1 18h1.7L6.4 3.9H4.6L17.8 20Z"/></svg><span>@iamgingertrash</span></a></div>
+  </div>
+</section>
+
+<!-- ============ OVERTURE ============ -->
+<section class="part" id="introduction" data-title="Introduction">
+  <div class="prose">
+    <p>Every era of computing has had its own unit of account, the thing you were billed for. The mainframe had the timeshare credit: minutes on a machine that belonged to someone else. The internet had the megabit. The AI era has the <strong>token</strong>, and tokens obey a law that was first written down about coal. When British engines learned to burn coal more efficiently, Britain did not burn less of it. It burned far more, because cheap coal found work that expensive coal never could. Jevons saw it first:</p>
+    <blockquote class="bigquote">&ldquo;It is wholly a confusion of ideas to suppose that the economical use of fuel is equivalent to a diminished consumption. The very contrary is the truth.&rdquo;<span class="attr">W. Stanley Jevons, The Coal Question, 1865</span></blockquote>
+    <p>Tokens have behaved exactly like coal since the day ChatGPT launched. Every time the models got better and the tokens got cheaper, we found something new to spend them on, and the new thing was always bigger than the old one. Four years in, there is no sign of a ceiling. The easiest way to see it is to follow one person&rsquo;s use of AI, one generation at a time.</p>
+  </div>
+  <div class="scrolly" id="scrolly">
+    <div class="scrolly-steps">
+      <div class="step">
+        <div class="when">2023 &middot; Chatbots</div>
+        <p>The first chatbots answered simple questions:</p>
+        <div class="chat">
+          <div class="msg user"><span class="bubble-shell"><svg class="user-bubble-tail" viewBox="0 0 12 14" aria-hidden="true"><path d="M0 14C0 7.2 4.8 2 12 2V14H0Z"/></svg><span class="bubble">What is the capital of France?</span></span></div>
+          <div class="msg bot"><span class="bubble-shell"><span class="bubble">Paris is the capital of France.</span></span></div>
+          <div class="msg user"><span class="bubble-shell"><svg class="user-bubble-tail" viewBox="0 0 12 14" aria-hidden="true"><path d="M0 14C0 7.2 4.8 2 12 2V14H0Z"/></svg><span class="bubble">How many ounces are in a pound?</span></span></div>
+          <div class="msg bot"><span class="bubble-shell"><span class="bubble">There are 16 ounces in a pound.</span></span></div>
+        </div>
+        <p>Each exchange cost a few dozen tokens, and a whole day of use rarely crossed a hundred.</p>
+      </div>
+      <div class="step">
+        <div class="when">2025 &middot; Early agents</div>
+        <p>Then came short-horizon agents that could do small jobs on their own, like answering email, browsing the web, or running a piece of research for you:</p>
+        <div class="chat">
+          <div class="msg user"><span class="bubble-shell"><svg class="user-bubble-tail" viewBox="0 0 12 14" aria-hidden="true"><path d="M0 14C0 7.2 4.8 2 12 2V14H0Z"/></svg><span class="bubble">Who are the five biggest home-battery makers, and how do their prices compare?</span></span></div>
+          <div class="msg bot"><span class="bubble-shell"><span class="bubble"><span class="tools">
+            <span class="tc"><b>web.search</b>(&ldquo;biggest home battery manufacturers&rdquo;)</span>
+            <span class="tc"><b>browser.read</b>(14 pages)</span>
+            <span class="tc"><b>docs.extract</b>(spec_sheets: Tesla, BYD, LG, Enphase, Sonnen)</span>
+            <span class="tc"><b>calc.normalize</b>(&ldquo;$ / kWh installed&rdquo;)</span>
+            <span class="tc res">&rarr; Powerwall 3 &asymp; $1,000/kWh; BYD undercuts it at&hellip; <span class="trunc">truncated</span></span>
+          </span></span></span></div>
+        </div>
+        <p>One of these chats ran to five thousand tokens or more, and nobody minded, because the work was worth it.</p>
+      </div>
+      <div class="step">
+        <div class="when">2026&ndash;27 &middot; Strong agents</div>
+        <p>Now there are strong agents that carry a long task from start to finish, building a piece of software end to end or reverse-engineering an app, in runs that last tens of hours:</p>
+        <div class="chat">
+          <div class="msg user"><span class="bubble-shell"><svg class="user-bubble-tail" viewBox="0 0 12 14" aria-hidden="true"><path d="M0 14C0 7.2 4.8 2 12 2V14H0Z"/></svg><span class="bubble">Port our billing service off the legacy API and migrate the tests.</span></span></div>
+          <div class="msg bot"><span class="bubble-shell"><span class="bubble"><span class="tools">
+            <span class="tc"><b>repo.read</b>(212 files)</span>
+            <span class="tc"><b>code.map</b>(&ldquo;legacy_api.*&rdquo;) &rarr; 47 call sites</span>
+            <span class="tc"><b>code.rewrite</b>(&ldquo;billing/client.ts&rdquo;)</span>
+            <span class="tc"><b>tests.run</b>() &rarr; 14 failures</span>
+            <span class="tc"><b>tests.run</b>() &rarr; pass</span>
+            <span class="tc res"><b>webhooks.migrate</b>() &mdash; day two&hellip; <span class="trunc">truncated</span></span>
+          </span></span></span></div>
+        </div>
+        <p>A run like that burns a hundred thousand tokens without trying, and the number climbs with every improvement in memory, context, and tool use, because each one makes a longer run worth paying for.</p>
+      </div>
+      <div class="step">
+        <div class="step-content">
+        <div class="when">2027&frac12; and beyond &middot; Always-on</div>
+        <p>The last step is the loop that never closes: an agent that is never prompted and never stops.</p>
+        <p>New information is just another injection into its stream of tokens, and it runs all day and all night on behalf of one human. The first of these are already here, in Grok Bot, Instinct, Muse, and Dot. The curve goes vertical when they become ordinary.</p>        </div>
+      </div>
+    </div>
+    <div class="scrolly-chart">
+      <svg viewBox="0 0 560 500" role="img" aria-label="Tokens consumed, 2023 to beyond 2027, rising gently through chatbots and agents, then going vertical for always-on agents.">
+        <defs>
+          <symbol id="agent-icon-chatbots" viewBox="0 0 44 44" fill="none">
+            <path d="M44 42H0L22 2L44 42Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </symbol>
+          <symbol id="agent-icon-early-agents" viewBox="0 0 44 44" fill="none">
+            <path d="M3 3H41V41H3V3Z" fill="none" stroke="currentColor" stroke-width="2"/>
+          </symbol>
+          <symbol id="agent-icon-strong-agents" viewBox="0 0 44 44" fill="none">
+            <path d="M22 2L42 18.25L34.5 42H9.5L2 18.25L22 2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </symbol>
+          <symbol id="agent-icon-247-agents" viewBox="0 0 44 44" fill="none">
+            <path d="M41 22C41 32.4934 32.4934 41 22 41C11.5066 41 3 32.4934 3 22C3 11.5066 11.5066 3 22 3C32.4934 3 41 11.5066 41 22Z" fill="none" stroke="currentColor" stroke-width="2"/>
+          </symbol>
+        </defs>
+        <g class="chart-grid">
+          <line x1="54" y1="337.5" x2="440" y2="337.5"/>
+          <line x1="54" y1="235" x2="440" y2="235"/>
+          <line x1="54" y1="132.5" x2="440" y2="132.5"/>
+          <line x1="54" y1="30" x2="440" y2="30"/>
+          <line x1="54" y1="440" x2="440" y2="440"/>
+        </g>
+        <text class="figtext" x="54" y="18" font-size="14.5" letter-spacing="1" fill="var(--ink-soft)" style="text-transform:uppercase">Tokens consumed</text>
+        <text class="figtext" id="stage-chip" x="556" y="18" font-size="17" letter-spacing="2" text-anchor="end" font-weight="400" fill="var(--ink)">2023</text>
+        <path id="tokcurve" d="M 54.0 437.0 C 62.8 436.2 83.6 434.5 101.8 432.7 C 120.0 430.9 134.5 429.4 153.0 427.1 C 171.5 424.8 184.1 423.1 202.5 420.0 C 220.9 416.9 235.5 414.0 253.1 410.3 C 270.7 406.6 283.2 403.9 298.4 399.8 C 313.6 395.7 324.4 392.8 336.1 388.0 C 347.8 383.2 353.4 381.3 362.2 373.7 C 371.0 366.1 377.7 356.1 383.9 346.5 C 390.1 336.9 392.7 329.6 396.2 321.1 C 401.5 310.0 405.0 291.0 409.2 272.5 C 414.0 250.0 420.0 210.0 425.2 170.0 C 430.5 128.0 435.0 75.0 440.0 30.0" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/>
+        <g class="marker figtext" data-x="54" fill="var(--ink)">
+          <circle cx="54" cy="437" r="3.15"/>
+          <use href="#agent-icon-chatbots" x="60" y="396" width="20" height="20"/>
+          <text x="90" y="406" font-size="17.5" font-weight="400" dominant-baseline="middle">Chatbots</text>
+        </g>
+        <g class="marker figtext" data-x="202.5" fill="var(--ink)">
+          <circle cx="202.5" cy="420" r="3.15"/>
+          <use href="#agent-icon-early-agents" x="166" y="364" width="20" height="20"/>
+          <text x="196" y="374" font-size="17.5" font-weight="400" dominant-baseline="middle">Early agents</text>
+        </g>
+        <g class="marker figtext" data-x="336.1" fill="var(--ink)">
+          <circle cx="336.1" cy="388" r="3.15"/>
+          <use href="#agent-icon-strong-agents" x="224" y="314" width="20" height="20"/>
+          <text x="254" y="324" font-size="17.5" font-weight="400" dominant-baseline="middle">Strong agents</text>
+        </g>
+        <g class="marker figtext" data-x="395.5" fill="var(--ink)">
+          <circle cx="396" cy="321" r="3.15"/>
+          <use href="#agent-icon-247-agents" x="270" y="270" width="20" height="20"/>
+          <text x="300" y="280" font-size="17.5" font-weight="400" dominant-baseline="middle">24/7 Agents</text>
+        </g>
+        <g class="figtext" fill="var(--ink-soft)" font-size="15.5" text-anchor="middle">
+          <text x="54" y="462">2023</text>
+          <text x="128" y="462">2024</text>
+          <text x="202.5" y="462">2025</text>
+          <text x="276.7" y="462">2026</text>
+          <text x="350.9" y="462">2027</text>
+          <text x="425.2" y="462">2028</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="prose">
+    <p>The supply of tokens is not growing anything like as fast. Demand lives in software, where Silicon Valley builds better than anyone. Supply lives in the physical world, in substations and permits and county meetings, and Silicon Valley no longer knows how to build there. Even if it did, supply is a function of energy, land, and regulation, and every one of the three is set to get worse from here. The thesis of this essay is the distance between those two curves. It can be drawn in one figure.<sup class="fn"><a href="/endnotes#note-interactive-model" aria-label="Source 1: interactive model" id="reference-interactive-model">1</a></sup></p>
+  </div>
+  <figure>
+    <svg class="supply-demand-chart" viewBox="0 0 720 420" role="img" aria-label="Token demand rising exponentially against a flattening cloud supply curve; the area between them is unmet demand, served locally.">
+      <defs>
+        <pattern id="hatch1" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="7" stroke="var(--ink)" stroke-width="1" opacity=".35"/>
+        </pattern>
+      </defs>
+      <g class="chart-grid" aria-hidden="true">
+        <line x1="40" y1="25" x2="660" y2="25"/>
+        <line x1="40" y1="111" x2="660" y2="111"/>
+        <line x1="40" y1="197" x2="660" y2="197"/>
+        <line x1="40" y1="284" x2="660" y2="284"/>
+        <line x1="40" y1="370" x2="660" y2="370"/>
+      </g>
+      <g class="fig-layer fig-layer-unmet" tabindex="0" role="button" aria-label="Unmet demand, served locally">
+        <title>Unmet demand — the gap filled by local inference</title>
+        <path class="layer-fill layer-fill-unmet" d="M 221.4 344.0 L 226.0 343.3 L 241.5 340.8 L 257.0 338.0 L 272.5 335.0 L 288.0 331.7 L 303.5 328.1 L 319.0 324.2 L 334.5 319.9 L 350.0 315.1 L 365.5 310.0 L 381.0 304.3 L 396.5 298.1 L 412.0 291.4 L 427.5 284.0 L 443.0 275.9 L 458.5 267.0 L 474.0 257.3 L 489.5 246.7 L 505.0 235.1 L 520.5 222.4 L 536.0 208.5 L 551.5 193.3 L 567.0 176.6 L 582.5 158.4 L 598.0 138.5 L 613.5 116.7 L 629.0 92.8 L 644.5 66.7 L 660.0 38.2 L 660.0 303.0 Z"/>
+        <text class="figtext fig-label" x="588" y="242" text-anchor="middle" fill="var(--ink)">Unmet demand</text>
+        <text class="figtext fig-label fig-label-served" x="588" y="258" font-style="italic" text-anchor="middle" fill="var(--ink-soft)">Served locally</text>
+      </g>
+      <g class="fig-layer fig-layer-caps" tabindex="0" role="button" aria-label="Supply constrained by energy, land, and regulation">
+        <title>Three caps — supply held down by real-world limits</title>
+        <path class="layer-fill layer-fill-caps" d="M 40.0 360.9 L 660.0 303.0 L 660.0 335.8 L 644.5 336.0 L 629.0 336.3 L 613.5 336.5 L 598.0 336.7 L 582.5 337.0 L 567.0 337.2 L 551.5 337.5 L 536.0 337.8 L 520.5 338.1 L 505.0 338.4 L 489.5 338.7 L 474.0 339.1 L 458.5 339.4 L 443.0 339.8 L 427.5 340.2 L 412.0 340.7 L 396.5 341.1 L 381.0 341.6 L 365.5 342.1 L 350.0 342.6 L 334.5 343.1 L 319.0 343.7 L 303.5 344.3 L 288.0 345.0 L 272.5 345.6 L 257.0 346.3 L 241.5 347.1 L 226.0 347.8 L 210.5 348.7 L 195.0 349.5 L 179.5 350.4 L 164.0 351.4 L 148.5 352.4 L 133.0 353.4 L 117.5 354.5 L 102.0 355.7 L 86.5 356.9 L 71.0 358.2 L 55.5 359.5 L 40.0 360.9 Z"/>
+      </g>
+      <g class="fig-layer fig-layer-counter" tabindex="0" role="button" aria-label="Counterfactual unconstrained cloud supply">
+        <title>Counterfactual supply without energy, land, or regulation limits</title>
+        <line class="layer-stroke curve-counter" x1="40" y1="360.9" x2="660" y2="303.0"/>
+        <line class="hit-line" x1="40" y1="360.9" x2="660" y2="303.0"/>
+      </g>
+      <g class="fig-layer fig-layer-demand" tabindex="0" role="button" aria-label="Token demand curve">
+        <title>Token demand — rising exponentially</title>
+        <polyline class="layer-stroke curve-demand" points="40.0,360.9 55.5,360.1 71.0,359.1 86.5,358.1 102.0,357.0 117.5,355.8 133.0,354.4 148.5,353.0 164.0,351.4 179.5,349.6 195.0,347.7 210.5,345.6 226.0,343.3 241.5,340.8 257.0,338.0 272.5,335.0 288.0,331.7 303.5,328.1 319.0,324.2 334.5,319.9 350.0,315.1 365.5,310.0 381.0,304.3 396.5,298.1 412.0,291.4 427.5,284.0 443.0,275.9 458.5,267.0 474.0,257.3 489.5,246.7 505.0,235.1 520.5,222.4 536.0,208.5 551.5,193.3 567.0,176.6 582.5,158.4 598.0,138.5 613.5,116.7 629.0,92.8 644.5,66.7 660.0,38.2"/>
+        <polyline class="hit-line" points="40.0,360.9 55.5,360.1 71.0,359.1 86.5,358.1 102.0,357.0 117.5,355.8 133.0,354.4 148.5,353.0 164.0,351.4 179.5,349.6 195.0,347.7 210.5,345.6 226.0,343.3 241.5,340.8 257.0,338.0 272.5,335.0 288.0,331.7 303.5,328.1 319.0,324.2 334.5,319.9 350.0,315.1 365.5,310.0 381.0,304.3 396.5,298.1 412.0,291.4 427.5,284.0 443.0,275.9 458.5,267.0 474.0,257.3 489.5,246.7 505.0,235.1 520.5,222.4 536.0,208.5 551.5,193.3 567.0,176.6 582.5,158.4 598.0,138.5 613.5,116.7 629.0,92.8 644.5,66.7 660.0,38.2"/>
+        <text class="figtext fig-label" x="638" y="36" font-style="italic" text-anchor="end" fill="var(--ink)">Token demand</text>
+      </g>
+      <g class="fig-layer fig-layer-supply" tabindex="0" role="button" aria-label="Cloud supply curve">
+        <title>Cloud supply — flattening under real-world constraints</title>
+        <polyline class="layer-stroke curve-supply" points="40.0,360.9 55.5,359.5 71.0,358.2 86.5,356.9 102.0,355.7 117.5,354.5 133.0,353.4 148.5,352.4 164.0,351.4 179.5,350.4 195.0,349.5 210.5,348.7 226.0,347.8 241.5,347.1 257.0,346.3 272.5,345.6 288.0,345.0 303.5,344.3 319.0,343.7 334.5,343.1 350.0,342.6 365.5,342.1 381.0,341.6 396.5,341.1 412.0,340.7 427.5,340.2 443.0,339.8 458.5,339.4 474.0,339.1 489.5,338.7 505.0,338.4 520.5,338.1 536.0,337.8 551.5,337.5 567.0,337.2 582.5,337.0 598.0,336.7 613.5,336.5 629.0,336.3 644.5,336.0 660.0,335.8"/>
+        <polyline class="hit-line" points="40.0,360.9 55.5,359.5 71.0,358.2 86.5,356.9 102.0,355.7 117.5,354.5 133.0,353.4 148.5,352.4 164.0,351.4 179.5,350.4 195.0,349.5 210.5,348.7 226.0,347.8 241.5,347.1 257.0,346.3 272.5,345.6 288.0,345.0 303.5,344.3 319.0,343.7 334.5,343.1 350.0,342.6 365.5,342.1 381.0,341.6 396.5,341.1 412.0,340.7 427.5,340.2 443.0,339.8 458.5,339.4 474.0,339.1 489.5,338.7 505.0,338.4 520.5,338.1 536.0,337.8 551.5,337.5 567.0,337.2 582.5,337.0 598.0,336.7 613.5,336.5 629.0,336.3 644.5,336.0 660.0,335.8"/>
+        <text class="figtext fig-label" x="660" y="354" font-style="italic" text-anchor="end" fill="var(--ink)">Cloud supply</text>
+      </g>
+      <g class="figtext" fill="var(--ink-soft)" font-size="12" text-anchor="middle">
+        <text x="40" y="392">2026</text>
+        <text x="195" y="392">2027</text>
+        <text x="350" y="392">2028</text>
+        <text x="505" y="392">2029</text>
+        <text x="660" y="392">2030</text>
+      </g>
+      <g class="fig-caps-label-wrap" tabindex="0" aria-label="Supply, if energy, land, and regulation were not limiting factors">
+        <rect class="fig-label-hit" x="448" y="298" width="215" height="32"/>
+        <g class="figtext fig-label" transform="rotate(-5.34 655 313.5)" fill="var(--ink-soft)" font-style="italic" text-anchor="end" pointer-events="none">
+          <text x="655" y="313.5">Supply, if energy, land, and regulation</text>
+          <text x="655" y="325.5">were not limiting factors</text>
+        </g>
+      </g>
+      <g class="fig-caps-tooltip" aria-hidden="true" pointer-events="none">
+        <rect class="fig-caps-tooltip-box" x="418" y="238" width="298" height="58" rx="8"/>
+        <text class="figtext" x="432" y="262" font-size="14" font-weight="400" fill="var(--ink)">Supply, if energy, land, and regulation</text>
+        <text class="figtext" x="432" y="282" font-size="14" font-weight="400" fill="var(--ink)">were not limiting factors</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="prose">
+    <p>The area between the two curves is demand the cloud cannot serve. Demand like that does not go away. It finds a new home:</p>
+    <p class="callline">Local inference.</p>
+    <p>Instead of covering the planet in datacenters, you put one GPU in front of each of a billion people. Apple and Nvidia understand this. OpenAI and Anthropic do not.</p>
+    <p>This has happened before. In 1970 computing meant the mainframe, and IBM, which owned the mainframe, looked like it would own computing forever. The personal computer looked like a toy next to it. Within fifteen years the toy had won, because it turned out to be easier to ship a million small computers than to build a few giant ones. The story is a clich&eacute; now. It is also happening again, and nearly everyone is asleep at the wheel.</p>  </div>
+</section>
+
+<!-- ============ PART I ============ -->
+<section class="part" id="the-math-behind-agents" data-title="The Math Behind Agents" style="margin-top:9em">
+  <div class="sect">
+    <div class="prose">
+      <p>Let&rsquo;s do the arithmetic on that last step.</p>
+      <p>Start with something modest: one billion people, each with a personal agent that runs around the clock at fifty tokens per second, a little slower than ChatGPT answers today.</p>
+      <p>The agent reads everything its person does, their messages, their screen, their email, and it is connected to every app they touch in a day.</p>
+      <p>Here is what it takes to serve that from datacenters:</p>
+    </div>
+    <table class="worked">
+      <tr><td>Tok/s required</td><td>5&thinsp;&times;&thinsp;10<sup>10</sup> tokens per second</td></tr>
+      <tr><td>Tokens per day</td><td>&asymp; 4.3 quadrillion</td></tr>
+      <tr><td>H200 equivalents</td><td>&asymp; 80,000,000 GPUs</td></tr>
+      <tr><td>Power at roughly two joules per token</td><td>100 GW, continuous</td></tr>
+      <tr><td>Energy per year</td><td>&asymp; 880 TWh</td></tr>
+      <tr><td>Cost to build</td><td>&asymp; $3.5 trillion</td></tr>
+    </table>
+    <div class="prose">
+      <p>A hundred gigawatts of continuous draw is the entire American nuclear fleet, every reactor in the country running flat out and doing nothing but inference. It is more than the whole Texas grid pulls at its all-time peak. Eight hundred and eighty terawatt-hours a year is a fifth of the electricity the United States generates, and that is personal agents <em>alone</em>. Training, enterprise work, and everything else come on top.</p>
+      <p>The industry does not dispute this arithmetic. It has simply decided that the answer is the obvious one:</p>
+      <p class="callline">&ldquo;Build more!&rdquo;</p>
+      <p>The next part is about why that answer does not work. A datacenter is not made of chips. It is made of a grid connection, a piece of land, and a permit, and all three are getting harder to obtain at exactly the moment the demand curve turns vertical.</p>
+    </div>
+  </div>
+</section>
+
+<div class="endmark endmark-nav">
+  <div class="readline readline-next"><a href="/the-three-caps">The Three Caps →</a></div>
+</div>
+
+</div>
+
+<!-- ============ LEFT RAIL ============ -->
+<nav id="rail" aria-label="Contents">
+  <ol>
+    <li data-target="introduction"><span class="dot"></span><a href="/introduction" aria-label="Introduction"><span class="rail-title">Introduction</span></a></li>
+    <li><span class="dot"></span><a href="/the-three-caps" aria-label="The Three Caps"><span class="rail-title">The Three Caps</span></a></li>
+    <li><span class="dot"></span><a href="/the-three-paths" aria-label="The Three Paths"><span class="rail-title">The Three Paths</span></a></li>
+    <li><span class="dot"></span><a href="/precedents" aria-label="Precedents"><span class="rail-title">Precedents</span></a></li>
+    <li><span class="dot"></span><a href="/a-new-computer" aria-label="A New Computer"><span class="rail-title">A New Computer</span></a></li>
+    <li><span class="dot"></span><a href="/next-gen-chips" aria-label="Next-Gen Chips"><span class="rail-title">Next-Gen Chips</span></a></li>
+    <li><span class="dot"></span><a href="/a-million-new-computers" aria-label="A Million New Computers"><span class="rail-title">A Million New Computers</span></a></li>
+    <li><span class="dot"></span><a href="/endnotes" aria-label="Endnotes"><span class="rail-title">Endnotes</span></a></li>
+  </ol>
+</nav>
+
+<div id="mini-chart" aria-hidden="true">
+  <svg viewBox="0 0 560 170">
+    <g transform="translate(0,8) scale(1,0.3)">
+      <path id="tokcurve-m" d="M 54.0 437.0 C 62.8 436.2 83.6 434.5 101.8 432.7 C 120.0 430.9 134.5 429.4 153.0 427.1 C 171.5 424.8 184.1 423.1 202.5 420.0 C 220.9 416.9 235.5 414.0 253.1 410.3 C 270.7 406.6 283.2 403.9 298.4 399.8 C 313.6 395.7 324.4 392.8 336.1 388.0 C 347.8 383.2 353.4 381.3 362.2 373.7 C 371.0 366.1 377.7 356.1 383.9 346.5 C 390.1 336.9 392.7 329.6 396.2 321.1 C 401.5 310.0 405.0 291.0 409.2 272.5 C 414.0 250.0 420.0 210.0 425.2 170.0 C 430.5 128.0 435.0 75.0 440.0 30.0" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    </g>
+    <circle class="marker" cx="54.0" cy="139.1" r="2.8" fill="var(--ink)"/><circle class="marker" cx="202.5" cy="134.0" r="2.8" fill="var(--ink)"/><circle class="marker" cx="336.1" cy="124.4" r="2.8" fill="var(--ink)"/><circle class="marker" cx="396.0" cy="104.3" r="2.8" fill="var(--ink)"/>
+    <text id="stage-name-m" class="figtext" x="16" y="28" font-size="23" font-weight="400" fill="var(--ink)">Chatbots</text>
+    <text id="stage-chip-m" class="figtext" x="544" y="28" font-size="17" letter-spacing="2" text-anchor="end" fill="var(--ink-soft)">2023</text>
+  </svg>
+</div>
+
+<div id="topbar"><div class="inner"><span class="where" id="whereami"></span><a class="toc-link" href="#top">Top</a></div></div>
+
+<script>
+(function(){
+  var topbar = document.getElementById('topbar');
+  var where = document.getElementById('whereami');
+  var readingRail = window.createReadingRail(document.getElementById('rail'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-title]'));
+  var title = document.getElementById('top');
+  function onScroll(){
+    var y = window.scrollY || document.documentElement.scrollTop;
+    var past = y > title.offsetHeight - 220;
+    topbar.classList.toggle('show', past);
+    var current = '';
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].offsetTop - 140 <= y) current = sections[i].getAttribute('data-title');
+    }
+    where.textContent = current;
+    readingRail.update();
+    scrollyUpdate();
+  }
+
+  // scrollytelling: draw the token curve as the intro steps pass
+  var scrolly = document.getElementById('scrolly');
+  var tokcurve = document.getElementById('tokcurve');
+  var chip = document.getElementById('stage-chip');
+  var steps = scrolly ? Array.prototype.slice.call(scrolly.querySelectorAll('.step')) : [];
+  var markers = scrolly ? Array.prototype.slice.call(scrolly.querySelectorAll('.marker')) : [];
+  var chipText = ['2023', '2025', '2026–27', '2027½+'];
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var curveLen = 0, markerFrac = [];
+  if (tokcurve) {
+    curveLen = tokcurve.getTotalLength();
+    markers.forEach(function(m){
+      var mx = parseFloat(m.getAttribute('data-x'));
+      var lo = 0, hi = curveLen;
+      for (var k = 0; k < 24; k++) {
+        var mid = (lo + hi) / 2;
+        if (tokcurve.getPointAtLength(mid).x < mx) { lo = mid; } else { hi = mid; }
+      }
+      markerFrac.push(lo / curveLen);
+    });
+    if (!reduceMotion) {
+      tokcurve.style.strokeDasharray = curveLen;
+      tokcurve.style.strokeDashoffset = curveLen;
+    } else {
+      markers.forEach(function(m){ m.classList.add('on'); });
+    }
+  }
+  var mini = document.getElementById('mini-chart');
+  var miniCurve = document.getElementById('tokcurve-m');
+  var miniMarkers = mini ? Array.prototype.slice.call(mini.querySelectorAll('.marker')) : [];
+  var miniChip = document.getElementById('stage-chip-m');
+  var miniName = document.getElementById('stage-name-m');
+  var stageNames = ['Chatbots', 'Early agents', 'Strong agents', '24/7 Agents'];
+  var miniLen = 0;
+  if (miniCurve) {
+    miniLen = miniCurve.getTotalLength();
+    if (!reduceMotion) {
+      miniCurve.style.strokeDasharray = miniLen;
+      miniCurve.style.strokeDashoffset = miniLen;
+    } else {
+      miniMarkers.forEach(function(m){ m.classList.add('on'); });
+    }
+  }
+  function scrollyUpdate(){
+    if (!scrolly || !tokcurve || steps.length < 2) return;
+    var vh = window.innerHeight;
+    // Match the visible drawing, including its movement as the sticky chart exits.
+    if (window.matchMedia('(min-width:1000px)').matches) {
+      var chartSvg = scrolly.querySelector('.scrolly-chart > svg');
+      if (chartSvg) scrolly.style.setProperty('--scrolly-copy-top', chartSvg.getBoundingClientRect().top + 'px');
+    }
+    var m = vh * 0.5;
+    var centers = steps.map(function(st){
+      var sr = st.getBoundingClientRect();
+      return sr.top + sr.height / 2;
+    });
+    // s: continuous stage position; s = i exactly when step i is centered
+    var s;
+    if (m <= centers[0]) {
+      s = (m - centers[0]) / (centers[1] - centers[0]);
+    } else if (m >= centers[centers.length - 1]) {
+      var n = centers.length - 1;
+      s = n + (m - centers[n]) / (centers[n] - centers[n - 1]);
+    } else {
+      for (var i = 0; i < centers.length - 1; i++) {
+        if (m >= centers[i] && m <= centers[i + 1]) {
+          s = i + (m - centers[i]) / (centers[i + 1] - centers[i]);
+          break;
+        }
+      }
+    }
+    s = Math.max(-0.9, Math.min(3.75, s));
+    // piecewise map: stage position -> fraction of curve drawn
+    var sa = [-0.9, 0, 1, 2, 3, 3.75];
+    var fa = [0, markerFrac[0] || 0.05, markerFrac[1] || 0.4, markerFrac[2] || 0.72, markerFrac[3] || 0.88, 1];
+    var p = fa[fa.length - 1];
+    for (var k = 0; k < sa.length - 1; k++) {
+      if (s <= sa[k + 1]) {
+        p = fa[k] + (fa[k + 1] - fa[k]) * (s - sa[k]) / (sa[k + 1] - sa[k]);
+        break;
+      }
+    }
+    var activeIdx = Math.max(0, Math.min(steps.length - 1, Math.round(s)));
+    if (!reduceMotion) {
+      tokcurve.style.strokeDashoffset = curveLen * (1 - p);
+    }
+    for (var q = 0; q < markers.length; q++) {
+      var showMarker = reduceMotion || s >= q - 0.1;
+      if (!reduceMotion) markers[q].classList.toggle('on', showMarker);
+      markers[q].classList.toggle('active', showMarker && q === activeIdx);
+    }
+    for (var j = 0; j < steps.length; j++) steps[j].classList.remove('active');
+    steps[activeIdx].classList.add('active');
+    if (chip) chip.textContent = chipText[activeIdx] || chipText[0];
+    if (miniCurve && !reduceMotion) {
+      miniCurve.style.strokeDashoffset = miniLen * (1 - p);
+    }
+    for (var q2 = 0; q2 < miniMarkers.length; q2++) {
+      var showMini = reduceMotion || s >= q2 - 0.1;
+      if (!reduceMotion) miniMarkers[q2].classList.toggle('on', showMini);
+      miniMarkers[q2].classList.toggle('active', showMini && q2 === activeIdx);
+    }
+    if (miniChip) miniChip.textContent = chipText[activeIdx] || chipText[0];
+    if (miniName) miniName.textContent = stageNames[activeIdx] || stageNames[0];
+    if (mini) {
+      var rsc = scrolly.getBoundingClientRect();
+      var miniOn = rsc.top < vh * 0.75 && rsc.bottom > vh * 0.5;
+      mini.classList.toggle('show', miniOn);
+      document.body.classList.toggle('scrolly-mini-active', miniOn);
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', function(){ readingRail.measure(); onScroll(); });
+  onScroll();
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.style.scrollBehavior = 'smooth';
+  }
+
+  var supplyChart = document.querySelector('.supply-demand-chart');
+  if (supplyChart) {
+    var supplyLayers = Array.prototype.slice.call(supplyChart.querySelectorAll('.fig-layer'));
+    function setSupplyActive(layer) {
+      supplyChart.classList.add('is-hovering');
+      supplyLayers.forEach(function(l){ l.classList.remove('is-active'); });
+      if (layer) layer.classList.add('is-active');
+    }
+    function clearSupplyActive() {
+      supplyChart.classList.remove('is-hovering');
+      supplyLayers.forEach(function(l){ l.classList.remove('is-active'); });
+    }
+    supplyChart.addEventListener('mouseleave', clearSupplyActive);
+    supplyLayers.forEach(function(layer){
+      layer.addEventListener('mouseenter', function(){ setSupplyActive(layer); });
+      layer.addEventListener('focus', function(){ setSupplyActive(layer); });
+      layer.addEventListener('blur', clearSupplyActive);
+    });
+    var capsLabelWrap = supplyChart.querySelector('.fig-caps-label-wrap');
+    if (capsLabelWrap) {
+      capsLabelWrap.addEventListener('mouseenter', function(){ supplyChart.classList.add('show-caps-tooltip'); });
+      capsLabelWrap.addEventListener('mouseleave', function(){ supplyChart.classList.remove('show-caps-tooltip'); });
+      capsLabelWrap.addEventListener('focus', function(){ supplyChart.classList.add('show-caps-tooltip'); });
+      capsLabelWrap.addEventListener('blur', function(){ supplyChart.classList.remove('show-caps-tooltip'); });
+    }
+  }
+})();
+</script>
+<script src="chart-interact.js"></script>
+<script src="mobile-fig-viewbox.js"></script>
+<script src="mobile-nav.js"></script>
+<footer style="margin:2rem auto;text-align:center"><form method="post" action="/_auth/logout"><button type="submit" style="font:inherit;font-size:12px;color:#5c6164;background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Sign out</button></form></footer>
+</body>
+</html>
