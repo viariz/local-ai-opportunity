@@ -385,6 +385,81 @@ table.worked td:first-child{padding-right:1.4em;}
   .cutout-chart-wide svg#amazon-unpowered-racks{max-width:min(100%,22rem);}
   .cutout-chart-wide svg.ichart-bars text{font-size:12px!important; letter-spacing:.03em!important;}
 }
+/* ---- cap cards (matches Three Caps / essay) ---- */
+.cap-cards{
+  display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:clamp(6px, 1.5vw, 14px);
+  margin:2.8em 0 0; max-width:52rem; margin-inline:auto; padding:0 2px;
+}
+.cap-card{
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  padding:12px; border:1px solid rgba(31,33,34,.16); border-radius:4px; background:var(--paper);
+  text-align:left; cursor:pointer; color:inherit; font:inherit;
+  -webkit-tap-highlight-color:transparent;
+  transition:background-color .18s ease, border-color .18s ease;
+}
+.cap-card:focus-visible{outline:1px solid rgba(31,33,34,.35); outline-offset:3px;}
+@media (hover:hover){
+  .cap-card:hover{background:color-mix(in srgb, var(--ink) 2.2%, var(--paper)); border-color:rgba(31,33,34,.16);}
+}
+.cap-card:active{background:color-mix(in srgb, var(--ink) 6.5%, var(--paper));}
+.cap-card-art{width:100%; max-width:210px; aspect-ratio:1; display:block; flex-shrink:0;}
+.cap-card-art img{display:block; width:100%; height:100%; object-fit:contain;}
+.cap-card-text{width:100%; display:flex; flex-direction:column; gap:8px; min-height:2.9em;}
+.cap-card-title{
+  font-family:var(--display); font-size:1.125rem; line-height:1.25; color:var(--ink);
+  font-weight:400; font-variation-settings:"wght" 100; font-synthesis:none;
+  margin:0; letter-spacing:.02em;
+}
+.cap-card-sub{
+  font-size:.875rem; line-height:1.45; color:rgba(31,33,34,.5); margin:0;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  min-height:calc(1.45em * 2);
+}
+@media (max-width:700px){
+  .cap-cards{grid-template-columns:1fr; gap:8px;}
+}
+/* ---- two path cards (two columns; same card style as Three Caps) ---- */
+.cap-cards.path-cards{grid-template-columns:repeat(2, minmax(0, 1fr));}
+@media (max-width:700px){
+  .cap-cards.path-cards{grid-template-columns:1fr; gap:8px;}
+}
+
+.cap-article-sect[hidden]{display:none!important;}
+
+.cap-article-overlay{
+  position:fixed; inset:0; z-index:50; background:var(--paper);
+  overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;
+  scrollbar-gutter:stable;
+  opacity:0; visibility:hidden;
+  transition:opacity .22s ease, visibility 0s linear .22s;
+}
+.cap-article-overlay.is-open{opacity:1; visibility:visible; transition:opacity .22s ease, visibility 0s;}
+.cap-article-panel{
+  box-sizing:border-box; min-height:100%;
+  padding:max(52px, calc(env(safe-area-inset-top, 0px) + 40px)) max(20px, env(safe-area-inset-right, 0px)) max(28px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+}
+.cap-article-inner.book{max-width:44em; margin:0 auto;}
+.cap-article-inner .cap-article-sect > h4{
+  font-family:var(--display); font-size:clamp(1.25rem, 2.8vw, 1.65rem);
+  font-weight:100; font-variation-settings:"wght" 100; font-synthesis:none;
+  letter-spacing:.02em; line-height:1.25;
+  padding-top:0; border-top:none; margin:0 0 1em;
+}
+.cap-article-inner .cap-article-sect{padding-bottom:2.75em;}
+.cap-article-close{
+  position:fixed; top:max(10px, env(safe-area-inset-top, 0px)); right:max(18px, env(safe-area-inset-right, 0px));
+  z-index:51; width:auto; height:auto; min-width:44px; min-height:44px; padding:0; display:grid; place-items:center;
+  border:none; border-radius:0; background:transparent;
+  color:var(--ink); font-family:var(--sans); font-size:22px; font-weight:300; font-variation-settings:normal; font-synthesis:none;
+  line-height:1; cursor:pointer;
+  -webkit-appearance:none; appearance:none;
+  transition:color .15s ease, opacity .15s ease;
+}
+.cap-article-close:hover{background:transparent; border-color:transparent; color:var(--ink); opacity:.68;}
+.cap-article-close:focus-visible{outline:2px solid rgba(31,33,34,.4); outline-offset:3px;}
+html.cap-article-open{overflow:hidden;}
+body.cap-article-open{overflow:hidden;}
+
 /* ---- section tabs ---- */
 .captabs{display:flex; justify-content:center; gap:2em; margin:2.8em 0 0; border-bottom:1px solid var(--rule); flex-wrap:wrap;}
 .captabs button{appearance:none; background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-1px; padding:.55em .1em .7em; font-family:var(--sans); font-size:.92em; letter-spacing:.02em; font-weight:400; color:var(--ink-soft); cursor:pointer;}
@@ -438,9 +513,34 @@ table.worked td:first-child{padding-right:1.4em;}
 <!-- ============ PART IV ============ -->
 <section class="part" id="the-lesser-two" data-title="The lesser two">
 
-  <div class="sect" id="just-build-more">
+<div id="path-article-overlay" class="cap-article-overlay" hidden>
+  <button type="button" class="cap-article-close path-article-close" aria-label="Close article" aria-expanded="false">&#x2715;</button>
+  <div class="cap-article-panel" id="path-article-panel" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="book cap-article-inner" id="path-article-inner"></div>
+  </div>
+</div>
+
+<nav id="path-cards-nav" class="cap-cards path-cards" aria-label="The two paths">
+  <button type="button" class="cap-card" data-cap="just-build-more">
+    <span class="cap-card-art" aria-hidden="true"><img src="fig/paths/just-build-more.svg" width="210" height="210" alt=""></span>
+    <span class="cap-card-text">
+      <span class="cap-card-title">Just Build More, Bro</span>
+      <span class="cap-card-sub">Why AI will diffuse through society as a GPU per person.</span>
+    </span>
+  </button>
+  <button type="button" class="cap-card" data-cap="put-them-into-space">
+    <span class="cap-card-art" aria-hidden="true"><img src="fig/paths/put-them-into-space.svg" width="210" height="210" alt=""></span>
+    <span class="cap-card-text">
+      <span class="cap-card-title">Put Them Into Space</span>
+      <span class="cap-card-sub">Why AI will diffuse through society as a GPU per person.</span>
+    </span>
+  </button>
+</nav>
+
+  <div class="sect cap-article-sect" id="just-build-more" hidden>
     <h4>Just Build More, Bro</h4>
-    <div class="prose">
+    <div class="prose cap-prose" hidden>
+
       <p>The current era of AI was built in datacenters, so the default plan is more of what already works.</p>
       <p>The next era needs, at a minimum, a hundred gigawatts of continuous power. Here is how the build toward it is going:<sup class="fn"><a href="/endnotes#note-capacity-forecasts" aria-label="Source 17: capacity forecasts" id="reference-capacity-forecasts">17</a></sup></p>
       <table class="worked cmp">
@@ -478,12 +578,14 @@ table.worked td:first-child{padding-right:1.4em;}
         </svg><figcaption>Business Insider, October 2026: roughly $5B of GB300 racks staged in warehouses awaiting powered shells, with about $3B a month more expected. Industry-wide, dark chips are estimated near $300B.</figcaption></figure>
       </div>
       <p>Few people in the industry say this directly, because the stakes of being wrong are so large. If &ldquo;build more&rdquo; fails, a meaningful part of the AI trade unwinds, and a share of U.S. GDP growth goes with it. So the plan keeps being restated rather than re-examined.</p>
+    
     </div>
   </div>
 
-  <div class="sect" id="put-them-into-space">
+  <div class="sect cap-article-sect" id="put-them-into-space" hidden>
     <h4>Put Them Into Space</h4>
-    <div class="prose">
+    <div class="prose cap-prose" hidden>
+
       <p>The second candidate solves the siting problem by leaving the planet. In orbit the sun never sets, land costs nothing, and there are no neighbors to object. Serious teams are working on it: Google&rsquo;s Project Suncatcher plans two prototype satellites carrying TPUs by early 2027,<sup class="fn"><a href="/endnotes#note-project-suncatcher" aria-label="Source 19: project suncatcher" id="reference-project-suncatcher">19</a></sup> and Starcloud, now valued at $2.3B, flew an Nvidia H100 to orbit in November 2025 and trained a small model on the works of Shakespeare.<sup class="fn"><a href="/endnotes#note-orbital-gpus" aria-label="Source 20: orbital gpus" id="reference-orbital-gpus">20</a></sup></p>
       <p>The physics is where it gets difficult. In vacuum there is no air and no water, so every joule a chip consumes must leave as infrared radiation. At datacenter scale that means roughly 500,000 square meters of radiators per 100 MW: thousands of tons of panel, delivered by heavy-lift launches that carry no chips at all. Radiators and solar arrays come to about two thirds of a satellite&rsquo;s mass, and nothing in orbit can be repaired. Google&rsquo;s own analysis puts the launch cost needed to make the economics work below $200 per kilogram; today&rsquo;s price is about fourteen times that.<sup class="fn"><a href="/endnotes#note-space-economics" aria-label="Source 21: space economics" id="reference-space-economics">21</a></sup></p>
       <figure>
@@ -515,10 +617,12 @@ table.worked td:first-child{padding-right:1.4em;}
         <figcaption>Fig.&nbsp;6.&ensp;The price of a kilogram to low Earth orbit, log scale. The solid line is flown hardware; the dashed line is the projection if Starship works and costs keep falling at the historical rate. Google&rsquo;s own analysis places the crossing in the mid-2030s. Sources: SpaceX pricing; outside analyst estimates; Google Research.</figcaption>
       </figure>
       <p>In practice that means Starship has to work, and work at scale, and launch prices have to keep falling at their historical rate for most of another decade. Google&rsquo;s own analysis puts the crossing in the mid-2030s. None of that helps in 2027, however hard you believe in Elon.</p>
+    
     </div>
   </div>
 
 </section>
+
 
 <!-- ============ TRANSITION TO A GPU PER PERSON ============ -->
 <aside class="section-transition" aria-label="A simpler approach">
@@ -675,34 +779,104 @@ table.worked td:first-child{padding-right:1.4em;}
 </script>
 <script>
 (function(){
-  var ids = ['just-build-more','put-them-into-space'];
-  var names = ['Just Build More, Bro','Put Them Into Space'];
-  var sects = ids.map(function(i){ return document.getElementById(i); });
+  var IDS = ['just-build-more','put-them-into-space'];
+  var sects = IDS.map(function(id){ return document.getElementById(id); });
   if (sects.some(function(x){ return !x; })) return;
-  var bar = document.createElement('div'); bar.className = 'captabs';
-  sects[0].parentNode.insertBefore(bar, sects[0]);
-  function show(k){
-    sects.forEach(function(x,i){ x.classList.toggle('hiddentab', i!==k); });
-    Array.prototype.forEach.call(bar.children, function(b,i){ b.classList.toggle('active', i===k); });
+  var nav = document.getElementById('path-cards-nav');
+  var overlay = document.getElementById('path-article-overlay');
+  var inner = document.getElementById('path-article-inner');
+  var closeBtn = overlay && overlay.querySelector('.path-article-close');
+  if (!nav || !overlay || !inner || !closeBtn) return;
+
+  var state = { sect: null, parent: null, next: null, scrollY: 0, prevHtmlScrollBehavior: '', prevBodyTop: '', prevBodyWidth: '' };
+
+  function lockScroll(y){
+    state.scrollY = y;
+    state.prevHtmlScrollBehavior = document.documentElement.style.scrollBehavior || '';
+    state.prevBodyTop = document.body.style.top;
+    state.prevBodyWidth = document.body.style.width;
+    document.documentElement.style.scrollBehavior = 'auto';
+    document.body.style.top = -y + 'px';
+    document.body.style.width = '100%';
+    document.body.classList.add('cap-article-open');
+    document.documentElement.classList.add('cap-article-open');
   }
-  names.forEach(function(n,i){
-    var b = document.createElement('button'); b.type = 'button'; b.textContent = n;
-    b.addEventListener('click', function(){ show(i); });
-    bar.appendChild(b);
+  function unlockScroll(){
+    document.documentElement.classList.remove('cap-article-open');
+    document.body.classList.remove('cap-article-open');
+    document.body.style.top = state.prevBodyTop;
+    document.body.style.width = state.prevBodyWidth;
+    document.documentElement.style.scrollBehavior = state.prevHtmlScrollBehavior;
+    window.scrollTo(0, state.scrollY);
+  }
+
+  function openPath(sect){
+    if (!sect || state.sect) return;
+    state.sect = sect;
+    state.parent = sect.parentNode;
+    state.next = sect.nextSibling;
+    sect.removeAttribute('hidden');
+    var prose = sect.querySelector('.cap-prose');
+    if (prose) prose.removeAttribute('hidden');
+    lockScroll(window.scrollY);
+    inner.appendChild(sect);
+    overlay.scrollTop = 0;
+    overlay.classList.add('is-open');
+    overlay.removeAttribute('hidden');
+    closeBtn.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(function(){
+      if (window.ichartRefresh) window.ichartRefresh();
+      if (window.reflowMobileFigs) window.reflowMobileFigs();
+      try { closeBtn.focus(); } catch (e) {}
+    });
+  }
+
+  function closePath(){
+    if (!state.sect) return;
+    var sect = state.sect;
+    sect.setAttribute('hidden', '');
+    var prose = sect.querySelector('.cap-prose');
+    if (prose) prose.setAttribute('hidden', '');
+    if (state.parent) state.parent.insertBefore(sect, state.next);
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('hidden', '');
+    closeBtn.setAttribute('aria-expanded', 'false');
+    overlay.scrollTop = 0;
+    unlockScroll();
+    state.sect = null;
+    state.parent = null;
+    state.next = null;
+  }
+
+  nav.querySelectorAll('.cap-card').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-cap');
+      var s = id && document.getElementById(id);
+      if (s) openPath(s);
+    });
   });
-  sects.forEach(function(x){ x.classList.add('tabsect'); var h = x.querySelector('h4'); if (h) h.style.display = 'none'; });
-  function showLinkedTab(scroll){
-    var id; try{id=decodeURIComponent(location.hash.slice(1));}catch(e){return;}
-    var target=document.getElementById(id);
-    var index=sects.findIndex(function(section){return target && section.contains(target);});
-    if(index>=0){
-      show(index);
-      if(scroll) (target.classList.contains('tabsect') ? bar : target).scrollIntoView({block:'start',behavior:'instant'});
-    }
+  closeBtn.addEventListener('click', closePath);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) closePath(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && state.sect) { e.preventDefault(); closePath(); }
+  });
+
+  function pathFromHash(){
+    var h = '';
+    try { h = decodeURIComponent(location.hash.slice(1)); } catch (err) { return null; }
+    if (IDS.indexOf(h) >= 0) return document.getElementById(h);
+    return null;
   }
-  show(0);
-  showLinkedTab(false);
-  window.addEventListener('hashchange',function(){showLinkedTab(true);});
+  function tryOpenFromHash(){
+    var s = pathFromHash();
+    if (s) openPath(s);
+  }
+  if (location.hash && pathFromHash()) {
+    setTimeout(tryOpenFromHash, 0);
+  }
+  window.addEventListener('hashchange', function(){
+    if (pathFromHash() && !state.sect) tryOpenFromHash();
+  });
 })();
 </script>
 <script src="chart-interact.js"></script>
