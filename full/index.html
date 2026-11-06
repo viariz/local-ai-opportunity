@@ -192,59 +192,6 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
-#chapter-sticky-dock{
-  position:fixed;
-  left:0;right:0;
-  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:7px max(40px, env(safe-area-inset-right, 0px)) 5px max(40px, env(safe-area-inset-left, 0px));
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  box-sizing:border-box;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
-}
-#chapter-sticky-dock.is-visible{
-  opacity:1;
-  visibility:visible;
-  transform:none;
-  transition:opacity .2s ease, transform .2s ease, visibility 0s;
-}
-#chapter-sticky-dock .chapter-sticky-inner{
-  max-width:44em;
-  width:100%;
-  margin:0 auto;
-  text-align:center;
-}
-#chapter-sticky-dock .chapter-sticky-inner h1{
-  font-family:var(--sans);
-  font-weight:400;
-  font-synthesis:none;
-  font-size:clamp(.64em,1.2vw,.74em);
-  line-height:1.25;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin:0;
-  padding-block:0;
-  text-wrap:balance;
-  color:color-mix(in srgb, var(--ink-soft) 76%, var(--paper));
-}
-@media (max-width:700px){
-  #chapter-sticky-dock{
-    padding-left:max(18px, env(safe-area-inset-left, 0px));
-    padding-right:max(18px, env(safe-area-inset-right, 0px));
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  #chapter-sticky-dock{transition:none;}
-}
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:400; letter-spacing:.01em;}
@@ -583,59 +530,6 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
-#chapter-sticky-dock{
-  position:fixed;
-  left:0;right:0;
-  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:7px max(40px, env(safe-area-inset-right, 0px)) 5px max(40px, env(safe-area-inset-left, 0px));
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  box-sizing:border-box;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
-}
-#chapter-sticky-dock.is-visible{
-  opacity:1;
-  visibility:visible;
-  transform:none;
-  transition:opacity .2s ease, transform .2s ease, visibility 0s;
-}
-#chapter-sticky-dock .chapter-sticky-inner{
-  max-width:44em;
-  width:100%;
-  margin:0 auto;
-  text-align:center;
-}
-#chapter-sticky-dock .chapter-sticky-inner h1{
-  font-family:var(--sans);
-  font-weight:400;
-  font-synthesis:none;
-  font-size:clamp(.64em,1.2vw,.74em);
-  line-height:1.25;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin:0;
-  padding-block:0;
-  text-wrap:balance;
-  color:color-mix(in srgb, var(--ink-soft) 76%, var(--paper));
-}
-@media (max-width:700px){
-  #chapter-sticky-dock{
-    padding-left:max(18px, env(safe-area-inset-left, 0px));
-    padding-right:max(18px, env(safe-area-inset-right, 0px));
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  #chapter-sticky-dock{transition:none;}
-}
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:400; letter-spacing:.01em;}
@@ -970,59 +864,6 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
-#chapter-sticky-dock{
-  position:fixed;
-  left:0;right:0;
-  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:7px max(40px, env(safe-area-inset-right, 0px)) 5px max(40px, env(safe-area-inset-left, 0px));
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  box-sizing:border-box;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
-}
-#chapter-sticky-dock.is-visible{
-  opacity:1;
-  visibility:visible;
-  transform:none;
-  transition:opacity .2s ease, transform .2s ease, visibility 0s;
-}
-#chapter-sticky-dock .chapter-sticky-inner{
-  max-width:44em;
-  width:100%;
-  margin:0 auto;
-  text-align:center;
-}
-#chapter-sticky-dock .chapter-sticky-inner h1{
-  font-family:var(--sans);
-  font-weight:400;
-  font-synthesis:none;
-  font-size:clamp(.64em,1.2vw,.74em);
-  line-height:1.25;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin:0;
-  padding-block:0;
-  text-wrap:balance;
-  color:color-mix(in srgb, var(--ink-soft) 76%, var(--paper));
-}
-@media (max-width:700px){
-  #chapter-sticky-dock{
-    padding-left:max(18px, env(safe-area-inset-left, 0px));
-    padding-right:max(18px, env(safe-area-inset-right, 0px));
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  #chapter-sticky-dock{transition:none;}
-}
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:400; letter-spacing:.01em;}
@@ -1185,6 +1026,9 @@ figure.fig-gap-absorb{margin:4rem 0;}
 .gap-absorb text{font-family:var(--sans);fill:var(--ink);font-weight:400;}
 .gap-absorb .gap-shimmer-label{font-weight:400;letter-spacing:.04em;fill:var(--ink-soft);}
 @media (prefers-reduced-motion:reduce){.gap-absorb .gap-shimmer-label{letter-spacing:.06em;}}
+figure.fig-gpu-test{margin:2.8rem 0 0;}
+figure.fig-gpu-test .fighead{margin:0 0 .65em;}
+figure.fig-gpu-test svg{margin-top:.75rem;border-radius:12px;box-shadow:0 12px 40px rgba(31,33,34,.05),0 4px 14px rgba(31,33,34,.025);overflow:visible;}
 @media(max-width:700px){.gap-motion-heading{gap:.75rem;}.gap-motion-heading .figsubtitle{max-width:23em;}.gap-replay{font-size:.65rem;}}
 
 
@@ -1387,59 +1231,6 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
-#chapter-sticky-dock{
-  position:fixed;
-  left:0;right:0;
-  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:7px max(40px, env(safe-area-inset-right, 0px)) 5px max(40px, env(safe-area-inset-left, 0px));
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  box-sizing:border-box;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
-}
-#chapter-sticky-dock.is-visible{
-  opacity:1;
-  visibility:visible;
-  transform:none;
-  transition:opacity .2s ease, transform .2s ease, visibility 0s;
-}
-#chapter-sticky-dock .chapter-sticky-inner{
-  max-width:44em;
-  width:100%;
-  margin:0 auto;
-  text-align:center;
-}
-#chapter-sticky-dock .chapter-sticky-inner h1{
-  font-family:var(--sans);
-  font-weight:400;
-  font-synthesis:none;
-  font-size:clamp(.64em,1.2vw,.74em);
-  line-height:1.25;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin:0;
-  padding-block:0;
-  text-wrap:balance;
-  color:color-mix(in srgb, var(--ink-soft) 76%, var(--paper));
-}
-@media (max-width:700px){
-  #chapter-sticky-dock{
-    padding-left:max(18px, env(safe-area-inset-left, 0px));
-    padding-right:max(18px, env(safe-area-inset-right, 0px));
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  #chapter-sticky-dock{transition:none;}
-}
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:400; letter-spacing:.01em;}
@@ -1846,59 +1637,6 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
-#chapter-sticky-dock{
-  position:fixed;
-  left:0;right:0;
-  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:7px max(40px, env(safe-area-inset-right, 0px)) 5px max(40px, env(safe-area-inset-left, 0px));
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  box-sizing:border-box;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
-}
-#chapter-sticky-dock.is-visible{
-  opacity:1;
-  visibility:visible;
-  transform:none;
-  transition:opacity .2s ease, transform .2s ease, visibility 0s;
-}
-#chapter-sticky-dock .chapter-sticky-inner{
-  max-width:44em;
-  width:100%;
-  margin:0 auto;
-  text-align:center;
-}
-#chapter-sticky-dock .chapter-sticky-inner h1{
-  font-family:var(--sans);
-  font-weight:400;
-  font-synthesis:none;
-  font-size:clamp(.64em,1.2vw,.74em);
-  line-height:1.25;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin:0;
-  padding-block:0;
-  text-wrap:balance;
-  color:color-mix(in srgb, var(--ink-soft) 76%, var(--paper));
-}
-@media (max-width:700px){
-  #chapter-sticky-dock{
-    padding-left:max(18px, env(safe-area-inset-left, 0px));
-    padding-right:max(18px, env(safe-area-inset-right, 0px));
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  #chapter-sticky-dock{transition:none;}
-}
 .thesis em{font-style:normal; font-weight:300; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:300; letter-spacing:.01em;}
@@ -2197,59 +1935,6 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
-#chapter-sticky-dock{
-  position:fixed;
-  left:0;right:0;
-  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:7px max(40px, env(safe-area-inset-right, 0px)) 5px max(40px, env(safe-area-inset-left, 0px));
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  box-sizing:border-box;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
-}
-#chapter-sticky-dock.is-visible{
-  opacity:1;
-  visibility:visible;
-  transform:none;
-  transition:opacity .2s ease, transform .2s ease, visibility 0s;
-}
-#chapter-sticky-dock .chapter-sticky-inner{
-  max-width:44em;
-  width:100%;
-  margin:0 auto;
-  text-align:center;
-}
-#chapter-sticky-dock .chapter-sticky-inner h1{
-  font-family:var(--sans);
-  font-weight:400;
-  font-synthesis:none;
-  font-size:clamp(.64em,1.2vw,.74em);
-  line-height:1.25;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin:0;
-  padding-block:0;
-  text-wrap:balance;
-  color:color-mix(in srgb, var(--ink-soft) 76%, var(--paper));
-}
-@media (max-width:700px){
-  #chapter-sticky-dock{
-    padding-left:max(18px, env(safe-area-inset-left, 0px));
-    padding-right:max(18px, env(safe-area-inset-right, 0px));
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  #chapter-sticky-dock{transition:none;}
-}
 .thesis em{font-style:normal; font-weight:300; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:300; letter-spacing:.01em;}
@@ -2795,59 +2480,6 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
-#chapter-sticky-dock{
-  position:fixed;
-  left:0;right:0;
-  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:7px max(40px, env(safe-area-inset-right, 0px)) 5px max(40px, env(safe-area-inset-left, 0px));
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  box-sizing:border-box;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
-}
-#chapter-sticky-dock.is-visible{
-  opacity:1;
-  visibility:visible;
-  transform:none;
-  transition:opacity .2s ease, transform .2s ease, visibility 0s;
-}
-#chapter-sticky-dock .chapter-sticky-inner{
-  max-width:44em;
-  width:100%;
-  margin:0 auto;
-  text-align:center;
-}
-#chapter-sticky-dock .chapter-sticky-inner h1{
-  font-family:var(--sans);
-  font-weight:400;
-  font-synthesis:none;
-  font-size:clamp(.64em,1.2vw,.74em);
-  line-height:1.25;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin:0;
-  padding-block:0;
-  text-wrap:balance;
-  color:color-mix(in srgb, var(--ink-soft) 76%, var(--paper));
-}
-@media (max-width:700px){
-  #chapter-sticky-dock{
-    padding-left:max(18px, env(safe-area-inset-left, 0px));
-    padding-right:max(18px, env(safe-area-inset-right, 0px));
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  #chapter-sticky-dock{transition:none;}
-}
 .thesis em{font-style:normal; font-weight:300; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:300; letter-spacing:.01em;}
@@ -3189,59 +2821,6 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .titlepage-rhythm{visibility:hidden; pointer-events:none; user-select:none;}
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
-#chapter-sticky-dock{
-  position:fixed;
-  left:0;right:0;
-  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:7px max(40px, env(safe-area-inset-right, 0px)) 5px max(40px, env(safe-area-inset-left, 0px));
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  box-sizing:border-box;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform:translateY(-8px);
-  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
-}
-#chapter-sticky-dock.is-visible{
-  opacity:1;
-  visibility:visible;
-  transform:none;
-  transition:opacity .2s ease, transform .2s ease, visibility 0s;
-}
-#chapter-sticky-dock .chapter-sticky-inner{
-  max-width:44em;
-  width:100%;
-  margin:0 auto;
-  text-align:center;
-}
-#chapter-sticky-dock .chapter-sticky-inner h1{
-  font-family:var(--sans);
-  font-weight:400;
-  font-synthesis:none;
-  font-size:clamp(.64em,1.2vw,.74em);
-  line-height:1.25;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin:0;
-  padding-block:0;
-  text-wrap:balance;
-  color:color-mix(in srgb, var(--ink-soft) 76%, var(--paper));
-}
-@media (max-width:700px){
-  #chapter-sticky-dock{
-    padding-left:max(18px, env(safe-area-inset-left, 0px));
-    padding-right:max(18px, env(safe-area-inset-right, 0px));
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  #chapter-sticky-dock{transition:none;}
-}
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:400; letter-spacing:.01em;}
@@ -3465,7 +3044,6 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 </script>
 </head>
 <body>
-<div id="chapter-sticky-dock" aria-hidden="true"><div class="chapter-sticky-inner"></div></div>
 <div class="book" lang="en">
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage" id="top">
@@ -3965,14 +3543,14 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <nav id="path-cards-nav" class="cap-cards path-cards" aria-label="The two paths">
   <button type="button" class="cap-card" data-cap="just-build-more">
-    <span class="cap-card-art" aria-hidden="true"><img src="fig/paths/just-build-more.svg" width="210" height="210" alt=""></span>
+    <span class="cap-card-art" aria-hidden="true"><img src="../fig/paths/just-build-more.svg" width="210" height="210" alt=""></span>
     <span class="cap-card-text">
       <span class="cap-card-title">Just Build More, Bro</span>
       <span class="cap-card-sub">Why AI will diffuse through society as a GPU per person.</span>
     </span>
   </button>
   <button type="button" class="cap-card" data-cap="put-them-into-space">
-    <span class="cap-card-art" aria-hidden="true"><img src="fig/paths/put-them-into-space.svg" width="210" height="210" alt=""></span>
+    <span class="cap-card-art" aria-hidden="true"><img src="../fig/paths/put-them-into-space.svg" width="210" height="210" alt=""></span>
     <span class="cap-card-text">
       <span class="cap-card-title">Put Them Into Space</span>
       <span class="cap-card-sub">Why AI will diffuse through society as a GPU per person.</span>
@@ -4086,6 +3664,11 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
           <button class="gap-replay" type="button" aria-label="Replay demand distribution animation">Replay <span aria-hidden="true">↻</span></button>
         </div>
         <svg class="gap-absorb" viewBox="0 0 720 420" role="img" aria-label="Animation: unmet cloud demand leaves the chart; thin drifting lines and waves of dots move only inside the figure; a shimmering A billion personal computers caption appears; then they dissolve softly back into the gap in a seamless loop."></svg>
+      </figure>
+      <figure class="fig-gpu-test" id="gpu-per-person-test-fig">
+        <div class="fighead fighead-chart"><div class="figtitle">Test animation</div><div class="figsubtitle">Placeholder diffusion sketch under the demand figure.</div></div>
+        <svg class="gpu-per-person-test" viewBox="0 0 720 240" role="img" aria-label="Test animation: a large ring on the left connects with thin curved lines to a field of small circles in the middle, then to four small squares on the right."></svg>
+        <figcaption>Fig.&nbsp;7.&ensp;Test animation (layout prototype): one large ring, many small nodes, thin bundle-like curves, four end caps. Styling matches the other technical figures on this page.</figcaption>
       </figure>
       <p>A cloud build needs trillions of dollars raised before the first token is served, and repaid on a guess about future utilization. A personal machine is paid for up front by the person who uses it. Supply arrives with demand instead of years ahead of it, and none of it depends on a rate cycle.</p>
       <p>AI will diffuse through the economy as a GPU per person.</p>
@@ -4956,66 +4539,10 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
   var readingRail = window.createReadingRail(document.getElementById('rail'));
   var sections = Array.prototype.slice.call(document.querySelectorAll('[data-title]'));
   var title = document.getElementById('top');
-  function syncChapterStickyOffset(){
-    var off = 0;
-    if (topbar && topbar.classList.contains('show') && getComputedStyle(topbar).display !== 'none') {
-      off = topbar.offsetHeight;
-    }
-    document.documentElement.style.setProperty('--chapter-sticky-offset', off + 'px');
-  }
-  var chapterDock = document.getElementById('chapter-sticky-dock');
-  var chapterDockInner = chapterDock ? chapterDock.querySelector('.chapter-sticky-inner') : null;
-  var chapterPages = chapterDockInner ? Array.prototype.slice.call(document.querySelectorAll('section.titlepage.chapter-title')) : [];
-  var chapterDockLast = -1;
-  function updateChapterStickyDock(scrollY){
-    if (!chapterDock || !chapterDockInner || !chapterPages.length) return;
-    var y = scrollY;
-    var onTitlePage = false;
-    for (var c = 0; c < chapterPages.length; c++) {
-      var pg = chapterPages[c];
-      var top = pg.offsetTop;
-      var bot = top + pg.offsetHeight;
-      if (y >= top && y < bot) {
-        onTitlePage = true;
-        break;
-      }
-    }
-    if (onTitlePage) {
-      chapterDock.classList.remove('is-visible');
-      chapterDock.setAttribute('aria-hidden', 'true');
-      chapterDockLast = -1;
-      return;
-    }
-    var active = -1;
-    for (var j = chapterPages.length - 1; j >= 0; j--) {
-      var p = chapterPages[j];
-      if (y >= p.offsetTop + p.offsetHeight) {
-        active = j;
-        break;
-      }
-    }
-    if (active < 0) {
-      chapterDock.classList.remove('is-visible');
-      chapterDock.setAttribute('aria-hidden', 'true');
-      chapterDockLast = -1;
-      return;
-    }
-    if (active !== chapterDockLast) {
-      chapterDockLast = active;
-      var sec = chapterPages[active];
-      var h1 = sec.querySelector('h1');
-      chapterDockInner.innerHTML = '';
-      if (h1) chapterDockInner.appendChild(h1.cloneNode(true));
-    }
-    chapterDock.classList.add('is-visible');
-    chapterDock.setAttribute('aria-hidden', 'false');
-  }
   function onScroll(){
     var y = window.scrollY || document.documentElement.scrollTop;
     var past = y > title.offsetHeight - 220;
     topbar.classList.toggle('show', past);
-    syncChapterStickyOffset();
-    updateChapterStickyDock(y);
     var current = '';
     for (var i = 0; i < sections.length; i++) {
       if (sections[i].offsetTop - 140 <= y) current = sections[i].getAttribute('data-title');
@@ -5403,6 +4930,7 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 })();
 </script>
 <script src="gap-absorb.js"></script>
+<script src="gpu-per-person-test.js"></script>
 <script src="workload-charts.js"></script>
 <script src="dreaming-canvas.js"></script>
 <script>
