@@ -35,16 +35,24 @@
 <meta name="twitter:image:alt" content="The Local AI Opportunity. Why AI will diffuse through society as a GPU per person. Rising token demand leaves a shaded gap above constrained cloud supply: unmet demand, served locally.">
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>@font-face{
-  font-family:"Neue Haas Unica Pro";
-  src:url("fonts/NeueHaasUnicaPro-Light.ttf") format("truetype");
+  font-family:"ABC Diatype Rounded";
+  src:url("fonts/ABCDiatypeRounded-Light.woff2") format("woff2");
   font-weight:300;
   font-style:normal;
   font-display:swap;
 }
 @font-face{
-  font-family:"Neue Haas Unica Pro";
-  src:url("fonts/NeueHaasUnicaPro-Regular.ttf") format("truetype");
+  font-family:"ABC Diatype Rounded";
+  src:url("fonts/ABCDiatypeRounded-Regular.woff2") format("woff2");
   font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:"Truffle Sans";
+  src:url("fonts/TruffleSans.ttf") format("truetype");
+  font-weight:1 1000;
+  font-stretch:100%;
   font-style:normal;
   font-display:swap;
 }
@@ -56,7 +64,8 @@
   --ink-soft:#5c6164;
   --rule:rgba(31,33,34,.28);
   --wash:rgba(31,33,34,.06);
-  --sans:"Neue Haas Unica Pro","Helvetica Neue",Arial,sans-serif;
+  --sans:"ABC Diatype Rounded","Helvetica Neue",Arial,sans-serif;
+  --display:"Truffle Sans","ABC Diatype Rounded",sans-serif;
   color-scheme:light;
 }
 
@@ -174,16 +183,17 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .titlepage .eyebrow{text-transform:uppercase; letter-spacing:.26em; font-size:13px; font-weight:300; color:var(--ink-soft); margin:0 0 1.35em;}
 .titlepage .eyebrow a{text-decoration:none; color:inherit;}
 .titlepage .eyebrow + h1{margin-top:0;}
-.titlepage h1{font-weight:300; font-size:clamp(1.55em,3.6vw,2.05em); line-height:1.22; letter-spacing:.16em; text-transform:uppercase; margin:.15em 0 0; white-space:nowrap; text-wrap:nowrap;}
-.titlepage h1.titlepage-h1-multiline{white-space:normal; text-wrap:balance;}
+.titlepage h1{font-family:var(--display);font-weight:300;font-variation-settings:"wght" 210;font-synthesis:none;font-size:clamp(1.55em,3.6vw,2.05em);line-height:1.22;letter-spacing:.04em;text-transform:none;margin:.15em 0 0;white-space:nowrap;text-wrap:nowrap;}
+
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
+.titlepage h1+.thesis{margin-top:12px;}
 .thesis em{font-style:normal; font-weight:300; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:300; letter-spacing:.01em;}
 .author-link{display:inline-flex;align-items:center;gap:.55em;color:var(--ink-soft);transition:color .15s ease;}
 .author-link:hover,.author-link:focus-visible{color:var(--ink);}
 .author-link:focus-visible{outline:1px solid currentColor;outline-offset:5px;}
-.titlepage .dateline{margin:0 0 1.35em; font-size:.9em; color:var(--ink-soft);}
+.titlepage .dateline{margin:0 0 3.4em; font-size:.9em; color:var(--ink-soft);}
 .dateline{margin-top:1.6em; font-size:.9em; color:var(--ink-soft);}
 .readline{margin-top:4.2em;}
 .readline a{text-transform:uppercase; letter-spacing:.22em; font-size:12px; font-weight:300; border-bottom:1px solid var(--rule); padding-bottom:3px;}
@@ -280,7 +290,7 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
   .step .when, .part header .kicker{font-size:13px;}
   .chat{font-size:1em; margin:3.5em 0 4em; gap:1.55em;}
   .chat .tools{gap:.45em;}
-  .titlepage h1{white-space:normal; text-wrap:balance;}
+  
   .scrolly{display:block; margin-bottom:4em;}
   .scrolly-chart{display:none;}
   #scrolly .step{min-height:auto; opacity:1; padding:4.5rem 0 5rem; box-sizing:border-box;}
@@ -1986,6 +1996,7 @@ table.worked td:first-child{padding-right:1.4em;}
 /* ---- delta: endnotes.html ---- */
 itlepage-rhythm{visibility:hidden; pointer-events:none; user-select:none;}
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
+.titlepage h1+.thesis{margin-top:12px;}
 .thesis em{font-style:normal; font-weight:300; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:300; letter-spacing:.01em;}
@@ -2190,10 +2201,10 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage" id="top">
   <div class="dateline">November 1, 2026</div>
-  <h1 class="titlepage-h1-multiline">The Local AI<br>Opportunity</h1>
-  <p class="thesis">Why AI will diffuse through society as a GPU per person.</p>
+  <h1>The Local AI Opportunity</h1>
+  <p class="thesis">Why AI will diffuse through society as a GPU per person</p>
   <div class="byline">
-    <div class="names"><a class="author-link" href="https://x.com/iamgingertrash" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.3-8.5L.8 2h6.5l4.4 6.8L18.9 2Zm-1.1 18h1.7L6.4 3.9H4.6L17.8 20Z"/></svg><span>@iamgingertrash</span></a></div>
+    <div class="names"><a class="author-link" href="https://x.com/iamgingertrash" target="_blank" rel="noopener noreferrer"><span>@iamgingertrash</span></a></div>
   </div>
 </section>
 
@@ -2412,9 +2423,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="eyebrow"><a href="#introduction">The Local AI Opportunity</a></div>
   <h1>The Three Caps</h1>
-  <p class="thesis">Not all things are built at the speed of bits.</p>
+  <p class="thesis">Not all things are built at the speed of bits</p>
 </section>
 
 <!-- ============ PART II ============ -->
@@ -2635,9 +2645,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="eyebrow"><a href="#introduction">The Local AI Opportunity</a></div>
   <h1>The Three Paths</h1>
-  <p class="thesis">Cover the planet in datacenters, put them in space, or give every human their own GPU.</p>
+  <p class="thesis">Cover the planet in datacenters, put them in space, or give every human their own GPU</p>
 </section>
 
 <!-- ============ PART IV ============ -->
@@ -2755,9 +2764,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="eyebrow"><a href="#introduction">The Local AI Opportunity</a></div>
   <h1>Precedents</h1>
-  <p class="thesis">History teaches us more about the future than any extrapolation can.</p>
+  <p class="thesis">History teaches us more about the future than any extrapolation can</p>
 </section>
 
 <!-- ============ PART V ============ -->
@@ -2850,7 +2858,6 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="eyebrow"><a href="#introduction">The Local AI Opportunity</a></div>
   <h1>A New Computer</h1>
   <p class="thesis">What does a computer with intelligence feel like?</p>
 </section>
@@ -2868,7 +2875,6 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="eyebrow"><a href="#introduction">The Local AI Opportunity</a></div>
   <h1>Next-Gen Chips</h1>
   <p class="thesis">The Von Neumann Bottleneck</p>
 </section>
@@ -2883,9 +2889,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="eyebrow"><a href="#introduction">The Local AI Opportunity</a></div>
-  <h1 class="titlepage-h1-multiline">A Million<br>New Computers</h1>
-  <p class="thesis">The economy that comes after the personal AI computer.</p>
+  <h1>A Million New Computers</h1>
+  <p class="thesis">The economy that comes after the personal AI computer</p>
 </section>
 
 <!-- ============ THE ROADMAP ============ -->
@@ -2898,12 +2903,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 </section>
 
 <section class="titlepage chapter-title">
-  <div class="eyebrow"><a href="#introduction">The Local AI Opportunity</a></div>
   <h1>Endnotes</h1>
-  <p class="thesis titlepage-rhythm" aria-hidden="true">Why AI will diffuse through society as a GPU per person.</p>
-  <div class="byline titlepage-rhythm" aria-hidden="true">
-    <div class="names"><a class="author-link" tabindex="-1" href="https://x.com/iamgingertrash" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.3-8.5L.8 2h6.5l4.4 6.8L18.9 2Zm-1.1 18h1.7L6.4 3.9H4.6L17.8 20Z"/></svg><span>@iamgingertrash</span></a></div>
-  </div>
+  <p class="thesis titlepage-rhythm" aria-hidden="true">Why AI will diffuse through society as a GPU per person</p>
 </section>
 
 <!-- ============ ENDNOTES ============ -->

@@ -1223,7 +1223,7 @@
     var hasPrev = cycle.labelPrev && cycle.labelPrevAlpha > 0.02;
     if (!hasCurrent && !hasPrev) return;
     ctx.save();
-    ctx.font = '300 15px "Neue Haas Unica Pro", "Helvetica Neue", Arial, sans-serif';
+    ctx.font = '300 15px "ABC Diatype Rounded", "Helvetica Neue", Arial, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     if (hasPrev) drawStatusLine(ctx, cycle.labelPrev, inkSoft, cycle.labelPrevAlpha, animT, STATUS_Y);
