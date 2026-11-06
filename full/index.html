@@ -5300,9 +5300,15 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
     if (active !== chapterDockLast) {
       chapterDockLast = active;
       var sec = chapterPages[active];
-      var h1 = sec.querySelector('h1');
       chapterDockTitle.innerHTML = '';
-      if (h1) chapterDockTitle.appendChild(h1.cloneNode(true));
+      if (active === 0) {
+        var introH = document.createElement('h1');
+        introH.textContent = 'Introduction';
+        chapterDockTitle.appendChild(introH);
+      } else {
+        var h1 = sec.querySelector('h1');
+        if (h1) chapterDockTitle.appendChild(h1.cloneNode(true));
+      }
     }
     chapterDock.classList.add('is-visible');
     chapterDock.setAttribute('aria-hidden', 'false');
