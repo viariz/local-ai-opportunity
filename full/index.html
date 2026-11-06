@@ -4965,7 +4965,7 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
   }
   var chapterDock = document.getElementById('chapter-sticky-dock');
   var chapterDockInner = chapterDock ? chapterDock.querySelector('.chapter-sticky-inner') : null;
-  var chapterPages = chapterDockInner ? Array.prototype.slice.call(document.querySelectorAll('section.titlepage.chapter-title')) : [];
+  var chapterPages = chapterDockInner ? Array.prototype.slice.call(document.querySelectorAll('section#top.titlepage, section.titlepage.chapter-title')) : [];
   var chapterDockLast = -1;
   function updateChapterStickyDock(scrollY){
     if (!chapterDock || !chapterDockInner || !chapterPages.length) return;
