@@ -194,6 +194,16 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
+
+/* Public teaser: Learn more (no box; matches site typography) */
+.teaser-learn-more{min-height:min(52vh,28rem);display:flex;align-items:center;justify-content:center;padding-block:clamp(2rem,6vw,3.5rem);}
+.teaser-learn-more .teaser-copy{max-width:22em;margin-inline:auto;text-align:center;}
+/* Global `p { text-align:left }` otherwise wins over inherited centering */
+.teaser-learn-more .teaser-copy p{text-align:center;}
+.teaser-learn-more .teaser-lead{margin:0 0 .5rem;font-size:.88em;letter-spacing:.06em;color:var(--ink-soft);font-weight:300;}
+.teaser-learn-more .teaser-email{margin:0;font-size:1em;line-height:1.45;font-weight:300;}
+.teaser-learn-more .teaser-email a{color:var(--ink);text-decoration:none;font-weight:400;}
+.teaser-learn-more .teaser-email a:hover,.teaser-learn-more .teaser-email a:focus-visible{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:var(--ink-soft);}
 .byline{margin-top:3.4em; line-height:1.45;}
 .byline .names{font-weight:400; letter-spacing:.01em;}
 .author-link{display:inline-flex;align-items:center;gap:.55em;color:var(--ink-soft);transition:color .15s ease;}
