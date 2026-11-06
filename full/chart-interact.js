@@ -10,7 +10,7 @@
 
   var style = document.createElement('style');
   style.textContent =
-    '#ichart-tip{position:fixed;z-index:20;max-width:min(16em,72vw);padding:8px 11px;border:1px solid rgba(31,33,34,.28);border-radius:8px;background:#F4F4F4;color:#1F2122;font-family:"ABC Diatype Rounded","Helvetica Neue",Arial,sans-serif;font-weight:300;font-size:12.5px;line-height:1.35;pointer-events:none;box-shadow:0 10px 28px rgba(31,33,34,.08);transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s ease;}' +
+    '#ichart-tip{position:fixed;z-index:20;max-width:min(16em,72vw);padding:8px 11px;border:1px solid rgba(31,33,34,.28);border-radius:8px;background:#F4F4F4;color:#1F2122;font-family:"ABC Diatype Rounded","Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:12.5px;line-height:1.35;pointer-events:none;box-shadow:0 10px 28px rgba(31,33,34,.08);transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s ease;}' +
     '#ichart-tip.is-sub{transform:translate(-50%,calc(-100% - 8px));}' +
     '#ichart-tip .ichart-tip-main{display:block;font-weight:400;}' +
     '#ichart-tip .ichart-tip-sub{display:block;margin-top:3px;font-size:11px;color:#5c6164;}' +
@@ -377,6 +377,18 @@
     });
   }
 
+  function resetMovedIchart(svg) {
+    if (!svg || !svg.classList) return;
+    delete svg.__ichartScrub;
+    delete svg.__ichartBars;
+    delete svg.__ichartDonuts;
+    delete svg.__ichartLines;
+    delete svg.__ichartDiagram;
+    svg.querySelectorAll('.ichart-bar-group').forEach(function (g) {
+      delete g.__ichartBarGroup;
+    });
+  }
+
   function initTables() {
     document.querySelectorAll('table.worked tr').forEach(function (row) {
       if (row.__ichartRow) return;
@@ -492,6 +504,11 @@
 
   window.ichartRefresh = function () {
     initHits();
+    document.querySelectorAll('svg.ichart-scrub').forEach(resetMovedIchart);
+    document.querySelectorAll('svg.ichart-bars').forEach(resetMovedIchart);
+    document.querySelectorAll('svg.ichart-donuts').forEach(resetMovedIchart);
+    document.querySelectorAll('svg.ichart-diagram').forEach(resetMovedIchart);
+    document.querySelectorAll('svg.ichart-lines').forEach(resetMovedIchart);
     document.querySelectorAll('svg.ichart-scrub').forEach(initScrub);
     document.querySelectorAll('svg.ichart-bars').forEach(initBars);
     document.querySelectorAll('svg.ichart-donuts').forEach(initDonuts);

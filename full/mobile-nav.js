@@ -46,7 +46,7 @@
     '  #mobile-nav-panel.open{opacity:1; visibility:visible; pointer-events:auto; transform:none; transition:opacity .28s ease, transform .32s cubic-bezier(.33,1,.38,1), visibility 0s;}',
     '  #mobile-nav-panel ol{list-style:none; margin:0; padding:8px 0 0; display:flex; flex-direction:column; gap:0;}',
     '  #mobile-nav-panel li{display:flex; align-items:center; min-height:44px;',
-    '    font-size:14px; line-height:1.3; font-weight:300; letter-spacing:.12em; text-transform:uppercase;',
+    '    font-size:14px; line-height:1.3; font-weight:400; letter-spacing:.12em; text-transform:uppercase;',
     '    color:color-mix(in srgb, var(--ink) 72%, transparent);}',
     '  #mobile-nav-panel li.here{font-weight:400; color:var(--ink);}',
     '  #mobile-nav-panel li.soon{color:color-mix(in srgb, var(--ink) 45%, transparent);}',
