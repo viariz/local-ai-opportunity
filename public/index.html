@@ -192,25 +192,63 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Sticky chapter dividers (The Three Paths, A New Computer, etc.) */
-.titlepage.chapter-title{min-height:calc(100svh + min(42vh,22rem));justify-content:flex-start;padding-block:clamp(6vh,12vw,14vh);box-sizing:border-box;}
-.chapter-title-header{
-  position:sticky;
-  top:max(env(safe-area-inset-top,0px),calc(var(--chapter-sticky-offset,0px) + 1px));
-  z-index:7;
-  box-sizing:border-box;
-  width:100%;
-  max-width:44em;
-  margin-inline:auto;
-  padding-block:clamp(.85rem,2.5vw,1.1rem);
-  margin-block:clamp(.35rem,1.2vw,.65rem);
+/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter’s title does the same */
+#chapter-sticky-dock{
+  position:fixed;
+  left:0;right:0;
+  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
+  z-index:6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px max(40px, env(safe-area-inset-right, 0px)) 12px max(40px, env(safe-area-inset-left, 0px));
   background:var(--paper);
   border-bottom:1px solid var(--rule);
+  box-sizing:border-box;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.titlepage.chapter-title .chapter-title-header .thesis{margin-top:.55em;}
-.titlepage.chapter-title h1{font-size:clamp(1.05em,2.6vw,1.45em);}
+#chapter-sticky-dock.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:opacity .2s ease, transform .2s ease, visibility 0s;
+}
+#chapter-sticky-dock .chapter-sticky-inner{
+  max-width:44em;
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+#chapter-sticky-dock .chapter-sticky-inner h1{
+  font-family:var(--display);
+  font-weight:100;
+  font-variation-settings:"wght" 100;
+  font-synthesis:none;
+  font-size:clamp(1.05em,2.35vw,1.38em);
+  line-height:1.22;
+  letter-spacing:.04em;
+  text-transform:none;
+  margin:0;
+  text-wrap:balance;
+}
+#chapter-sticky-dock .chapter-sticky-inner .thesis{
+  margin:8px auto 0;
+  max-width:34em;
+  font-size:.95em;
+  line-height:1.45;
+}
+@media (max-width:700px){
+  #chapter-sticky-dock{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce){
-  .chapter-title-header{transition:none;}
+  #chapter-sticky-dock{transition:none;}
 }
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 
@@ -560,25 +598,63 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Sticky chapter dividers (The Three Paths, A New Computer, etc.) */
-.titlepage.chapter-title{min-height:calc(100svh + min(42vh,22rem));justify-content:flex-start;padding-block:clamp(6vh,12vw,14vh);box-sizing:border-box;}
-.chapter-title-header{
-  position:sticky;
-  top:max(env(safe-area-inset-top,0px),calc(var(--chapter-sticky-offset,0px) + 1px));
-  z-index:7;
-  box-sizing:border-box;
-  width:100%;
-  max-width:44em;
-  margin-inline:auto;
-  padding-block:clamp(.85rem,2.5vw,1.1rem);
-  margin-block:clamp(.35rem,1.2vw,.65rem);
+/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter’s title does the same */
+#chapter-sticky-dock{
+  position:fixed;
+  left:0;right:0;
+  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
+  z-index:6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px max(40px, env(safe-area-inset-right, 0px)) 12px max(40px, env(safe-area-inset-left, 0px));
   background:var(--paper);
   border-bottom:1px solid var(--rule);
+  box-sizing:border-box;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.titlepage.chapter-title .chapter-title-header .thesis{margin-top:.55em;}
-.titlepage.chapter-title h1{font-size:clamp(1.05em,2.6vw,1.45em);}
+#chapter-sticky-dock.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:opacity .2s ease, transform .2s ease, visibility 0s;
+}
+#chapter-sticky-dock .chapter-sticky-inner{
+  max-width:44em;
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+#chapter-sticky-dock .chapter-sticky-inner h1{
+  font-family:var(--display);
+  font-weight:100;
+  font-variation-settings:"wght" 100;
+  font-synthesis:none;
+  font-size:clamp(1.05em,2.35vw,1.38em);
+  line-height:1.22;
+  letter-spacing:.04em;
+  text-transform:none;
+  margin:0;
+  text-wrap:balance;
+}
+#chapter-sticky-dock .chapter-sticky-inner .thesis{
+  margin:8px auto 0;
+  max-width:34em;
+  font-size:.95em;
+  line-height:1.45;
+}
+@media (max-width:700px){
+  #chapter-sticky-dock{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce){
-  .chapter-title-header{transition:none;}
+  #chapter-sticky-dock{transition:none;}
 }
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
@@ -914,25 +990,63 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Sticky chapter dividers (The Three Paths, A New Computer, etc.) */
-.titlepage.chapter-title{min-height:calc(100svh + min(42vh,22rem));justify-content:flex-start;padding-block:clamp(6vh,12vw,14vh);box-sizing:border-box;}
-.chapter-title-header{
-  position:sticky;
-  top:max(env(safe-area-inset-top,0px),calc(var(--chapter-sticky-offset,0px) + 1px));
-  z-index:7;
-  box-sizing:border-box;
-  width:100%;
-  max-width:44em;
-  margin-inline:auto;
-  padding-block:clamp(.85rem,2.5vw,1.1rem);
-  margin-block:clamp(.35rem,1.2vw,.65rem);
+/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter’s title does the same */
+#chapter-sticky-dock{
+  position:fixed;
+  left:0;right:0;
+  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
+  z-index:6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px max(40px, env(safe-area-inset-right, 0px)) 12px max(40px, env(safe-area-inset-left, 0px));
   background:var(--paper);
   border-bottom:1px solid var(--rule);
+  box-sizing:border-box;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.titlepage.chapter-title .chapter-title-header .thesis{margin-top:.55em;}
-.titlepage.chapter-title h1{font-size:clamp(1.05em,2.6vw,1.45em);}
+#chapter-sticky-dock.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:opacity .2s ease, transform .2s ease, visibility 0s;
+}
+#chapter-sticky-dock .chapter-sticky-inner{
+  max-width:44em;
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+#chapter-sticky-dock .chapter-sticky-inner h1{
+  font-family:var(--display);
+  font-weight:100;
+  font-variation-settings:"wght" 100;
+  font-synthesis:none;
+  font-size:clamp(1.05em,2.35vw,1.38em);
+  line-height:1.22;
+  letter-spacing:.04em;
+  text-transform:none;
+  margin:0;
+  text-wrap:balance;
+}
+#chapter-sticky-dock .chapter-sticky-inner .thesis{
+  margin:8px auto 0;
+  max-width:34em;
+  font-size:.95em;
+  line-height:1.45;
+}
+@media (max-width:700px){
+  #chapter-sticky-dock{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce){
-  .chapter-title-header{transition:none;}
+  #chapter-sticky-dock{transition:none;}
 }
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
@@ -1298,25 +1412,63 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Sticky chapter dividers (The Three Paths, A New Computer, etc.) */
-.titlepage.chapter-title{min-height:calc(100svh + min(42vh,22rem));justify-content:flex-start;padding-block:clamp(6vh,12vw,14vh);box-sizing:border-box;}
-.chapter-title-header{
-  position:sticky;
-  top:max(env(safe-area-inset-top,0px),calc(var(--chapter-sticky-offset,0px) + 1px));
-  z-index:7;
-  box-sizing:border-box;
-  width:100%;
-  max-width:44em;
-  margin-inline:auto;
-  padding-block:clamp(.85rem,2.5vw,1.1rem);
-  margin-block:clamp(.35rem,1.2vw,.65rem);
+/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter’s title does the same */
+#chapter-sticky-dock{
+  position:fixed;
+  left:0;right:0;
+  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
+  z-index:6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px max(40px, env(safe-area-inset-right, 0px)) 12px max(40px, env(safe-area-inset-left, 0px));
   background:var(--paper);
   border-bottom:1px solid var(--rule);
+  box-sizing:border-box;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.titlepage.chapter-title .chapter-title-header .thesis{margin-top:.55em;}
-.titlepage.chapter-title h1{font-size:clamp(1.05em,2.6vw,1.45em);}
+#chapter-sticky-dock.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:opacity .2s ease, transform .2s ease, visibility 0s;
+}
+#chapter-sticky-dock .chapter-sticky-inner{
+  max-width:44em;
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+#chapter-sticky-dock .chapter-sticky-inner h1{
+  font-family:var(--display);
+  font-weight:100;
+  font-variation-settings:"wght" 100;
+  font-synthesis:none;
+  font-size:clamp(1.05em,2.35vw,1.38em);
+  line-height:1.22;
+  letter-spacing:.04em;
+  text-transform:none;
+  margin:0;
+  text-wrap:balance;
+}
+#chapter-sticky-dock .chapter-sticky-inner .thesis{
+  margin:8px auto 0;
+  max-width:34em;
+  font-size:.95em;
+  line-height:1.45;
+}
+@media (max-width:700px){
+  #chapter-sticky-dock{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce){
-  .chapter-title-header{transition:none;}
+  #chapter-sticky-dock{transition:none;}
 }
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
@@ -1724,25 +1876,63 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Sticky chapter dividers (The Three Paths, A New Computer, etc.) */
-.titlepage.chapter-title{min-height:calc(100svh + min(42vh,22rem));justify-content:flex-start;padding-block:clamp(6vh,12vw,14vh);box-sizing:border-box;}
-.chapter-title-header{
-  position:sticky;
-  top:max(env(safe-area-inset-top,0px),calc(var(--chapter-sticky-offset,0px) + 1px));
-  z-index:7;
-  box-sizing:border-box;
-  width:100%;
-  max-width:44em;
-  margin-inline:auto;
-  padding-block:clamp(.85rem,2.5vw,1.1rem);
-  margin-block:clamp(.35rem,1.2vw,.65rem);
+/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
+#chapter-sticky-dock{
+  position:fixed;
+  left:0;right:0;
+  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
+  z-index:6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px max(40px, env(safe-area-inset-right, 0px)) 12px max(40px, env(safe-area-inset-left, 0px));
   background:var(--paper);
   border-bottom:1px solid var(--rule);
+  box-sizing:border-box;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.titlepage.chapter-title .chapter-title-header .thesis{margin-top:.55em;}
-.titlepage.chapter-title h1{font-size:clamp(1.05em,2.6vw,1.45em);}
+#chapter-sticky-dock.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:opacity .2s ease, transform .2s ease, visibility 0s;
+}
+#chapter-sticky-dock .chapter-sticky-inner{
+  max-width:44em;
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+#chapter-sticky-dock .chapter-sticky-inner h1{
+  font-family:var(--display);
+  font-weight:100;
+  font-variation-settings:"wght" 100;
+  font-synthesis:none;
+  font-size:clamp(1.05em,2.35vw,1.38em);
+  line-height:1.22;
+  letter-spacing:.04em;
+  text-transform:none;
+  margin:0;
+  text-wrap:balance;
+}
+#chapter-sticky-dock .chapter-sticky-inner .thesis{
+  margin:8px auto 0;
+  max-width:34em;
+  font-size:.95em;
+  line-height:1.45;
+}
+@media (max-width:700px){
+  #chapter-sticky-dock{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce){
-  .chapter-title-header{transition:none;}
+  #chapter-sticky-dock{transition:none;}
 }
 .thesis em{font-style:normal; font-weight:300; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
@@ -2042,25 +2232,63 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Sticky chapter dividers (The Three Paths, A New Computer, etc.) */
-.titlepage.chapter-title{min-height:calc(100svh + min(42vh,22rem));justify-content:flex-start;padding-block:clamp(6vh,12vw,14vh);box-sizing:border-box;}
-.chapter-title-header{
-  position:sticky;
-  top:max(env(safe-area-inset-top,0px),calc(var(--chapter-sticky-offset,0px) + 1px));
-  z-index:7;
-  box-sizing:border-box;
-  width:100%;
-  max-width:44em;
-  margin-inline:auto;
-  padding-block:clamp(.85rem,2.5vw,1.1rem);
-  margin-block:clamp(.35rem,1.2vw,.65rem);
+/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
+#chapter-sticky-dock{
+  position:fixed;
+  left:0;right:0;
+  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
+  z-index:6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px max(40px, env(safe-area-inset-right, 0px)) 12px max(40px, env(safe-area-inset-left, 0px));
   background:var(--paper);
   border-bottom:1px solid var(--rule);
+  box-sizing:border-box;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.titlepage.chapter-title .chapter-title-header .thesis{margin-top:.55em;}
-.titlepage.chapter-title h1{font-size:clamp(1.05em,2.6vw,1.45em);}
+#chapter-sticky-dock.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:opacity .2s ease, transform .2s ease, visibility 0s;
+}
+#chapter-sticky-dock .chapter-sticky-inner{
+  max-width:44em;
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+#chapter-sticky-dock .chapter-sticky-inner h1{
+  font-family:var(--display);
+  font-weight:100;
+  font-variation-settings:"wght" 100;
+  font-synthesis:none;
+  font-size:clamp(1.05em,2.35vw,1.38em);
+  line-height:1.22;
+  letter-spacing:.04em;
+  text-transform:none;
+  margin:0;
+  text-wrap:balance;
+}
+#chapter-sticky-dock .chapter-sticky-inner .thesis{
+  margin:8px auto 0;
+  max-width:34em;
+  font-size:.95em;
+  line-height:1.45;
+}
+@media (max-width:700px){
+  #chapter-sticky-dock{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce){
-  .chapter-title-header{transition:none;}
+  #chapter-sticky-dock{transition:none;}
 }
 .thesis em{font-style:normal; font-weight:300; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
@@ -2607,25 +2835,63 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Sticky chapter dividers (The Three Paths, A New Computer, etc.) */
-.titlepage.chapter-title{min-height:calc(100svh + min(42vh,22rem));justify-content:flex-start;padding-block:clamp(6vh,12vw,14vh);box-sizing:border-box;}
-.chapter-title-header{
-  position:sticky;
-  top:max(env(safe-area-inset-top,0px),calc(var(--chapter-sticky-offset,0px) + 1px));
-  z-index:7;
-  box-sizing:border-box;
-  width:100%;
-  max-width:44em;
-  margin-inline:auto;
-  padding-block:clamp(.85rem,2.5vw,1.1rem);
-  margin-block:clamp(.35rem,1.2vw,.65rem);
+/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter's title does the same */
+#chapter-sticky-dock{
+  position:fixed;
+  left:0;right:0;
+  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
+  z-index:6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px max(40px, env(safe-area-inset-right, 0px)) 12px max(40px, env(safe-area-inset-left, 0px));
   background:var(--paper);
   border-bottom:1px solid var(--rule);
+  box-sizing:border-box;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.titlepage.chapter-title .chapter-title-header .thesis{margin-top:.55em;}
-.titlepage.chapter-title h1{font-size:clamp(1.05em,2.6vw,1.45em);}
+#chapter-sticky-dock.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:opacity .2s ease, transform .2s ease, visibility 0s;
+}
+#chapter-sticky-dock .chapter-sticky-inner{
+  max-width:44em;
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+#chapter-sticky-dock .chapter-sticky-inner h1{
+  font-family:var(--display);
+  font-weight:100;
+  font-variation-settings:"wght" 100;
+  font-synthesis:none;
+  font-size:clamp(1.05em,2.35vw,1.38em);
+  line-height:1.22;
+  letter-spacing:.04em;
+  text-transform:none;
+  margin:0;
+  text-wrap:balance;
+}
+#chapter-sticky-dock .chapter-sticky-inner .thesis{
+  margin:8px auto 0;
+  max-width:34em;
+  font-size:.95em;
+  line-height:1.45;
+}
+@media (max-width:700px){
+  #chapter-sticky-dock{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce){
-  .chapter-title-header{transition:none;}
+  #chapter-sticky-dock{transition:none;}
 }
 .thesis em{font-style:normal; font-weight:300; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
@@ -2968,25 +3234,63 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .titlepage-rhythm{visibility:hidden; pointer-events:none; user-select:none;}
 .thesis{margin-top:1.35em; max-width:34em; font-size:1.02em; line-height:1.6; color:var(--ink-soft); text-align:center; text-wrap:balance;}
 .titlepage h1+.thesis{margin-top:12px;}
-/* Sticky chapter dividers (The Three Paths, A New Computer, etc.) */
-.titlepage.chapter-title{min-height:calc(100svh + min(42vh,22rem));justify-content:flex-start;padding-block:clamp(6vh,12vw,14vh);box-sizing:border-box;}
-.chapter-title-header{
-  position:sticky;
-  top:max(env(safe-area-inset-top,0px),calc(var(--chapter-sticky-offset,0px) + 1px));
-  z-index:7;
-  box-sizing:border-box;
-  width:100%;
-  max-width:44em;
-  margin-inline:auto;
-  padding-block:clamp(.85rem,2.5vw,1.1rem);
-  margin-block:clamp(.35rem,1.2vw,.65rem);
+/* Chapter title dock: after each full-page chapter title scrolls away, show it here until the next chapter’s title does the same */
+#chapter-sticky-dock{
+  position:fixed;
+  left:0;right:0;
+  top:max(env(safe-area-inset-top,0px),var(--chapter-sticky-offset,0px));
+  z-index:6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px max(40px, env(safe-area-inset-right, 0px)) 12px max(40px, env(safe-area-inset-left, 0px));
   background:var(--paper);
   border-bottom:1px solid var(--rule);
+  box-sizing:border-box;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
 }
-.titlepage.chapter-title .chapter-title-header .thesis{margin-top:.55em;}
-.titlepage.chapter-title h1{font-size:clamp(1.05em,2.6vw,1.45em);}
+#chapter-sticky-dock.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:opacity .2s ease, transform .2s ease, visibility 0s;
+}
+#chapter-sticky-dock .chapter-sticky-inner{
+  max-width:44em;
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+#chapter-sticky-dock .chapter-sticky-inner h1{
+  font-family:var(--display);
+  font-weight:100;
+  font-variation-settings:"wght" 100;
+  font-synthesis:none;
+  font-size:clamp(1.05em,2.35vw,1.38em);
+  line-height:1.22;
+  letter-spacing:.04em;
+  text-transform:none;
+  margin:0;
+  text-wrap:balance;
+}
+#chapter-sticky-dock .chapter-sticky-inner .thesis{
+  margin:8px auto 0;
+  max-width:34em;
+  font-size:.95em;
+  line-height:1.45;
+}
+@media (max-width:700px){
+  #chapter-sticky-dock{
+    padding-left:max(18px, env(safe-area-inset-left, 0px));
+    padding-right:max(18px, env(safe-area-inset-right, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce){
-  .chapter-title-header{transition:none;}
+  #chapter-sticky-dock{transition:none;}
 }
 .thesis em{font-style:normal; font-weight:400; color:var(--ink);}
 .byline{margin-top:3.4em; line-height:1.45;}
@@ -3211,6 +3515,7 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 </script>
 </head>
 <body>
+<div id="chapter-sticky-dock" aria-hidden="true"><div class="chapter-sticky-inner"></div></div>
 <div class="book" lang="en">
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage" id="top">
@@ -3440,10 +3745,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="chapter-title-header">
-    <h1>The Three Caps</h1>
-    <p class="thesis">Not all things are built at the speed of bits</p>
-  </div>
+  <h1>The Three Caps</h1>
+  <p class="thesis">Not all things are built at the speed of bits</p>
 </section>
 
 <!-- ============ PART II ============ -->
@@ -3696,10 +3999,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="chapter-title-header">
-    <h1>The Three Paths</h1>
-    <p class="thesis">Cover the planet in datacenters, put them in space, or give every human their own GPU</p>
-  </div>
+  <h1>The Three Paths</h1>
+  <p class="thesis">Cover the planet in datacenters, put them in space, or give every human their own GPU</p>
 </section>
 
 <!-- ============ PART IV ============ -->
@@ -3846,10 +4147,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="chapter-title-header">
-    <h1>Precedents</h1>
-    <p class="thesis">History teaches us more about the future than any extrapolation can</p>
-  </div>
+  <h1>Precedents</h1>
+  <p class="thesis">History teaches us more about the future than any extrapolation can</p>
 </section>
 
 <!-- ============ PART V ============ -->
@@ -3942,10 +4241,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="chapter-title-header">
-    <h1>A New Computer</h1>
-    <p class="thesis">What does a computer with intelligence feel like?</p>
-  </div>
+  <h1>A New Computer</h1>
+  <p class="thesis">What does a computer with intelligence feel like?</p>
 </section>
 
 <!-- ============ PART VI ============ -->
@@ -3960,10 +4257,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="chapter-title-header">
-    <h1>Next-Gen Chips</h1>
-    <p class="thesis">The Von Neumann Bottleneck</p>
-  </div>
+  <h1>Next-Gen Chips</h1>
+  <p class="thesis">The Von Neumann Bottleneck</p>
 </section>
 
 <!-- ============ THE ROADMAP ============ -->
@@ -3978,10 +4273,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <!-- ============ TITLE PAGE ============ -->
 <section class="titlepage chapter-title">
-  <div class="chapter-title-header">
-    <h1>A Million New Computers</h1>
-    <p class="thesis">The economy that comes after the personal AI computer</p>
-  </div>
+  <h1>A Million New Computers</h1>
+  <p class="thesis">The economy that comes after the personal AI computer</p>
 </section>
 
 <!-- ============ THE ROADMAP ============ -->
@@ -3995,10 +4288,8 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 </section>
 
 <section class="titlepage chapter-title">
-  <div class="chapter-title-header">
-    <h1>Endnotes</h1>
-    <p class="thesis titlepage-rhythm" aria-hidden="true">Why AI will diffuse through society as a GPU per person</p>
-  </div>
+  <h1>Endnotes</h1>
+  <p class="thesis titlepage-rhythm" aria-hidden="true">Why AI will diffuse through society as a GPU per person</p>
 </section>
 
 <!-- ============ ENDNOTES ============ -->
@@ -4074,11 +4365,61 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
     }
     document.documentElement.style.setProperty('--chapter-sticky-offset', off + 'px');
   }
+  var chapterDock = document.getElementById('chapter-sticky-dock');
+  var chapterDockInner = chapterDock ? chapterDock.querySelector('.chapter-sticky-inner') : null;
+  var chapterPages = chapterDockInner ? Array.prototype.slice.call(document.querySelectorAll('section.titlepage.chapter-title')) : [];
+  var chapterDockLast = -1;
+  function updateChapterStickyDock(scrollY){
+    if (!chapterDock || !chapterDockInner || !chapterPages.length) return;
+    var y = scrollY;
+    var onTitlePage = false;
+    for (var c = 0; c < chapterPages.length; c++) {
+      var pg = chapterPages[c];
+      var top = pg.offsetTop;
+      var bot = top + pg.offsetHeight;
+      if (y >= top && y < bot) {
+        onTitlePage = true;
+        break;
+      }
+    }
+    if (onTitlePage) {
+      chapterDock.classList.remove('is-visible');
+      chapterDock.setAttribute('aria-hidden', 'true');
+      chapterDockLast = -1;
+      return;
+    }
+    var active = -1;
+    for (var j = chapterPages.length - 1; j >= 0; j--) {
+      var p = chapterPages[j];
+      if (y >= p.offsetTop + p.offsetHeight) {
+        active = j;
+        break;
+      }
+    }
+    if (active < 0) {
+      chapterDock.classList.remove('is-visible');
+      chapterDock.setAttribute('aria-hidden', 'true');
+      chapterDockLast = -1;
+      return;
+    }
+    if (active !== chapterDockLast) {
+      chapterDockLast = active;
+      var sec = chapterPages[active];
+      var h1 = sec.querySelector('h1');
+      var th = sec.querySelector('.thesis');
+      chapterDockInner.innerHTML = '';
+      if (h1) chapterDockInner.appendChild(h1.cloneNode(true));
+      if (th) chapterDockInner.appendChild(th.cloneNode(true));
+    }
+    chapterDock.classList.add('is-visible');
+    chapterDock.setAttribute('aria-hidden', 'false');
+  }
   function onScroll(){
     var y = window.scrollY || document.documentElement.scrollTop;
     var past = y > title.offsetHeight - 220;
     topbar.classList.toggle('show', past);
     syncChapterStickyOffset();
+    updateChapterStickyDock(y);
     var current = '';
     for (var i = 0; i < sections.length; i++) {
       if (sections[i].offsetTop - 140 <= y) current = sections[i].getAttribute('data-title');
