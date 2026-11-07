@@ -175,7 +175,20 @@ def normalize_script_src(tag: str) -> str | None:
     return m.group(1).strip() if m else None
 
 
-def merge_chapter_scripts(chapter_paths: list[Path]) -> str:
+def shell_script_srcs(shell_raw: str) -> set[str]:
+    """External script URLs already in the introduction shell (head + footer)."""
+    out: set[str] = set()
+    for tag in SCRIPT_TAG.findall(shell_raw):
+        src = normalize_script_src(tag)
+        if src:
+            out.add(src.lstrip("/"))
+    return out
+
+
+def merge_chapter_scripts(
+    chapter_paths: list[Path], skip_src: set[str] | None = None
+) -> str:
+    skip = skip_src or set()
     seen_src: set[str] = set()
     blocks: list[str] = []
     for path in chapter_paths:
@@ -184,7 +197,7 @@ def merge_chapter_scripts(chapter_paths: list[Path]) -> str:
             src = normalize_script_src(tag)
             if src:
                 key = src.lstrip("/")
-                if key in seen_src:
+                if key in skip or key in seen_src:
                     continue
                 seen_src.add(key)
             blocks.append(tag)
@@ -258,6 +271,10 @@ def merge_extra_styles(shell_path: Path, chapter_paths: list[Path]) -> str:
     single_page_tail = """
 /* ---- single-page build (must stay last): rail visible; chip roadmap photos unstyled ---- */
 #rail,#rail.show{opacity:1!important;pointer-events:auto!important;visibility:visible!important}
+@media (max-width:999px){
+  #topbar{opacity:1!important;pointer-events:auto!important}
+  #topbar:not(.show) .where{opacity:0!important;visibility:hidden!important}
+}
 figure.t1-package-top img{
   border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
   display:block!important;
@@ -357,10 +374,11 @@ def build_edition(edition: str) -> None:
     src_dir = ensure_chapter_sources(base)
 
     shell_path = src_dir / "introduction.html"
+    shell_raw = shell_path.read_text(encoding="utf-8")
     template = merge_extra_styles(shell_path, [src_dir / CHAPTER_FILES[p["slug"]] for p in PAGES[1:]])
 
     chapter_only = [src_dir / CHAPTER_FILES[p["slug"]] for p in PAGES[1:]]
-    extra_scripts = merge_chapter_scripts(chapter_only)
+    extra_scripts = merge_chapter_scripts(chapter_only, shell_script_srcs(shell_raw))
 
     parts: list[str] = []
     for i, p in enumerate(PAGES):
