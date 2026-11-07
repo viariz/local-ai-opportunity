@@ -364,8 +364,8 @@ figure.arc-tl{width:100%; max-width:none; margin:2.8em 0; overflow:visible;}
 .arc-tl-stage{
   display:grid;
   grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  column-gap:clamp(2rem,5.5vw,4.25rem);
+  align-items:stretch;
+  column-gap:clamp(1.5rem,4vw,3.25rem);
   width:100%;
 }
 .arc-tl-col-graph{
@@ -374,6 +374,10 @@ figure.arc-tl{width:100%; max-width:none; margin:2.8em 0; overflow:visible;}
   width:max-content;
   max-width:100%;
   overflow:visible;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  min-height:0;
 }
 .arc-tl-col-media{
   grid-column:2;
@@ -381,14 +385,30 @@ figure.arc-tl{width:100%; max-width:none; margin:2.8em 0; overflow:visible;}
   align-items:center;
   justify-content:center;
   min-width:0;
-  height:18em;
+  align-self:center;
 }
 .arc-tl-photo{
-  display:block; width:min(100%,11.5em); height:auto; max-height:100%; object-fit:contain;
-  opacity:0; transform:scale(.985);
-  transition:opacity .2s cubic-bezier(.4,0,.2,1), transform .2s cubic-bezier(.4,0,.2,1), width .16s cubic-bezier(.4,0,.2,1);
+  display:block;
+  width:min(100%,8.5em);
+  max-width:min(100%,8.5em);
+  height:auto;
+  max-height:9.5em;
+  object-fit:contain;
+  box-sizing:border-box;
+  opacity:0;
+  transform:none;
+  transition:opacity .2s ease;
+  pointer-events:none;
 }
-.arc-tl-photo.is-current{opacity:1; transform:none;}
+.arc-tl[data-on] .arc-tl-photo,
+.arc-tl[data-hover] .arc-tl-photo{opacity:1;}
+.arc-tl.is-fading .arc-tl-photo{opacity:0; transition-duration:.08s;}
+.arc-tl[data-on="3"] .arc-tl-photo,
+.arc-tl[data-hover="3"] .arc-tl-photo{
+  width:min(100%,11em);
+  max-width:min(100%,11em);
+  max-height:13em;
+}
 .arc-tl-col-copy{
   grid-column:3;
   justify-self:end;
@@ -397,6 +417,7 @@ figure.arc-tl{width:100%; max-width:none; margin:2.8em 0; overflow:visible;}
   justify-content:flex-end;
   min-width:0;
   max-width:16em;
+  align-self:stretch;
 }
 .arc-tl-frame{
   position:relative;
@@ -404,24 +425,54 @@ figure.arc-tl{width:100%; max-width:none; margin:2.8em 0; overflow:visible;}
   max-width:100%;
   height:27em;
   transform:translateX(-6%);
-  cursor:grab;
-  touch-action:none;
-  user-select:none;
-  -webkit-user-select:none;
 }
-.arc-tl-frame.is-dragging{cursor:grabbing;}
 figure.arc-tl .arc-tl-svg{
   position:absolute; top:0; right:0;
   width:calc(100% * 70 / 220); height:100%;
-  display:block; pointer-events:none; overflow:visible;
+  display:block; pointer-events:none;
 }
-.arc-tl .tick{stroke:var(--ink-soft); stroke-width:1; opacity:.55;}
-.arc-tl-track{fill:none; stroke:var(--rule); stroke-width:.85; opacity:.9;}
-.arc-tl-selection{fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round;}
-.arc-tl .stem{stroke:var(--ink-soft); stroke-width:1; opacity:.72; transition:opacity .15s ease, stroke .15s ease;}
-.arc-tl .stem.is-active{opacity:1; stroke:var(--ink);}
+.arc-tl .tick-wrap,
+.arc-tl .tick-hit,
+.arc-tl .tick,
+.arc-tl .stem{pointer-events:none;}
+.arc-tl .tick-hit{stroke:transparent!important; fill:none;}
+.arc-tl .tick{
+  opacity:.68; pointer-events:none;
+  transform-box:view-box;
+  transition:opacity .26s cubic-bezier(.22,1,.36,1), stroke .26s cubic-bezier(.22,1,.36,1), transform .26s cubic-bezier(.34,1.25,.64,1);
+}
+.arc-tl[data-on] .arc-tl-svg line.tick:not([data-tick-state]){
+  opacity:.48; stroke:rgba(31,33,34,.78); transform:none;
+}
+.arc-tl .arc-tl-svg line.tick[data-tick-state="dim"]{
+  opacity:.48; stroke:rgba(31,33,34,.78); transform:none;
+}
+.arc-tl .arc-tl-svg line.tick[data-tick-state="near"]{
+  opacity:.58; stroke:rgba(31,33,34,.68); transform:scale(1.03); transform-box:view-box;
+}
+.arc-tl .stem{
+  opacity:.64;
+  transform-box:view-box;
+  transition:opacity .26s cubic-bezier(.22,1,.36,1), transform .26s cubic-bezier(.34,1.25,.64,1), stroke .26s cubic-bezier(.22,1,.36,1);
+}
+.arc-tl[data-on] .stem,.arc-tl[data-hover] .stem{opacity:.48;}
+.arc-tl[data-on="0"]:not([data-hover]) .stem-0,
+.arc-tl[data-on="1"]:not([data-hover]) .stem-1,
+.arc-tl[data-on="2"]:not([data-hover]) .stem-2,
+.arc-tl[data-on="3"]:not([data-hover]) .stem-3,
+.arc-tl[data-on="4"]:not([data-hover]) .stem-4{opacity:1; stroke:var(--ink); transform:scale(1.16);}
+.arc-tl[data-hover="0"] .stem-0,
+.arc-tl[data-hover="1"] .stem-1,
+.arc-tl[data-hover="2"] .stem-2,
+.arc-tl[data-hover="3"] .stem-3,
+.arc-tl[data-hover="4"] .stem-4{opacity:1; stroke:var(--ink); transform:scale(1.16);}
+.arc-tl .arc-tl-svg--arc line.tick,
+.arc-tl .arc-tl-svg--arc line.stem{transition:none; transform:none!important;}
+.arc-tl-zones{
+  position:absolute; inset:0; z-index:3;
+}
 .arc-tl-hit{
-  position:absolute; z-index:1;
+  position:absolute; z-index:4;
   width:max-content; max-width:58%; height:auto;
   transform:translate(-100%, -50%);
   display:flex; flex-direction:column; align-items:flex-end; gap:2px;
@@ -430,106 +481,214 @@ figure.arc-tl .arc-tl-svg{
   cursor:pointer; color:var(--ink-soft);
   font-family:var(--sans); font-style:normal; font-weight:300; font-size:12.5px; line-height:1.2;
   letter-spacing:.02em; text-align:right;
-  opacity:.35;
-  transition:opacity .18s cubic-bezier(.22,1,.36,1), color .18s ease;
+  transition:opacity .26s cubic-bezier(.22,1,.36,1), color .26s cubic-bezier(.22,1,.36,1), transform .26s cubic-bezier(.34,1.25,.64,1);
 }
-.arc-tl[data-on="0"] .arc-tl-hit[data-ev="0"],
-.arc-tl[data-on="1"] .arc-tl-hit[data-ev="1"],
-.arc-tl[data-on="2"] .arc-tl-hit[data-ev="2"],
-.arc-tl[data-on="3"] .arc-tl-hit[data-ev="3"],
-.arc-tl[data-on="4"] .arc-tl-hit[data-ev="4"],
-.arc-tl-hit:hover,.arc-tl-hit:focus-visible{opacity:1; color:var(--ink);}
-.arc-tl-hit[aria-pressed="true"]{opacity:1; color:var(--ink);}
-.arc-tl-hit .when,.arc-tl-hit .name{
+.arc-tl-hit.is-hot{opacity:1!important; color:var(--ink);}
+.arc-tl-hit .when, .arc-tl-hit .name{
   position:static; transform:none;
   white-space:nowrap; pointer-events:none;
   font-family:var(--sans); font-style:normal; font-weight:300;
 }
 .arc-tl-hit .when{color:rgba(31,33,34,.58); font-size:11px; font-weight:300; line-height:1.15;}
-.arc-tl-hit .name{font-size:14.5px; font-weight:400; color:var(--ink); letter-spacing:.01em;}
+.arc-tl-hit .name{
+  font-size:14.5px; font-weight:400; color:var(--ink); letter-spacing:.01em;
+}
+.arc-tl[data-on] .arc-tl-hit{opacity:.26;}
+.arc-tl[data-on="0"]:not([data-hover]) .arc-tl-hit[data-ev="0"],
+.arc-tl[data-on="1"]:not([data-hover]) .arc-tl-hit[data-ev="1"],
+.arc-tl[data-on="2"]:not([data-hover]) .arc-tl-hit[data-ev="2"],
+.arc-tl[data-on="3"]:not([data-hover]) .arc-tl-hit[data-ev="3"],
+.arc-tl[data-on="4"]:not([data-hover]) .arc-tl-hit[data-ev="4"]{opacity:1; color:var(--ink);}
+.arc-tl[data-hover] .arc-tl-hit{opacity:.26;}
+.arc-tl[data-hover="0"] .arc-tl-hit[data-ev="0"],
+.arc-tl[data-hover="1"] .arc-tl-hit[data-ev="1"],
+.arc-tl[data-hover="2"] .arc-tl-hit[data-ev="2"],
+.arc-tl[data-hover="3"] .arc-tl-hit[data-ev="3"],
+.arc-tl[data-hover="4"] .arc-tl-hit[data-ev="4"]{opacity:1; color:var(--ink);}
 .arc-tl-hit:focus{outline:none;}
-.arc-tl-hit:focus-visible{outline:1px solid rgba(31,33,34,.4); outline-offset:3px; border-radius:2px;}
+.arc-tl-hit:focus-visible{
+  outline:1px solid rgba(31,33,34,.4);
+  outline-offset:3px;
+  border-radius:2px;
+}
+.arc-tl-hit:focus-visible .when,
+.arc-tl-hit:focus-visible .name{text-decoration:none;}
+@media (hover:hover){
+  .arc-tl-hit:hover .when{color:var(--ink-soft);}
+  .arc-tl-hit:hover .name{color:var(--ink);}
+}
 .arc-tl-arc-hit{
   position:absolute; z-index:2;
   right:0; width:30%; height:12%;
   transform:translateY(-50%);
   appearance:none; background:transparent; border:0; margin:0; padding:0;
-  cursor:pointer; opacity:0; pointer-events:none;
+  cursor:pointer;
 }
-.arc-tl-detail{position:relative; min-height:10em; width:100%; font-size:.94em; line-height:1.45; text-align:right;}
-.arc-tl-detail-layer{position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; opacity:0; transform:translateY(5px); transition:opacity .18s ease, transform .18s ease; pointer-events:none;}
-.arc-tl-detail-layer.is-current{opacity:1; transform:none;}
+.arc-tl-detail{
+  margin:0; min-height:2.7em; max-width:16em; width:100%;
+  text-align:right; font-weight:300; font-size:.94em; line-height:1.45;
+  color:var(--ink); opacity:0;
+  transition:opacity .2s ease;
+}
 .arc-tl-detail p{margin:0; text-align:right;}
-.arc-tl-detail p + p{margin-top:1.1em;}
+.arc-tl-detail p + p{margin-top:1.35em;}
+.arc-tl[data-on] .arc-tl-detail{opacity:1;}
+.arc-tl.is-fading .arc-tl-detail{opacity:0; transition-duration:.08s;}
+@media (prefers-reduced-motion: reduce){
+  .arc-tl .tick, .arc-tl .stem, .arc-tl-hit, .arc-tl-hit .name, .arc-tl-detail, .arc-tl-photo{transition:none;}
+}
 .arc-tl-spine{display:none;}
-.arc-tl-spine-majors{display:none;}
 @media (max-width:760px){
-  .arc-tl-stage{display:flex; flex-direction:column; align-items:stretch; gap:1rem;}
-  .arc-tl-col-graph,.arc-tl-col-media,.arc-tl-col-copy{grid-column:auto; width:100%; max-width:100%;}
-  .arc-tl-col-media{order:1; height:12rem;}
-  .arc-tl-col-media .arc-tl-photo{max-width:min(100%,12rem)!important; max-height:12rem!important; margin:auto;}
-  .arc-tl-col-copy{order:2;}
-  .arc-tl-detail{min-height:6.5rem; max-width:28em; margin-inline:auto; text-align:center;}
-  .arc-tl-detail p{text-align:center;}
-  .arc-tl-detail p + p{margin-top:.55em;}
-  .arc-tl-col-graph{order:3;}
+  figure.arc-tl{width:100%; max-width:none; align-self:stretch;}
+  .prose figure.arc-tl{margin-left:0; margin-right:0;}
+  .arc-tl-stage{
+    display:flex; flex-direction:column; align-items:stretch;
+    row-gap:1rem; width:100%;
+  }
+  .arc-tl-col-graph,.arc-tl-col-media,.arc-tl-col-copy{grid-column:unset; width:100%;}
+  .arc-tl-col-media{
+    order:1; display:flex; justify-content:center; align-items:center;
+    min-height:10rem; margin:0;
+  }
+  .arc-tl[data-on="3"] .arc-tl-col-media,
+  .arc-tl[data-hover="3"] .arc-tl-col-media{min-height:12.5rem;}
+  .arc-tl-zones{display:none;}
+  .arc-tl-col-media .arc-tl-photo{
+    width:auto!important;
+    max-width:min(100%,10rem)!important;
+    max-height:10rem!important;
+    height:auto!important;
+    object-fit:contain;
+    box-sizing:border-box;
+  }
+  .arc-tl[data-on="3"] .arc-tl-col-media .arc-tl-photo,
+  .arc-tl[data-hover="3"] .arc-tl-col-media .arc-tl-photo{
+    max-width:min(100%,12.5rem)!important;
+    max-height:12.5rem!important;
+  }
+  .arc-tl-col-copy{
+    order:2; justify-self:stretch; justify-content:center; max-width:100%;
+    min-height:4.25rem; display:flex; align-items:center;
+  }
+  .arc-tl-col-graph{
+    order:3; justify-self:stretch; display:block;
+    padding:0; margin:.5rem 0 0; width:100%; max-width:100%;
+  }
   .arc-tl-frame-shell{
-    position:relative;
-    width:calc(100% + 2 * max(18px, env(safe-area-inset-left, 0px)));
+    position:relative; width:calc(100% + 2 * max(18px, env(safe-area-inset-left, 0px)));
     max-width:none;
-    height:auto;
-    margin:0 calc(-1 * max(18px, env(safe-area-inset-left, 0px)));
+    height:auto; margin:0 calc(-1 * max(18px, env(safe-area-inset-left, 0px)));
     overflow:visible;
   }
   .arc-tl-frame{
     position:relative; left:auto; top:auto;
     width:100%; max-width:100%; height:auto; min-height:0;
     margin:0; padding:0 0 .35rem;
-    transform:none!important;
+    transform:none!important; transform-origin:center center;
     display:grid;
     grid-template-columns:repeat(5,minmax(0,1fr));
     grid-template-rows:auto auto;
     column-gap:0; row-gap:.85rem;
-    align-items:end;
-    cursor:auto;
-    touch-action:pan-y;
+    align-items:end; justify-items:stretch;
+    overflow:visible;
   }
-  figure.arc-tl .arc-tl-svg.arc-tl-svg--arc{display:none!important; visibility:hidden!important;}
-  .arc-tl-arc-hit{display:none!important;}
-  .arc-tl-spine{display:block; grid-column:1 / -1; grid-row:2; position:relative; width:100%; height:3.35rem; cursor:ew-resize;}
-  .arc-tl-spine-chart{position:absolute; inset:0; width:100%; height:100%; pointer-events:none;}
-  .arc-tl-spine-minor-group{opacity:.4;}
-  .arc-tl-spine-cursor{stroke:var(--ink); stroke-width:2;}
-  .arc-tl-spine-majors{
-    display:grid;
-    position:absolute; inset:0;
-    grid-template-columns:repeat(5,minmax(0,1fr));
-    align-items:stretch;
+  figure.arc-tl .arc-tl-svg.arc-tl-svg--arc{
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+  .arc-tl-spine{
+    display:block;
+    grid-column:1 / -1; grid-row:2;
+    position:relative; width:100%; height:3.35rem;
     pointer-events:auto;
+  }
+  .arc-tl-spine-chart{
+    position:absolute; inset:0;
+    width:100%; height:100%; display:block;
+    pointer-events:none;
+  }
+  .arc-tl-spine-chart line{
+    vector-effect:non-scaling-stroke;
+  }
+  .arc-tl-spine-minor-group{opacity:.64;}
+  .arc-tl[data-on] .arc-tl-spine-minor-group,
+  .arc-tl[data-hover] .arc-tl-spine-minor-group{opacity:.48;}
+  .arc-tl-spine-majors{
+    position:absolute; inset:0;
+    display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
+    align-items:center; justify-items:stretch;
   }
   .arc-tl-spine-hit{
     appearance:none; background:transparent; border:0; margin:0; padding:0;
+    display:flex; justify-content:center; align-items:center;
     width:100%; height:100%; min-height:3.35rem; cursor:pointer;
-    touch-action:manipulation;
+    touch-action:manipulation; -webkit-tap-highlight-color:transparent;
   }
   .arc-tl-spine-hit:focus{outline:none;}
   .arc-tl-spine-hit:focus-visible{outline:1px solid rgba(31,33,34,.4); outline-offset:2px; border-radius:2px;}
+  .arc-tl .tick-wrap{pointer-events:none!important;}
+  .arc-tl-arc-hit{display:none!important;}
   .arc-tl-frame .arc-tl-hit{
-    position:relative; grid-row:1;
+    position:relative; z-index:1; grid-row:1;
     left:auto!important; top:auto!important;
-    transform:none!important;
-    width:100%; min-height:3.5rem;
-    align-items:center; justify-content:center;
-    text-align:center; padding:.45rem .05rem .15rem;
-    opacity:.6;
+    transform:none!important; transform-origin:center center;
+    align-self:end; justify-self:stretch;
+    width:100%; max-width:100%; height:auto;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    gap:4px; text-align:center;
+    font-size:12.5px;
+    padding:.45rem .05rem .15rem; margin:0;
+    min-height:3.5rem;
+    touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+    text-decoration:none;
   }
-  .arc-tl-hit[aria-pressed="true"]{opacity:1!important;}
-  .arc-tl-hit .when{font-size:10px;}
-  .arc-tl-hit .name{font-size:13px; white-space:normal;}
-  figure.arc-tl figcaption{margin-top:2em;}
+  .arc-tl-frame .arc-tl-hit .when,
+  .arc-tl-frame .arc-tl-hit .name{text-decoration:none!important;}
+  .arc-tl-frame .arc-tl-hit[data-ev="0"]{grid-column:1;}
+  .arc-tl-frame .arc-tl-hit[data-ev="1"]{grid-column:2;}
+  .arc-tl-frame .arc-tl-hit[data-ev="2"]{grid-column:3;}
+  .arc-tl-frame .arc-tl-hit[data-ev="3"]{grid-column:4;}
+  .arc-tl-frame .arc-tl-hit[data-ev="4"]{grid-column:5;}
+  .arc-tl-frame .arc-tl-hit .when,.arc-tl-frame .arc-tl-hit .name{text-align:center;}
+  .arc-tl-frame .arc-tl-hit .when{font-size:11px; line-height:1.15;}
+  .arc-tl-frame .arc-tl-hit .name{
+    font-size:14.5px; line-height:1.2;
+    white-space:normal; max-width:100%;
+  }
+  .arc-tl[data-on] .arc-tl-frame .arc-tl-hit{opacity:.78; color:var(--ink-soft);}
+  .arc-tl[data-on="0"]:not([data-hover]) .arc-tl-frame .arc-tl-hit[data-ev="0"],
+  .arc-tl[data-on="1"]:not([data-hover]) .arc-tl-frame .arc-tl-hit[data-ev="1"],
+  .arc-tl[data-on="2"]:not([data-hover]) .arc-tl-frame .arc-tl-hit[data-ev="2"],
+  .arc-tl[data-on="3"]:not([data-hover]) .arc-tl-frame .arc-tl-hit[data-ev="3"],
+  .arc-tl[data-on="4"]:not([data-hover]) .arc-tl-frame .arc-tl-hit[data-ev="4"],
+  .arc-tl[data-hover="0"] .arc-tl-frame .arc-tl-hit[data-ev="0"],
+  .arc-tl[data-hover="1"] .arc-tl-frame .arc-tl-hit[data-ev="1"],
+  .arc-tl[data-hover="2"] .arc-tl-frame .arc-tl-hit[data-ev="2"],
+  .arc-tl[data-hover="3"] .arc-tl-frame .arc-tl-hit[data-ev="3"],
+  .arc-tl[data-hover="4"] .arc-tl-frame .arc-tl-hit[data-ev="4"]{opacity:1; color:var(--ink);}
+  .arc-tl-detail{
+    max-width:28em; width:100%; text-align:center; margin-inline:auto;
+    min-height:4.25rem; justify-items:center;
+  }
+  .arc-tl-detail p{text-align:center;}
+  .arc-tl-detail p + p{margin-top:.55em;}
+  figure.arc-tl figcaption{margin-top:2.15em;}
 }
-@media (prefers-reduced-motion:reduce){
-  .arc-tl-photo,.arc-tl-detail-layer,.arc-tl-hit,.arc-tl .stem{transition:none;}
+@media (max-width:520px){
+  .arc-tl-frame{column-gap:0;}
+  .arc-tl-col-media{min-height:9rem;}
+  .arc-tl[data-on="3"] .arc-tl-col-media,
+  .arc-tl[data-hover="3"] .arc-tl-col-media{min-height:11rem;}
+  .arc-tl-col-media .arc-tl-photo{
+    max-width:min(100%,9rem)!important;
+    max-height:9rem!important;
+  }
+  .arc-tl[data-on="3"] .arc-tl-col-media .arc-tl-photo,
+  .arc-tl[data-hover="3"] .arc-tl-col-media .arc-tl-photo{
+    max-width:min(100%,11rem)!important;
+    max-height:11rem!important;
+  }
 }
 
 /* ---- supply chain canvas (Fig. 9) ---- */
@@ -891,103 +1050,332 @@ figure.sc-map{
     <h4>The Timeline</h4>
     <div class="prose">
       <figure class="arc-tl">
-        <div class="arc-tl-stage">
-          <div class="arc-tl-col arc-tl-col-graph">
-        <div class="arc-tl-frame-shell">
-        <div class="arc-tl-frame">
-          <div class="arc-tl-spine" role="slider" tabindex="0" aria-label="Roadmap milestone" aria-orientation="horizontal" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
-            <svg class="arc-tl-spine-chart" viewBox="0 0 500 48" preserveAspectRatio="none" aria-hidden="true">
-              <g class="arc-tl-spine-minor-group" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-linecap="butt">
-                <line x1="70" y1="19" x2="70" y2="29"/><line x1="90" y1="19" x2="90" y2="29"/><line x1="110" y1="19" x2="110" y2="29"/><line x1="130" y1="19" x2="130" y2="29"/>
-                <line x1="170" y1="19" x2="170" y2="29"/><line x1="190" y1="19" x2="190" y2="29"/><line x1="210" y1="19" x2="210" y2="29"/><line x1="230" y1="19" x2="230" y2="29"/>
-                <line x1="270" y1="19" x2="270" y2="29"/><line x1="290" y1="19" x2="290" y2="29"/><line x1="310" y1="19" x2="310" y2="29"/><line x1="330" y1="19" x2="330" y2="29"/>
-                <line x1="370" y1="19" x2="370" y2="29"/><line x1="390" y1="19" x2="390" y2="29"/><line x1="410" y1="19" x2="410" y2="29"/><line x1="430" y1="19" x2="430" y2="29"/>
-              </g>
-              <g class="stems" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-linecap="butt">
-                <line class="stem stem-0" x1="50" y1="8" x2="50" y2="40" style="transform-origin:50px 24px"/>
-                <line class="stem stem-1" x1="150" y1="8" x2="150" y2="40" style="transform-origin:150px 24px"/>
-                <line class="stem stem-2" x1="250" y1="8" x2="250" y2="40" style="transform-origin:250px 24px"/>
-                <line class="stem stem-3" x1="350" y1="8" x2="350" y2="40" style="transform-origin:350px 24px"/>
-                <line class="stem stem-4" x1="450" y1="8" x2="450" y2="40" style="transform-origin:450px 24px"/>
-              </g>
-              <line class="arc-tl-spine-cursor" x1="50" y1="4" x2="50" y2="44"/>
-            </svg>
-            <div class="arc-tl-spine-majors">
-              <button type="button" class="arc-tl-spine-hit" data-ev="0" aria-label="Q3 2026. TM50"></button>
-              <button type="button" class="arc-tl-spine-hit" data-ev="1" aria-label="Q4 2026. T1"></button>
-              <button type="button" class="arc-tl-spine-hit" data-ev="2" aria-label="Q2 2027. T2 samples"></button>
-              <button type="button" class="arc-tl-spine-hit" data-ev="3" aria-label="Q3 2027. South Korea"></button>
-              <button type="button" class="arc-tl-spine-hit" data-ev="4" aria-label="Q4 2027. T2"></button>
-            </div>
-          </div>
-                    <svg class="arc-tl-svg arc-tl-svg--arc" viewBox="0 0 70 338" preserveAspectRatio="none" role="slider" tabindex="0" aria-label="Roadmap milestone" aria-orientation="vertical" aria-valuemin="1" aria-valuemax="5" aria-valuenow="2">
-<path class="arc-tl-track" d="M 55.841 8.502 L 54.361 13.478 L 52.840 18.441 L 51.278 23.392 L 49.675 28.329 L 48.032 33.253 L 46.348 38.163 L 44.623 43.060 L 42.859 47.942 L 41.054 52.809 L 39.209 57.661 L 37.325 62.498 L 35.400 67.319 L 33.436 72.124 L 31.433 76.913 L 29.389 81.685 L 27.307 86.440 L 25.186 91.178 L 23.025 95.898 L 20.826 100.600 L 18.588 105.284 L 16.312 109.949 L 13.997 114.596 L 11.644 119.223 L 9.253 123.830 L 6.824 128.418 L 4.357 132.986 L 1.853 137.533 L -0.688 142.059 L -3.267 146.564 L -5.883 151.048 L -8.536 155.510 L -11.225 159.950 L -13.951 164.368 L -16.713 168.763 L -19.512 173.135 L -22.346 177.484 L -25.216 181.810 L -28.121 186.111 L -31.062 190.389 L -34.038 194.642 L -37.049 198.871 L -40.095 203.074 L -43.175 207.253 L -46.290 211.406 L -49.439 215.533 L -52.621 219.634 L -55.837 223.708 L -59.087 227.756"/>
-<g class="ticks">
-<line class="tick" data-progress="0.000000" x1="55.841" y1="8.502" x2="44.325" y2="5.128"/>
-<line class="tick" data-progress="0.033333" x1="53.453" y1="16.457" x2="41.983" y2="12.932"/>
-<line class="tick" data-progress="0.066667" x1="50.960" y1="24.380" x2="39.537" y2="20.703"/>
-<line class="tick" data-progress="0.100000" x1="48.363" y1="32.269" x2="36.990" y2="28.442"/>
-<line class="tick" data-progress="0.133333" x1="45.663" y1="40.124" x2="34.341" y2="36.147"/>
-<line class="tick" data-progress="0.166667" x1="42.859" y1="47.942" x2="31.590" y2="43.816"/>
-<line class="tick" data-progress="0.200000" x1="39.952" y1="55.722" x2="28.739" y2="51.448"/>
-<line class="tick" data-progress="0.233333" x1="36.943" y1="63.463" x2="25.787" y2="59.042"/>
-<line class="tick" data-progress="0.266667" x1="33.832" y1="71.164" x2="22.736" y2="66.596"/>
-<line class="tick" data-progress="0.300000" x1="30.620" y1="78.824" x2="19.585" y2="74.110"/>
-<line class="tick" data-progress="0.333333" x1="27.307" y1="86.440" x2="16.335" y2="81.581"/>
-<line class="tick" data-progress="0.366667" x1="23.894" y1="94.012" x2="12.987" y2="89.009"/>
-<line class="tick" data-progress="0.400000" x1="20.382" y1="101.538" x2="9.541" y2="96.392"/>
-<line class="tick" data-progress="0.433333" x1="16.770" y1="109.018" x2="5.999" y2="103.729"/>
-<line class="tick" data-progress="0.466667" x1="13.060" y1="116.449" x2="2.359" y2="111.018"/>
-<line class="tick" data-progress="0.500000" x1="9.253" y1="123.830" x2="-1.375" y2="118.259"/>
-<line class="tick" data-progress="0.533333" x1="5.349" y1="131.161" x2="-5.205" y2="125.450"/>
-<line class="tick" data-progress="0.566667" x1="1.348" y1="138.440" x2="-9.130" y2="132.590"/>
-<line class="tick" data-progress="0.600000" x1="-2.748" y1="145.665" x2="-13.148" y2="139.678"/>
-<line class="tick" data-progress="0.633333" x1="-6.940" y1="152.835" x2="-17.260" y2="146.712"/>
-<line class="tick" data-progress="0.666667" x1="-11.225" y1="159.950" x2="-21.463" y2="153.691"/>
-<line class="tick" data-progress="0.700000" x1="-15.604" y1="167.008" x2="-25.759" y2="160.614"/>
-<line class="tick" data-progress="0.733333" x1="-20.076" y1="174.007" x2="-30.145" y2="167.480"/>
-<line class="tick" data-progress="0.766667" x1="-24.639" y1="180.946" x2="-34.622" y2="174.287"/>
-<line class="tick" data-progress="0.800000" x1="-29.293" y1="187.825" x2="-39.188" y2="181.035"/>
-<line class="tick" data-progress="0.833333" x1="-34.038" y1="194.642" x2="-43.842" y2="187.722"/>
-<line class="tick" data-progress="0.866667" x1="-38.873" y1="201.396" x2="-48.584" y2="194.347"/>
-<line class="tick" data-progress="0.900000" x1="-43.795" y1="208.085" x2="-53.413" y2="200.909"/>
-<line class="tick" data-progress="0.933333" x1="-48.806" y1="214.709" x2="-58.328" y2="207.407"/>
-<line class="tick" data-progress="0.966667" x1="-53.904" y1="221.267" x2="-63.329" y2="213.839"/>
-<line class="tick" data-progress="1.000000" x1="-59.087" y1="227.756" x2="-68.414" y2="220.205"/>
-</g>
-<g class="stems">
-<line class="stem stem-0" x1="48.363" y1="32.269" x2="21.826" y2="23.340"/>
-<line class="stem stem-1" x1="30.620" y1="78.824" x2="4.871" y2="67.825"/>
-<line class="stem stem-2" x1="9.253" y1="123.830" x2="-15.547" y2="110.831"/>
-<line class="stem stem-3" x1="-15.604" y1="167.008" x2="-39.299" y2="152.089"/>
-<line class="stem stem-4" x1="-43.795" y1="208.085" x2="-66.237" y2="191.341"/>
-</g>
-<path class="arc-tl-selection" d="M 38.159 60.372 L 37.249 62.691 L 36.329 65.007 L 35.400 67.319 L 34.462 69.627 L 33.516 71.932 L 32.559 74.233 L 31.594 76.530 L 30.620 78.824 L 29.637 81.113 L 28.644 83.399 L 27.643 85.680 L 26.633 87.958 L 25.613 90.232 L 24.585 92.501 L 23.547 94.767 L 22.501 97.028"/>
-</svg>
-          <button type="button" class="arc-tl-arc-hit" data-ev="0" style="top:12.28%" tabindex="-1" aria-hidden="true"></button>
-          <button type="button" class="arc-tl-arc-hit" data-ev="1" style="top:30.95%" tabindex="-1" aria-hidden="true"></button>
-          <button type="button" class="arc-tl-arc-hit" data-ev="2" style="top:49.88%" tabindex="-1" aria-hidden="true"></button>
-          <button type="button" class="arc-tl-arc-hit" data-ev="3" style="top:68.85%" tabindex="-1" aria-hidden="true"></button>
-          <button type="button" class="arc-tl-arc-hit" data-ev="4" style="top:87.51%" tabindex="-1" aria-hidden="true"></button>
+              <div class="arc-tl-stage">
+                <div class="arc-tl-col arc-tl-col-graph">
+              <div class="arc-tl-frame-shell">
+              <div class="arc-tl-frame">
+                <div class="arc-tl-spine">
+                  <svg class="arc-tl-spine-chart" viewBox="0 0 500 48" preserveAspectRatio="none" aria-hidden="true">
+                    <g class="arc-tl-spine-minor-group" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-linecap="butt">
+                      <line x1="70" y1="19" x2="70" y2="29"/><line x1="90" y1="19" x2="90" y2="29"/><line x1="110" y1="19" x2="110" y2="29"/><line x1="130" y1="19" x2="130" y2="29"/>
+                      <line x1="170" y1="19" x2="170" y2="29"/><line x1="190" y1="19" x2="190" y2="29"/><line x1="210" y1="19" x2="210" y2="29"/><line x1="230" y1="19" x2="230" y2="29"/>
+                      <line x1="270" y1="19" x2="270" y2="29"/><line x1="290" y1="19" x2="290" y2="29"/><line x1="310" y1="19" x2="310" y2="29"/><line x1="330" y1="19" x2="330" y2="29"/>
+                      <line x1="370" y1="19" x2="370" y2="29"/><line x1="390" y1="19" x2="390" y2="29"/><line x1="410" y1="19" x2="410" y2="29"/><line x1="430" y1="19" x2="430" y2="29"/>
+                    </g>
+                    <g class="stems" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-linecap="butt">
+                      <line class="stem stem-0" x1="50" y1="8" x2="50" y2="40" style="transform-origin:50px 24px"/>
+                      <line class="stem stem-1" x1="150" y1="8" x2="150" y2="40" style="transform-origin:150px 24px"/>
+                      <line class="stem stem-2" x1="250" y1="8" x2="250" y2="40" style="transform-origin:250px 24px"/>
+                      <line class="stem stem-3" x1="350" y1="8" x2="350" y2="40" style="transform-origin:350px 24px"/>
+                      <line class="stem stem-4" x1="450" y1="8" x2="450" y2="40" style="transform-origin:450px 24px"/>
+                    </g>
+                  </svg>
+                  <div class="arc-tl-spine-majors">
+                    <button type="button" class="arc-tl-spine-hit" data-ev="0" aria-label="Now. M50"></button>
+                    <button type="button" class="arc-tl-spine-hit" data-ev="1" aria-label="Q4 2026. T1"></button>
+                    <button type="button" class="arc-tl-spine-hit" data-ev="2" aria-label="Q2 2027. T2 samples"></button>
+                    <button type="button" class="arc-tl-spine-hit" data-ev="3" aria-label="Q3 2027. South Korea"></button>
+                    <button type="button" class="arc-tl-spine-hit" data-ev="4" aria-label="Q4 2027. T2"></button>
+                  </div>
+                </div>
+                <svg class="arc-tl-svg arc-tl-svg--arc" viewBox="0 0 70 338" aria-hidden="true">
+                  <g class="ticks" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-linecap="butt">
+                    <g class="tick-wrap">
+                      <line class="tick tick-0" x1="63.0" y1="10.6" x2="48.8" y2="6.0" style="transform-origin:55.9px 8.3px"/>
+                      <line class="tick-hit" x1="63.0" y1="10.6" x2="48.8" y2="6.0" stroke-width="14"/>
+                    </g>
+                    <g class="tick-wrap">
+                      <line class="tick tick-1" x1="47.1" y1="72.8" x2="32.3" y2="70.0" style="transform-origin:39.7px 71.4px"/>
+                      <line class="tick-hit" x1="47.1" y1="72.8" x2="32.3" y2="70.0" stroke-width="14"/>
+                    </g>
+                    <g class="tick-wrap">
+                      <line class="tick tick-2" x1="39.0" y1="136.5" x2="24.0" y2="135.6" style="transform-origin:31.5px 136.1px"/>
+                      <line class="tick-hit" x1="39.0" y1="136.5" x2="24.0" y2="135.6" stroke-width="14"/>
+                    </g>
+                    <g class="tick-wrap">
+                      <line class="tick tick-3" x1="39.0" y1="200.7" x2="24.0" y2="201.7" style="transform-origin:31.5px 201.2px"/>
+                      <line class="tick-hit" x1="39.0" y1="200.7" x2="24.0" y2="201.7" stroke-width="14"/>
+                    </g>
+                    <g class="tick-wrap">
+                      <line class="tick tick-4" x1="47.1" y1="264.4" x2="32.3" y2="267.3" style="transform-origin:39.7px 265.9px"/>
+                      <line class="tick-hit" x1="47.1" y1="264.4" x2="32.3" y2="267.3" stroke-width="14"/>
+                    </g>
+                    <g class="tick-wrap">
+                      <line class="tick tick-5" x1="63.0" y1="326.6" x2="48.8" y2="331.3" style="transform-origin:55.9px 329.0px"/>
+                      <line class="tick-hit" x1="63.0" y1="326.6" x2="48.8" y2="331.3" stroke-width="14"/>
+                    </g>
+                  </g>
+                  <g class="stems" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-linecap="butt">
+                    <line class="stem stem-0" x1="54.1" y1="41.5" x2="23.1" y2="33.5" style="transform-origin:54.1px 41.5px"/>
+                    <line class="stem stem-1" x1="42.0" y1="104.6" x2="10.3" y2="100.5" style="transform-origin:42.0px 104.6px"/>
+                    <line class="stem stem-2" x1="38.0" y1="168.6" x2="6.0" y2="168.6" style="transform-origin:38.0px 168.6px"/>
+                    <line class="stem stem-3" x1="42.0" y1="232.7" x2="10.3" y2="236.7" style="transform-origin:42.0px 232.7px"/>
+                    <line class="stem stem-4" x1="54.1" y1="295.8" x2="23.1" y2="303.7" style="transform-origin:54.1px 295.8px"/>
+                  </g>
+                </svg>
+                <button type="button" class="arc-tl-arc-hit" data-ev="0" style="top:12.28%" tabindex="-1" aria-hidden="true"></button>
+                <button type="button" class="arc-tl-arc-hit" data-ev="1" style="top:30.95%" tabindex="-1" aria-hidden="true"></button>
+                <button type="button" class="arc-tl-arc-hit" data-ev="2" style="top:49.88%" tabindex="-1" aria-hidden="true"></button>
+                <button type="button" class="arc-tl-arc-hit" data-ev="3" style="top:68.85%" tabindex="-1" aria-hidden="true"></button>
+                <button type="button" class="arc-tl-arc-hit" data-ev="4" style="top:87.51%" tabindex="-1" aria-hidden="true"></button>
+                <button type="button" class="arc-tl-hit" data-ev="0" style="top:17.9%; left:71.9%" data-detail="Receive the first samples" data-img="roadmap-timeline-1.png" aria-label="Now. M50. Receive the first samples"><span class="when">Now</span><span class="name">M50</span></button>
+                <button type="button" class="arc-tl-hit" data-ev="1" style="top:33.8%; left:66.1%" data-detail="First Truffle machines" data-detail-2="Pay Houmo $2–3k per chip" data-img="roadmap-timeline-2.png" aria-label="Q4 2026. T1. First Truffle machines. Pay Houmo 2 to 3 thousand dollars per chip"><span class="when">Q4 2026</span><span class="name">T1</span></button>
+                <button type="button" class="arc-tl-hit" data-ev="2" style="top:49.88%; left:64.1%" data-detail="First silicon back" data-img="roadmap-timeline-3.png" aria-label="Q2 2027. T2 samples. First silicon back"><span class="when">Q2 2027</span><span class="name">T2 samples</span></button>
+                <button type="button" class="arc-tl-hit" data-ev="3" style="top:66%; left:66.1%" data-detail="Packaging facility + license deal" data-img="roadmap-timeline-4.png" aria-label="Q3 2027. South Korea. Packaging facility and license deal"><span class="when">Q3 2027</span><span class="name">South Korea</span></button>
+                <button type="button" class="arc-tl-hit" data-ev="4" style="top:81.9%; left:71.9%" data-detail="Source chip dies directly from TSMC" data-detail-2="Pay Houmo $10M per year starting in 2028" data-img="roadmap-timeline-5.png" aria-label="Q4 2027. T2. Source chip dies directly from TSMC. Pay Houmo 10 million dollars per year starting in 2028"><span class="when">Q4 2027</span><span class="name">T2</span></button>
+              </div>
+              </div>
+                </div>
+                <div class="arc-tl-col arc-tl-col-media">
+                  <img class="arc-tl-photo" src="" alt="" decoding="async">
+                </div>
+                <div class="arc-tl-col arc-tl-col-copy">
+                  <div class="arc-tl-detail" aria-live="polite"></div>
+                </div>
+              </div>
+              <figcaption>Fig.&nbsp;10.&ensp;The chip roadmap, from the M50 today to full T2 manufacturing at the end of 2027: what it pulls from TSMC, and what it pays Houmo.</figcaption>
+            </figure>
+            <script>
+            (function(){
+              var root = document.querySelector('.arc-tl');
+              if (!root) return;
+              var frame = root.querySelector('.arc-tl-frame');
+              var out = root.querySelector('.arc-tl-detail');
+              var photo = root.querySelector('.arc-tl-photo');
+              var hits = root.querySelectorAll('.arc-tl-hit');
+              var pinned = '0';
+              var displayedEv = null;
+              var raf = 0;
+              var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+              var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+              var centers = [41.5, 104.6, 168.6, 232.7, 295.8];
 
-                    <button type="button" class="arc-tl-hit" data-ev="0" style="top:17.9%; left:71.9%" data-detail="Receive the first samples" data-img="roadmap-timeline-1.png" aria-label="Q3 2026. TM50. Receive the first samples"><span class="when">Q3 2026</span><span class="name">TM50</span></button>
-          <button type="button" class="arc-tl-hit" data-ev="1" style="top:33.8%; left:66.1%" data-detail="First Truffle machines" data-detail-2="Pay our silicon partner $2–3k per chip" data-img="roadmap-timeline-2.png" aria-label="Q4 2026. T1. First Truffle machines. Pay our silicon partner 2 to 3 thousand dollars per chip"><span class="when">Q4 2026</span><span class="name">T1</span></button>
-          <button type="button" class="arc-tl-hit" data-ev="2" style="top:49.88%; left:64.1%" data-detail="First silicon back" data-img="roadmap-timeline-3.png" aria-label="Q2 2027. T2 samples. First silicon back"><span class="when">Q2 2027</span><span class="name">T2 samples</span></button>
-          <button type="button" class="arc-tl-hit" data-ev="3" style="top:66%; left:66.1%" data-detail="Packaging facility + license deal" data-img="roadmap-timeline-4.png" aria-label="Q3 2027. South Korea. Packaging facility and license deal"><span class="when">Q3 2027</span><span class="name">South Korea</span></button>
-          <button type="button" class="arc-tl-hit" data-ev="4" style="top:81.9%; left:71.9%" data-detail="Source chip dies directly from TSMC" data-detail-2="Pay our silicon partner $10M per year starting in 2028" data-img="roadmap-timeline-5.png" aria-label="Q4 2027. T2. Source chip dies directly from TSMC. Pay our silicon partner 10 million dollars per year starting in 2028"><span class="when">Q4 2027</span><span class="name">T2</span></button>
-        </div>
-        </div>
-          </div>
-          <div class="arc-tl-col arc-tl-col-media">
-            <img class="arc-tl-photo" src="" alt="" decoding="async">
-          </div>
-          <div class="arc-tl-col arc-tl-col-copy">
-            <div class="arc-tl-detail" aria-live="polite"></div>
-          </div>
-        </div>
-        <figcaption>Fig.&nbsp;10.&ensp;The chip roadmap, from the TM50 in Q3 2026 to full T2 manufacturing at the end of 2027: what it pulls from TSMC, and what it pays our silicon partner.</figcaption>
-      </figure>
-      <script src="roadmap-timeline.js"></script>
+              var zones = document.createElement('div');
+              zones.className = 'arc-tl-zones';
+              if (frame) frame.appendChild(zones);
+
+              var fadeTimer = 0;
+              var FADE_MS = 90;
+
+              hits.forEach(function(btn){
+                var src = btn.getAttribute('data-img');
+                if (src){ var im = new Image(); im.src = src; }
+              });
+
+              var marks = [];
+              var hotMark = -1;
+              var arcSvg = root.querySelector('.arc-tl-svg--arc');
+              root.querySelectorAll('.arc-tl-svg--arc line.tick, .arc-tl-svg--arc line.stem').forEach(function(el){
+                var x1 = parseFloat(el.getAttribute('x1')) || 0;
+                var y1 = parseFloat(el.getAttribute('y1')) || 0;
+                var x2 = parseFloat(el.getAttribute('x2')) || 0;
+                var y2 = parseFloat(el.getAttribute('y2')) || 0;
+                marks.push({
+                  el: el,
+                  x1: x1, y1: y1, x2: x2, y2: y2,
+                  y: (y1 + y2) / 2,
+                  kind: el.classList.contains('stem') ? 'stem' : 'tick',
+                  scale: 1,
+                  opacity: el.classList.contains('stem') ? 0.48 : 0.68
+                });
+              });
+              marks.sort(function(a, b){ return a.y - b.y; });
+              var zoneEdges = marks.filter(function(m){ return m.kind === 'tick'; }).slice(1, 5).map(function(m){ return m.y; });
+
+              function metaFor(ev){
+                return root.querySelector('.arc-tl-hit[data-ev="' + ev + '"]');
+              }
+              function detailPartsFor(ev){
+                var label = metaFor(ev);
+                if (!label) return [];
+                var parts = [];
+                var d1 = label.getAttribute('data-detail');
+                if (d1) parts.push(d1);
+                var d2 = label.getAttribute('data-detail-2');
+                if (d2) parts.push(d2);
+                return parts;
+              }
+              function applyContent(ev){
+                var label = metaFor(ev);
+                var src = label ? label.getAttribute('data-img') : '';
+                photo.src = src || '';
+                photo.alt = label ? (label.getAttribute('aria-label') || '') : '';
+                out.textContent = '';
+                detailPartsFor(ev).forEach(function(text){
+                  var p = document.createElement('p');
+                  p.textContent = text;
+                  out.appendChild(p);
+                });
+              }
+              function showContent(ev){
+                ev = String(ev);
+                if (displayedEv === ev) return;
+                if (displayedEv === null || reduced){
+                  displayedEv = ev;
+                  applyContent(ev);
+                  return;
+                }
+                displayedEv = ev;
+                root.classList.add('is-fading');
+                clearTimeout(fadeTimer);
+                fadeTimer = setTimeout(function(){
+                  applyContent(ev);
+                  root.classList.remove('is-fading');
+                }, FADE_MS);
+              }
+              function anchorIndex(ev){
+                var n = String(ev);
+                for (var i = 0; i < marks.length; i++){
+                  if (marks[i].kind === 'stem' && marks[i].el.classList.contains('stem-' + n)) return i;
+                }
+                return 0;
+              }
+              function targetFor(dist, kind, hovering){
+                if (!hovering){
+                  if (dist === 0 && kind === 'stem') return { s: 1.16, o: 1 };
+                  return { s: 1, o: kind === 'tick' ? 0.68 : 0.48 };
+                }
+                if (dist === 0) return { s: kind === 'stem' ? 1.16 : 1.5, o: 1 };
+                if (dist === 1) return { s: kind === 'stem' ? 1.1 : 1.28, o: 0.82 };
+                if (dist === 2) return { s: kind === 'stem' ? 1.05 : 1.14, o: 0.62 };
+                return { s: 1, o: 0.42 };
+              }
+              function activeEv(){
+                return root.dataset.hover || root.dataset.on || pinned;
+              }
+              function paintMark(m){
+                var s = m.scale;
+                if (m.kind === 'stem'){
+                  m.el.setAttribute('x2', (m.x1 + (m.x2 - m.x1) * s).toFixed(2));
+                  m.el.setAttribute('y2', (m.y1 + (m.y2 - m.y1) * s).toFixed(2));
+                } else {
+                  var mx = (m.x1 + m.x2) / 2;
+                  var my = (m.y1 + m.y2) / 2;
+                  m.el.setAttribute('x1', (mx + (m.x1 - mx) * s).toFixed(2));
+                  m.el.setAttribute('y1', (my + (m.y1 - my) * s).toFixed(2));
+                  m.el.setAttribute('x2', (mx + (m.x2 - mx) * s).toFixed(2));
+                  m.el.setAttribute('y2', (my + (m.y2 - my) * s).toFixed(2));
+                }
+                m.el.style.stroke = 'rgba(31,33,34,' + m.opacity.toFixed(3) + ')';
+              }
+              function drawMarks(){
+                var hovering = !!root.dataset.hover && hotMark >= 0;
+                var anchor = hovering ? hotMark : anchorIndex(activeEv());
+                var moving = false;
+                var k = reduced ? 1 : 0.16;
+                for (var i = 0; i < marks.length; i++){
+                  var m = marks[i];
+                  var t = targetFor(Math.abs(i - anchor), m.kind, hovering);
+                  m.scale += (t.s - m.scale) * k;
+                  m.opacity += (t.o - m.opacity) * k;
+                  if (Math.abs(t.s - m.scale) > 0.004 || Math.abs(t.o - m.opacity) > 0.01) moving = true;
+                  paintMark(m);
+                }
+                if (moving) raf = requestAnimationFrame(drawMarks);
+                else raf = 0;
+              }
+              function kick(){
+                if (!raf) raf = requestAnimationFrame(drawMarks);
+              }
+              function pin(ev){
+                if (ev == null) return;
+                ev = String(ev);
+                pinned = ev;
+                root.dataset.on = ev;
+                showContent(ev);
+                kick();
+              }
+              function preview(ev){
+                ev = String(ev);
+                root.dataset.hover = ev;
+                showContent(ev);
+                kick();
+              }
+              function releaseHover(){
+                hotMark = -1;
+                root.removeAttribute('data-hover');
+                showContent(pinned);
+                kick();
+              }
+              function viewYFromClient(clientY){
+                if (!arcSvg) return 0;
+                var rect = arcSvg.getBoundingClientRect();
+                var vb = arcSvg.viewBox.baseVal;
+                var vbW = vb && vb.width ? vb.width : 70;
+                var vbH = vb && vb.height ? vb.height : 338;
+                var scale = Math.min(rect.width / vbW, rect.height / vbH);
+                if (!scale) return 0;
+                var offsetY = rect.top + (rect.height - vbH * scale) / 2;
+                return (clientY - offsetY) / scale;
+              }
+              function nearestMark(y){
+                var best = 0;
+                var bestD = Infinity;
+                for (var i = 0; i < marks.length; i++){
+                  var d = Math.abs(marks[i].y - y);
+                  if (d < bestD){ bestD = d; best = i; }
+                }
+                return best;
+              }
+              function evForMark(index){
+                var i, n;
+                if (marks[index] && marks[index].kind === 'stem'){
+                  n = 0;
+                  for (i = 0; i < marks.length; i++){
+                    if (marks[i].kind !== 'stem') continue;
+                    if (i === index) return String(n);
+                    n++;
+                  }
+                }
+                for (i = index + 1; i < marks.length; i++){
+                  if (marks[i].kind !== 'stem') continue;
+                  n = 0;
+                  for (var k = 0; k <= i; k++) if (marks[k].kind === 'stem') n++;
+                  return String(n - 1);
+                }
+                return '4';
+              }
+              hits.forEach(function(btn){
+                var ev = btn.getAttribute('data-ev');
+                if (finePointer) btn.addEventListener('mouseenter', function(){ hotMark = anchorIndex(ev); preview(ev); });
+                btn.addEventListener('focus', function(){ hotMark = anchorIndex(ev); preview(ev); });
+                btn.addEventListener('click', function(e){
+                  e.preventDefault();
+                  pin(ev);
+                });
+              });
+              root.querySelectorAll('.arc-tl-spine-hit').forEach(function(btn){
+                var ev = btn.getAttribute('data-ev');
+                btn.addEventListener('click', function(e){
+                  e.preventDefault();
+                  pin(ev);
+                });
+                if (finePointer) btn.addEventListener('mouseenter', function(){ hotMark = anchorIndex(ev); preview(ev); });
+              });
+              if (finePointer && frame){
+                frame.addEventListener('pointermove', function(e){
+                  if (e.pointerType === 'touch') return;
+                  if (e.target.closest && e.target.closest('.arc-tl-hit')) return;
+                  var y = viewYFromClient(e.clientY);
+                  hotMark = nearestMark(y);
+                  preview(evForMark(hotMark));
+                });
+                frame.addEventListener('pointerdown', function(e){
+                  if (e.pointerType === 'touch') return;
+                  if (e.target.closest && e.target.closest('.arc-tl-hit, .arc-tl-spine-hit')) return;
+                  var y = viewYFromClient(e.clientY);
+                  hotMark = nearestMark(y);
+                  pin(evForMark(hotMark));
+                });
+                root.addEventListener('mouseleave', function(){
+                  if (root.contains(document.activeElement)) return;
+                  releaseHover();
+                });
+              }
+              pin(pinned);
+            })();
+            </script>
+
       <div style="display:flex; flex-wrap:wrap; gap:28px; align-items:center; margin:2.8em 0;">
         <div style="flex:1 1 280px; min-width:0;">
           <p>We learned from the best. It took Apple decades to conclude that it needed its own silicon; we started from that conclusion, and a year ago we put the company on a path to custom silicon designed for an inference computer.</p>
