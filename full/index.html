@@ -2908,15 +2908,13 @@ figure{margin:2.8em 0; padding:0; max-width:100%;}
 .fig-payments svg .pay-sector-inner{fill:none; stroke:#1F2122; stroke-opacity:.7; stroke-width:.8;}
 
 .fig-payments .pay-sector-machine{pointer-events:none;}
-.fig-payments .pay-hub-panel{fill:var(--paper);stroke:var(--ink);stroke-width:.8;}
-.fig-payments .pay-fee-glow{fill:var(--s3);opacity:0;pointer-events:none;}
-.fig-payments .pay-arbiter{fill:none;stroke:var(--ink);stroke-width:1;stroke-linecap:round;stroke-linejoin:round;}
-.fig-payments .pay-hub-label{font-size:7px;letter-spacing:1px;fill:var(--ink-soft);}
-.fig-payments .pay-fee-label{font-size:10px;font-weight:400;letter-spacing:.8px;fill:var(--ink);}
-.fig-payments .pay-fee-total{font-size:8.5px;font-variant-numeric:tabular-nums;fill:var(--ink-soft);}
-.fig-payments .pay-fee-receipt{font-size:8px;font-variant-numeric:tabular-nums;fill:var(--s3);opacity:0;}
+.fig-payments .pay-hub-hex{fill:var(--paper);stroke:var(--ink);stroke-width:.85;vector-effect:non-scaling-stroke;}
+.fig-payments .pay-fee-glow{fill:var(--s3);opacity:0;pointer-events:none;stroke:none;}
+.fig-payments .pay-hub-caption{font-variant-numeric:normal;}
+.fig-payments .pay-fee-receipt{font-size:6px;font-weight:300;font-variant-numeric:tabular-nums;fill:var(--s3);opacity:0;}
 
-.fig-payments .pay-hub-label,.fig-payments .pay-fee-label,.fig-payments .pay-fee-total,.fig-payments .pay-fee-receipt{paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round;}
+.fig-payments .pay-hub-caption,.fig-payments .pay-fee-total{paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round;}
+.fig-payments .pay-fee-receipt{paint-order:stroke;stroke:var(--paper);stroke-width:2px;stroke-linejoin:round;}
 .fig-payments figcaption{margin-top:3.7em;}
 @media (prefers-reduced-motion: reduce){
   .fig-payments .pay-glyph{transform:none!important;}
@@ -3283,7 +3281,17 @@ table.worked td:first-child{padding-right:1.4em;}
 
 /* ---- single-page build (must stay last): rail visible; chip roadmap photos unstyled ---- */
 #rail,#rail.show{opacity:1!important;pointer-events:auto!important;visibility:visible!important}
-figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
+figure.t1-package-top img{
+  border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
+  display:block!important;
+  width:auto!important;
+  max-width:min(100%,29.04em)!important;
+  height:auto!important;
+  max-height:min(72vh,33.88em)!important;
+  margin-inline:auto!important;
+  object-fit:contain;
+}
+figure.arc-tl img.arc-tl-photo{
   border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
   width:min(100%,8.5em)!important;
   max-width:min(100%,8.5em)!important;
@@ -4927,13 +4935,11 @@ figure.arc-tl[data-hover="3"] img.arc-tl-photo{
             </g>
             <g class="pay-glyph pay-glyph-hub" data-hub="1" data-sector="hub">
               <title>Arbiter: settles each payment and collects a 1% fee</title>
-              <text class="pay-hub-label" x="360" y="124" text-anchor="middle">SETTLEMENT</text>
-              <rect class="pay-hub-panel" x="340" y="135" width="40" height="40" rx="8"/>
-              <rect class="pay-fee-glow" x="340" y="135" width="40" height="40" rx="8"/>
-              <path class="pay-arbiter" d="M349 150 H371 M360 144 V165 M353 166 H367 M352 150 L348 158 Q352 162 356 158 Z M368 150 L364 158 Q368 162 372 158 Z"/>
-              <text class="pay-fee-label" x="360" y="189" text-anchor="middle">1% FEE</text>
-              <text class="pay-fee-total" x="360" y="202" text-anchor="middle" data-collected="0">$0.00 collected</text>
-              <text class="pay-fee-receipt" x="360" y="218" text-anchor="middle" aria-hidden="true"></text>
+              <polygon class="pay-hub-hex" points="369.53,149.5 369.53,160.5 360,166 350.47,160.5 350.47,149.5 360,144"/>
+              <polygon class="pay-fee-glow" points="369.53,149.5 369.53,160.5 360,166 350.47,160.5 350.47,149.5 360,144"/>
+              <text class="pay-glyph-name pay-hub-caption" x="360" y="181" text-anchor="middle">Settlement · 1% fee</text>
+              <text class="pay-glyph-sub pay-fee-total" x="360" y="191" text-anchor="middle" data-collected="0">$0.00 collected</text>
+              <text class="pay-fee-receipt" x="360" y="133" text-anchor="middle" aria-hidden="true"></text>
             </g>
           </g>
           </g>
@@ -5547,7 +5553,7 @@ figure.arc-tl[data-hover="3"] img.arc-tl-photo{
   var NS = 'http://www.w3.org/2000/svg';
   var HUB = { x: 360, y: 155 };
   var GLYPH_LINK_R = 16.5;
-  var HUB_LINK_R = 24;
+  var HUB_LINK_R = 12.35;
   var nodes = {
     legal: { x: 240, y: 155, r: 32 },
     research: { x: 297, y: 52, r: 32 },
@@ -5582,7 +5588,7 @@ figure.arc-tl[data-hover="3"] img.arc-tl-photo{
       feeReceipt.textContent = '+$' + pendingReceipt.toFixed(2);
       pendingReceipt = 0;
       feeGlow.animate([{opacity:0},{opacity:.2,offset:.2},{opacity:0}],{duration:650});
-      feeReceipt.animate([{opacity:0,transform:'translateY(2px)'},{opacity:1,offset:.15},{opacity:0,transform:'translateY(-4px)'}],{duration:650});
+      feeReceipt.animate([{opacity:0,transform:'translateY(5px)'},{opacity:1,offset:.15},{opacity:0,transform:'translateY(-6px)'}],{duration:650});
     }
     return fee;
   }

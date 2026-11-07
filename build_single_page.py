@@ -258,7 +258,17 @@ def merge_extra_styles(shell_path: Path, chapter_paths: list[Path]) -> str:
     single_page_tail = """
 /* ---- single-page build (must stay last): rail visible; chip roadmap photos unstyled ---- */
 #rail,#rail.show{opacity:1!important;pointer-events:auto!important;visibility:visible!important}
-figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
+figure.t1-package-top img{
+  border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
+  display:block!important;
+  width:auto!important;
+  max-width:min(100%,29.04em)!important;
+  height:auto!important;
+  max-height:min(72vh,33.88em)!important;
+  margin-inline:auto!important;
+  object-fit:contain;
+}
+figure.arc-tl img.arc-tl-photo{
   border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
   width:min(100%,8.5em)!important;
   max-width:min(100%,8.5em)!important;

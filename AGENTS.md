@@ -61,7 +61,7 @@ A static long-form essay built from HTML chapters, merged into **one scrollable 
 ### Change global styles on the bundled page only
 
 - Prefer adding rules to the relevant `_sources/` chapter `<style>` block, or
-- Extend `single_page_tail` in `build_single_page.py` for overrides that must load **last** (e.g. `.book figure img` vs `.arc-tl-photo`).
+- Extend `single_page_tail` in `build_single_page.py` for overrides that must load **last** (e.g. `.book figure img` vs `.arc-tl-photo`). **Do not** share Fig. 10’s `8.5em` caps with `figure.t1-package-top img` — T1 uses ~`29em` max width in the tail.
 
 ### Verify Fig. 10
 
