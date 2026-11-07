@@ -679,6 +679,41 @@
 
     function renderMinimap() {
       clearG(hud);
+      if (isMobileOverview()) return;
+      if (state.mode !== 'branch' || !state.branch) return;
+
+      var mm = ns('g');
+      mm.setAttribute('class', 'sc-map-minimap');
+      var bg = ns('rect');
+      setAttr(bg, { x: '48', y: '64', width: '108', height: '78', rx: '4', class: 'sc-map-minimap-bg' });
+      mm.appendChild(bg);
+
+      var sx = 96 / 900;
+      var sy = 72 / 620;
+      var ox = 48 + 54;
+      var oy = 64 + 39;
+
+      BRANCHES.forEach(function (b) {
+        var c = ns('circle');
+        var hot = b.id === state.branch;
+        setAttr(c, {
+          cx: ox + (b.x - CX) * sx,
+          cy: oy + (b.y - CY) * sy,
+          r: hot ? '3.2' : '2',
+          class: hot ? 'sc-map-minimap-dot is-hot' : 'sc-map-minimap-dot'
+        });
+        mm.appendChild(c);
+      });
+      var hub = ns('circle');
+      setAttr(hub, { cx: ox, cy: oy, r: '2.5', class: 'sc-map-minimap-hub' });
+      mm.appendChild(hub);
+
+      var tag = ns('text');
+      setAttr(tag, { x: '48', y: '58', class: 'sc-map-minimap-label' });
+      tag.textContent = branchById(state.branch).label.toUpperCase();
+      mm.appendChild(tag);
+
+      hud.appendChild(mm);
     }
 
     function clickInsideMapInteractive(el) {

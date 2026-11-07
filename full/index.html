@@ -381,6 +381,7 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
 }
 #mini-chart{display:none;}
 @media (max-width:700px){
+  .titlepage h1{white-space:normal;text-wrap:balance;}
   body{
     padding-left:max(18px, env(safe-area-inset-left, 0px));
     padding-right:max(18px, env(safe-area-inset-right, 0px));
@@ -1892,8 +1893,8 @@ table.worked td:first-child{padding-right:1.4em;}
   .cutouts{gap:1em;}
 }
 @media (max-width:700px){
-  #the-object figure.fig-stack-compare svg{display:block; width:100%; max-width:100%; height:auto; min-height:min(50vw, 240px);}
-  #the-object figure.fig-stack-compare svg text{font-size:15px!important; letter-spacing:.06em!important;}
+  #the-object figure.fig-stack-compare{overflow:visible; max-width:100%;}
+  #the-object figure.fig-stack-compare svg{display:block; width:100%; max-width:100%; height:auto; min-height:0; overflow:visible;}
   #intelligent-desktop .cutouts.cutouts-caption-center{align-items:stretch;}
   #intelligent-desktop .cutouts.cutouts-caption-center figure{flex:1 1 100%; width:100%; max-width:100%;}
   #intelligent-desktop .cutouts.cutouts-caption-center img{width:100%; max-width:100%;}
@@ -2617,6 +2618,11 @@ figure.sc-map{
 .sc-map[data-mode="branch"] .sc-map-branch[data-active="1"] .sc-map-branch-overview{opacity:0;}
 .sc-map[data-mode="branch"] .sc-map-branch[data-active="1"] .sc-map-branch-focus{opacity:1; pointer-events:none;}
 .sc-map-hud{pointer-events:none;}
+.sc-map-minimap-bg{fill:rgba(244,244,244,.94); stroke:var(--rule); stroke-width:.85;}
+.sc-map-minimap-dot{fill:rgba(31,33,34,.28);}
+.sc-map-minimap-dot.is-hot{fill:var(--ink);}
+.sc-map-minimap-hub{fill:rgba(31,33,34,.5);}
+.sc-map-minimap-label{font-family:var(--sans); font-size:7px; letter-spacing:1.2px; fill:var(--ink-soft);}
 .sc-map-callout-box{fill:rgba(244,244,244,.95); stroke:var(--rule); stroke-width:.85;}
 .sc-map-callout-text{font-family:var(--sans); font-size:8.5px; fill:var(--ink); font-weight:300;}
 .sc-map.is-hovering .sc-map-branch{opacity:.22;}
@@ -2637,6 +2643,7 @@ figure.sc-map{
   .sc-map-entity-chrome, .sc-map-entity-caption, .sc-map-branch-label-focus{transition:none;}
 }
 @media (max-width:700px){
+  figure.sc-map .sc-map-minimap{display:none;}
   figure.sc-map .sc-map-viewport{padding:3.9em 0 3.7em; overflow:visible;}
   figure.sc-map .sc-map-shell{overflow:visible;}
   figure.sc-map .sc-map-svg{
@@ -3360,8 +3367,10 @@ table.worked td:first-child{padding-right:1.4em;}
 /* ---- single-page build (must stay last): rail visible; chip roadmap photos unstyled ---- */
 #rail,#rail.show{opacity:1!important;pointer-events:auto!important;visibility:visible!important}
 @media (max-width:999px){
-  #topbar{opacity:1!important;pointer-events:auto!important}
+  #topbar{opacity:1!important;pointer-events:auto!important;position:fixed!important;top:env(safe-area-inset-top,0px)!important;left:0!important;right:0!important;z-index:15!important;}
   #topbar:not(.show) .where{opacity:0!important;visibility:hidden!important}
+  #topbar .inner{align-items:center!important;}
+  html.mobile-nav-open #topbar,body.mobile-nav-open #topbar{z-index:17!important;}
 }
 figure.t1-package-top img{
   border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
@@ -3402,7 +3411,78 @@ figure.arc-tl[data-hover="3"] img.arc-tl-photo{
 @media (min-width:1000px){
   #scrolly.scrolly{column-gap:1.75em;gap:1.75em;}
 }
+@media (max-width:999px){
+  #mobile-nav-panel .mobile-nav-list,
+  #mobile-nav-panel > ol{
+    list-style:none!important;
+    margin:0!important;
+    padding:10px 0 12px!important;
+    max-width:44em!important;
+    width:100%!important;
+    margin-inline:auto!important;
+  }
+  #mobile-nav-panel .mobile-nav-list > li,
+  #mobile-nav-panel > ol > li{
+    display:flex!important;
+    align-items:center!important;
+    position:relative!important;
+    height:auto!important;
+    min-height:44px!important;
+    margin:0!important;
+    padding:0!important;
+    font-family:var(--sans)!important;
+    font-size:14px!important;
+    line-height:1.35!important;
+    font-weight:300!important;
+    letter-spacing:.12em!important;
+    text-transform:uppercase!important;
+    border-bottom:1px solid color-mix(in srgb,var(--rule) 50%,transparent)!important;
+  }
+  #mobile-nav-panel .mobile-nav-list > li:last-child,
+  #mobile-nav-panel > ol > li:last-child{border-bottom:none!important;}
+  #mobile-nav-panel .mobile-nav-list > li.here,
+  #mobile-nav-panel > ol > li.here{font-weight:400!important;color:var(--ink)!important;}
+  #mobile-nav-panel .mobile-nav-list > li.soon,
+  #mobile-nav-panel > ol > li.soon{color:color-mix(in srgb,var(--ink) 45%,transparent)!important;}
+  #mobile-nav-panel .mobile-nav-list a,
+  #mobile-nav-panel > ol > li > a{
+    display:block!important;
+    flex:1!important;
+    width:auto!important;
+    height:auto!important;
+    min-height:44px!important;
+    box-sizing:border-box!important;
+    padding:14px 0!important;
+    margin:0!important;
+    color:inherit!important;
+    text-decoration:none!important;
+    font:inherit!important;
+    letter-spacing:inherit!important;
+    text-transform:inherit!important;
+    line-height:inherit!important;
+    -webkit-text-size-adjust:100%!important;
+    text-size-adjust:100%!important;
+  }
+  #mobile-nav-panel .mobile-nav-list a::before,
+  #mobile-nav-panel > ol > li > a::before{content:none!important;display:none!important;}
+  #mobile-nav-panel .dot,
+  #mobile-nav-panel .rail-title{display:none!important;}
+}
 @media (max-width:700px){
+  #mobile-nav-panel .mobile-nav-list,
+  #mobile-nav-panel > ol{padding:16px 0 18px!important;}
+  #mobile-nav-panel .mobile-nav-list > li,
+  #mobile-nav-panel > ol > li{min-height:52px!important;}
+  #mobile-nav-panel .mobile-nav-list a,
+  #mobile-nav-panel > ol > li > a{
+    min-height:52px!important;
+    padding:17px 0!important;
+    line-height:1.5!important;
+    letter-spacing:.11em!important;
+  }
+}
+@media (max-width:700px){
+  .titlepage h1{white-space:normal;text-wrap:balance;}
   /* Intro scrolly: single column + bottom #mini-chart only (beats chapter .scrolly grid deltas) */
   #scrolly.scrolly{
     display:block!important;
@@ -3418,7 +3498,6 @@ figure.arc-tl[data-hover="3"] img.arc-tl-photo{
 </style>
 <script src="navigation.js"></script>
 <script src="reading-rail.js"></script>
-<script src="mobile-nav.js" defer></script>
 <script>
 (function(){
   try{
@@ -5428,6 +5507,7 @@ figure.arc-tl[data-hover="3"] img.arc-tl-photo{
   });
 })();
 </script>
+<script src="mobile-nav.js?v=6" defer></script>
 <script>
 (function(){
   var IDS = ['the-grid','the-neighbors','the-state'];

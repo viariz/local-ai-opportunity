@@ -27,7 +27,7 @@
     {
       sel: 'figure.fig-stack-compare svg',
       full: '0 0 720 360',
-      mobile: '24 24 672 332'
+      mobile: '0 0 720 360'
     }
   ];
 
@@ -142,7 +142,6 @@
     }
     style.textContent =
       '@media (max-width:700px){' +
-      'figure.fig-stack-compare svg .figtext{font-size:15px!important;letter-spacing:.08em!important;}' +
       'figure.fig-mobile-lg svg .figtext{font-size:11.5px!important;letter-spacing:.06em!important;}' +
       'figure.fig-mobile-lg svg text{font-size:11.5px!important;}' +
       '}';
@@ -159,6 +158,7 @@
     applyAll(mq);
     window.reflowMobileFigs = function () {
       applyAll(mq);
+      if (window.ichartRefresh) window.ichartRefresh();
     };
     if (mq.addEventListener) mq.addEventListener('change', applyAll);
     else mq.addListener(applyAll);

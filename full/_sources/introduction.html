@@ -381,6 +381,7 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
 }
 #mini-chart{display:none;}
 @media (max-width:700px){
+  .titlepage h1{white-space:normal;text-wrap:balance;}
   body{
     padding-left:max(18px, env(safe-area-inset-left, 0px));
     padding-right:max(18px, env(safe-area-inset-right, 0px));
@@ -541,7 +542,6 @@ table.worked td:first-child{padding-right:1.4em;}
 </style>
 <script src="navigation.js"></script>
 <script src="reading-rail.js"></script>
-<script src="mobile-nav.js" defer></script>
 <script>
 (function(){
   try{
@@ -1094,6 +1094,7 @@ table.worked td:first-child{padding-right:1.4em;}
   });
 })();
 </script>
+<script src="mobile-nav.js?v=6" defer></script>
 <script src="chart-interact.js"></script>
 <script src="mobile-fig-viewbox.js"></script>
 </body>

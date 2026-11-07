@@ -172,7 +172,9 @@ def extract_scripts_after_left_rail(raw: str) -> list[str]:
 
 def normalize_script_src(tag: str) -> str | None:
     m = re.search(r'src\s*=\s*["\']([^"\']+)["\']', tag, re.I)
-    return m.group(1).strip() if m else None
+    if not m:
+        return None
+    return m.group(1).strip().lstrip("/").split("?")[0]
 
 
 def shell_script_srcs(shell_raw: str) -> set[str]:
@@ -181,7 +183,7 @@ def shell_script_srcs(shell_raw: str) -> set[str]:
     for tag in SCRIPT_TAG.findall(shell_raw):
         src = normalize_script_src(tag)
         if src:
-            out.add(src.lstrip("/"))
+            out.add(src)
     return out
 
 
@@ -196,7 +198,7 @@ def merge_chapter_scripts(
         for tag in extract_scripts_after_left_rail(raw):
             src = normalize_script_src(tag)
             if src:
-                key = src.lstrip("/")
+                key = src
                 if key in skip or key in seen_src:
                     continue
                 seen_src.add(key)
@@ -272,8 +274,10 @@ def merge_extra_styles(shell_path: Path, chapter_paths: list[Path]) -> str:
 /* ---- single-page build (must stay last): rail visible; chip roadmap photos unstyled ---- */
 #rail,#rail.show{opacity:1!important;pointer-events:auto!important;visibility:visible!important}
 @media (max-width:999px){
-  #topbar{opacity:1!important;pointer-events:auto!important}
+  #topbar{opacity:1!important;pointer-events:auto!important;position:fixed!important;top:env(safe-area-inset-top,0px)!important;left:0!important;right:0!important;z-index:15!important;}
   #topbar:not(.show) .where{opacity:0!important;visibility:hidden!important}
+  #topbar .inner{align-items:center!important;}
+  html.mobile-nav-open #topbar,body.mobile-nav-open #topbar{z-index:17!important;}
 }
 figure.t1-package-top img{
   border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
@@ -314,7 +318,78 @@ figure.arc-tl[data-hover="3"] img.arc-tl-photo{
 @media (min-width:1000px){
   #scrolly.scrolly{column-gap:1.75em;gap:1.75em;}
 }
+@media (max-width:999px){
+  #mobile-nav-panel .mobile-nav-list,
+  #mobile-nav-panel > ol{
+    list-style:none!important;
+    margin:0!important;
+    padding:10px 0 12px!important;
+    max-width:44em!important;
+    width:100%!important;
+    margin-inline:auto!important;
+  }
+  #mobile-nav-panel .mobile-nav-list > li,
+  #mobile-nav-panel > ol > li{
+    display:flex!important;
+    align-items:center!important;
+    position:relative!important;
+    height:auto!important;
+    min-height:44px!important;
+    margin:0!important;
+    padding:0!important;
+    font-family:var(--sans)!important;
+    font-size:14px!important;
+    line-height:1.35!important;
+    font-weight:300!important;
+    letter-spacing:.12em!important;
+    text-transform:uppercase!important;
+    border-bottom:1px solid color-mix(in srgb,var(--rule) 50%,transparent)!important;
+  }
+  #mobile-nav-panel .mobile-nav-list > li:last-child,
+  #mobile-nav-panel > ol > li:last-child{border-bottom:none!important;}
+  #mobile-nav-panel .mobile-nav-list > li.here,
+  #mobile-nav-panel > ol > li.here{font-weight:400!important;color:var(--ink)!important;}
+  #mobile-nav-panel .mobile-nav-list > li.soon,
+  #mobile-nav-panel > ol > li.soon{color:color-mix(in srgb,var(--ink) 45%,transparent)!important;}
+  #mobile-nav-panel .mobile-nav-list a,
+  #mobile-nav-panel > ol > li > a{
+    display:block!important;
+    flex:1!important;
+    width:auto!important;
+    height:auto!important;
+    min-height:44px!important;
+    box-sizing:border-box!important;
+    padding:14px 0!important;
+    margin:0!important;
+    color:inherit!important;
+    text-decoration:none!important;
+    font:inherit!important;
+    letter-spacing:inherit!important;
+    text-transform:inherit!important;
+    line-height:inherit!important;
+    -webkit-text-size-adjust:100%!important;
+    text-size-adjust:100%!important;
+  }
+  #mobile-nav-panel .mobile-nav-list a::before,
+  #mobile-nav-panel > ol > li > a::before{content:none!important;display:none!important;}
+  #mobile-nav-panel .dot,
+  #mobile-nav-panel .rail-title{display:none!important;}
+}
 @media (max-width:700px){
+  #mobile-nav-panel .mobile-nav-list,
+  #mobile-nav-panel > ol{padding:16px 0 18px!important;}
+  #mobile-nav-panel .mobile-nav-list > li,
+  #mobile-nav-panel > ol > li{min-height:52px!important;}
+  #mobile-nav-panel .mobile-nav-list a,
+  #mobile-nav-panel > ol > li > a{
+    min-height:52px!important;
+    padding:17px 0!important;
+    line-height:1.5!important;
+    letter-spacing:.11em!important;
+  }
+}
+@media (max-width:700px){
+  .titlepage h1{white-space:normal;text-wrap:balance;}
   /* Intro scrolly: single column + bottom #mini-chart only (beats chapter .scrolly grid deltas) */
   #scrolly.scrolly{
     display:block!important;

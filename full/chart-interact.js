@@ -10,7 +10,7 @@
 
   var style = document.createElement('style');
   style.textContent =
-    '#ichart-tip{position:fixed;z-index:20;max-width:min(16em,72vw);padding:8px 11px;border:1px solid rgba(31,33,34,.28);border-radius:8px;background:#F4F4F4;color:#1F2122;font-family:"ABC Diatype Rounded","Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:12.5px;line-height:1.35;pointer-events:none;box-shadow:0 10px 28px rgba(31,33,34,.08);transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s ease;}' +
+    '#ichart-tip{position:fixed;z-index:120;max-width:min(16em,72vw);padding:8px 11px;border:1px solid rgba(31,33,34,.28);border-radius:8px;background:#F4F4F4;color:#1F2122;font-family:"ABC Diatype Rounded","Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:12.5px;line-height:1.35;pointer-events:none;box-shadow:0 10px 28px rgba(31,33,34,.08);transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s ease;}' +
     '#ichart-tip.is-sub{transform:translate(-50%,calc(-100% - 8px));}' +
     '#ichart-tip .ichart-tip-main{display:block;font-weight:400;}' +
     '#ichart-tip .ichart-tip-sub{display:block;margin-top:3px;font-size:11px;color:#5c6164;}' +
@@ -33,6 +33,7 @@
     'svg.ichart-donuts.is-hovering .ichart-seg:not(.is-hot){opacity:.45;}' +
     'svg.ichart-donuts .ichart-seg.is-hot{opacity:1;}' +
     'svg.ichart-diagram .ichart-layer{cursor:pointer;transition:opacity .25s ease;}' +
+    'svg.ichart-diagram line.ichart-layer{pointer-events:stroke;}' +
     'svg.ichart-diagram.is-hovering .ichart-layer:not(.is-hot){opacity:.35;}' +
     'svg.ichart-diagram .ichart-layer.is-hot{opacity:1;}' +
     'svg.ichart-lines .ichart-line{transition:opacity .25s ease;cursor:pointer;pointer-events:stroke;}' +
@@ -178,6 +179,9 @@
     node.addEventListener('mouseenter', onIn);
     node.addEventListener('mousemove', onMove);
     node.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'touch') onIn(e);
+    });
+    node.addEventListener('pointerup', function (e) {
       if (e.pointerType === 'touch') onIn(e);
     });
     node.addEventListener('focus', onIn);
@@ -492,6 +496,9 @@
     initTables();
     initSupplyCharts();
     window.addEventListener('scroll', dismissFloatingTips, { passive: true });
+    document.querySelectorAll('.cap-article-overlay').forEach(function (el) {
+      el.addEventListener('scroll', dismissFloatingTips, { passive: true });
+    });
     document.addEventListener('click', function (e) {
       if (e.target.closest('#ichart-tip')) return;
       if (e.target.closest('[data-ichart-tip]')) return;

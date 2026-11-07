@@ -11,21 +11,17 @@
   style.textContent = [
     '@media (max-width:999px){',
     '  #topbar .toc-link{display:none;}',
-    '  #topbar{',
-    '    opacity:1!important; pointer-events:auto!important;',
-    '  }',
+    '  #topbar{opacity:1!important; pointer-events:auto!important;}',
     '  #topbar .where{transition:opacity .25s ease;}',
     '  #topbar:not(.show) .where{opacity:0; visibility:hidden;}',
     '  body.mobile-nav-open #topbar.show .where{opacity:.5; visibility:visible;}',
-    '  #topbar .inner{',
-    '    align-items:center; min-height:44px; padding-block:0; padding-right:0;',
-    '  }',
+    '  #topbar .inner{align-items:center; min-height:44px; padding-block:0; padding-right:0;}',
     '  #nav-toggle{',
     '    display:flex; flex-direction:column; justify-content:center; align-items:center; gap:5px;',
     '    flex:0 0 auto; position:relative; z-index:14;',
     '    width:44px; height:44px; margin:0 0 0 8px; padding:0; margin-right:-8px;',
-    '    border:none; background:transparent;',
-    '    cursor:pointer; color:var(--ink); -webkit-tap-highlight-color:transparent;',
+    '    border:none; background:transparent; cursor:pointer; color:var(--ink);',
+    '    -webkit-tap-highlight-color:transparent;',
     '  }',
     '  #nav-toggle .bar{display:block; width:18px; height:1px; background:currentColor;',
     '    transition:transform .28s cubic-bezier(.33,1,.38,1), opacity .2s ease, width .28s ease; transform-origin:center;}',
@@ -33,11 +29,10 @@
     '  #nav-toggle[aria-expanded="true"] .bar:nth-child(2){opacity:0; width:0;}',
     '  #nav-toggle[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-6px) rotate(-45deg);}',
     '  #mobile-nav-panel{',
-    '    position:fixed; z-index:13; left:0; right:0; top:0;',
-    '    max-height:100dvh;',
+    '    position:fixed; z-index:13; left:0; right:0; top:0; bottom:0;',
     '    overflow:auto; -webkit-overflow-scrolling:touch;',
     '    background:var(--paper); border-bottom:1px solid var(--rule);',
-    '    padding:0 max(18px, env(safe-area-inset-right, 0px)) 24px max(18px, env(safe-area-inset-left, 0px));',
+    '    padding:0 max(18px, env(safe-area-inset-right, 0px)) max(28px, env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));',
     '    padding-top:calc(env(safe-area-inset-top, 0px) + 44px);',
     '    box-sizing:border-box; font-family:var(--sans);',
     '    opacity:0; visibility:hidden; pointer-events:none;',
@@ -45,30 +40,17 @@
     '    transition:opacity .28s ease, transform .32s cubic-bezier(.33,1,.38,1), visibility 0s linear .32s;',
     '  }',
     '  #mobile-nav-panel.open{opacity:1; visibility:visible; pointer-events:auto; transform:none; transition:opacity .28s ease, transform .32s cubic-bezier(.33,1,.38,1), visibility 0s;}',
-    '  #mobile-nav-panel ol{',
-    '    list-style:none; margin:0; padding:8px 0 8px;',
-    '    display:flex; flex-direction:column; gap:0;',
-    '    max-width:44em; width:100%; margin-inline:auto;',
-    '  }',
-    '  #mobile-nav-panel li{display:block; margin:0; padding:0;',
-    '    border-bottom:1px solid color-mix(in srgb, var(--rule) 50%, transparent);}',
-    '  #mobile-nav-panel li:last-child{border-bottom:none;}',
-    '  #mobile-nav-panel a{',
-    '    display:block; padding:14px 0; width:100%; min-width:0; box-sizing:border-box;',
-    '    font-family:var(--sans); font-size:14px; line-height:1.35; font-weight:300;',
-    '    letter-spacing:.12em; text-transform:uppercase; text-decoration:none;',
-    '    color:color-mix(in srgb, var(--ink) 72%, transparent);',
-    '  }',
-    '  #mobile-nav-panel li.here a{font-weight:400; color:var(--ink);}',
-    '  #mobile-nav-panel li.soon a{color:color-mix(in srgb, var(--ink) 45%, transparent);}',
-    '  #mobile-nav-panel a:active{opacity:.7;}',
-    '  #mobile-nav-panel .dot, #mobile-nav-panel .rail-title{display:none!important;}',
+    '  #mobile-nav-panel .mobile-nav-list{display:flex; flex-direction:column;}',
+    '  #mobile-nav-panel .mobile-nav-list a:active{opacity:.7;}',
     '  #mobile-nav-backdrop{',
-    '    position:fixed; inset:0; z-index:12; background:color-mix(in srgb, var(--ink) 12%, transparent);',
-    '    opacity:0; visibility:hidden; pointer-events:none; transition:opacity .25s ease, visibility 0s linear .25s;',
+    '    position:fixed; inset:0; z-index:12;',
+    '    background:color-mix(in srgb, var(--ink) 12%, transparent);',
+    '    opacity:0; visibility:hidden; pointer-events:none;',
+    '    transition:opacity .25s ease, visibility 0s linear .25s;',
     '  }',
     '  #mobile-nav-backdrop.open{opacity:1; visibility:visible; pointer-events:auto; transition:opacity .25s ease, visibility 0s;}',
-    '  body.mobile-nav-open #topbar{z-index:14; background:var(--paper); border-bottom-color:transparent;}',
+    '  body.mobile-nav-open #topbar, html.mobile-nav-open #topbar{z-index:16; background:var(--paper); border-bottom-color:transparent;}',
+    '  html.mobile-nav-open, body.mobile-nav-open{overflow:hidden;}',
     '}',
     '@media (min-width:1000px){',
     '  #nav-toggle, #mobile-nav-panel, #mobile-nav-backdrop{display:none!important;}',
@@ -103,6 +85,7 @@
   panel.hidden = true;
 
   var list = document.createElement('ol');
+  list.className = 'mobile-nav-list';
   panel.appendChild(list);
 
   function labelFromRailAnchor(a) {
@@ -145,22 +128,58 @@
   document.body.appendChild(panel);
 
   var open = false;
+  var lockScrollY = 0;
+
+  function lockPageScroll() {
+    lockScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    document.documentElement.classList.add('mobile-nav-open');
+    document.body.classList.add('mobile-nav-open');
+    document.body.style.position = 'fixed';
+    document.body.style.top = -lockScrollY + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+  }
+
+  function scrollInstant(y) {
+    var root = document.documentElement;
+    var prevRoot = root.style.scrollBehavior;
+    var prevBody = document.body.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    document.body.style.scrollBehavior = 'auto';
+    window.scrollTo(0, y);
+    root.style.scrollBehavior = prevRoot;
+    document.body.style.scrollBehavior = prevBody;
+  }
+
+  function unlockPageScroll() {
+    var y = lockScrollY;
+    document.documentElement.classList.remove('mobile-nav-open');
+    document.body.classList.remove('mobile-nav-open');
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    scrollInstant(y);
+  }
 
   function setOpen(next) {
     open = next;
-    if (open) syncMobileNavState();
+    if (open) {
+      syncMobileNavState();
+      lockPageScroll();
+    } else {
+      unlockPageScroll();
+    }
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     toggle.setAttribute('aria-label', open ? 'Close contents' : 'Open contents');
     panel.classList.toggle('open', open);
     backdrop.classList.toggle('open', open);
     panel.hidden = !open;
     backdrop.hidden = !open;
-    document.body.classList.toggle('mobile-nav-open', open);
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
   }
 
   toggle.addEventListener('click', function () {
@@ -173,7 +192,26 @@
 
   panel.addEventListener('click', function (e) {
     var link = e.target.closest('a');
-    if (link) setOpen(false);
+    if (!link) return;
+    e.preventDefault();
+    var href = link.getAttribute('href') || '';
+    setOpen(false);
+    if (!href) return;
+    requestAnimationFrame(function () {
+      if (href.charAt(0) === '#') {
+        var id = href.slice(1);
+        var target = id ? document.getElementById(id) : null;
+        if (target) {
+          try {
+            target.scrollIntoView({ block: 'start', behavior: 'instant' });
+          } catch (err) {
+            target.scrollIntoView(true);
+          }
+        } else if (href.length > 1) location.hash = href;
+      } else {
+        location.href = href;
+      }
+    });
   });
 
   document.addEventListener('keydown', function (e) {
