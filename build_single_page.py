@@ -256,6 +256,9 @@ def merge_extra_styles(shell_path: Path, chapter_paths: list[Path]) -> str:
 figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
   border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
 }
+@media (min-width:1000px){
+  #scrolly.scrolly{column-gap:1.75em;gap:1.75em;}
+}
 """
     insert = (
         base

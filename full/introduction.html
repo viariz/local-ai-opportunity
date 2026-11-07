@@ -267,7 +267,7 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
 .prose > p:last-child{margin-bottom:0;}
 
 /* ---- scrollytelling intro ---- */
-.scrolly{display:grid; grid-template-columns:1fr 1.25fr; gap:2.5em; margin:2.5em 0 3em; align-items:start;}
+#scrolly.scrolly{display:grid; grid-template-columns:1fr 1.25fr; column-gap:1.75em; gap:1.75em; margin:2.5em 0 3em; align-items:start;}
 .scrolly-steps{display:flex; flex-direction:column; min-width:0;}
 .step-content{display:flex; flex-direction:column;}
 .step{min-height:80vh; display:flex; flex-direction:column; justify-content:center; opacity:.3; transition:opacity .35s ease;}
@@ -296,8 +296,8 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
 .bigquote{margin:2.1em 0; max-width:none; text-align:left; font-style:italic; font-size:1.02em; line-height:1.65; padding-left:1em; border-left:1px solid var(--ink);}
 .bigquote .attr{display:block; margin-top:.8em; font-style:normal; font-size:.72em; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-soft);}
 .step.active{opacity:1;}
-.scrolly-chart{position:sticky; top:14vh; height:72vh; display:flex; align-items:center; min-width:0;}
-.scrolly-chart svg{width:100%; height:auto; max-height:100%;}
+.scrolly-chart{position:sticky; top:14vh; height:72vh; display:flex; align-items:center; justify-content:flex-end; min-width:0;}
+.scrolly-chart svg{width:calc(100% * 440 / 560); max-width:calc(100% * 440 / 560); height:auto; max-height:100%; margin-left:auto;}
 @media (min-width:1000px){
   #scrolly .step:last-child .step-content{
     position:sticky; top:var(--scrolly-copy-top, 14vh);
@@ -341,7 +341,7 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
   #scrolly .step > p, #scrolly .step-content > p{margin-top:1em;}
   #mini-chart{display:block; position:fixed; left:0; right:0; bottom:0; width:100%; z-index:30; background:var(--paper); border-top:1px solid var(--rule); padding:6px max(18px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); box-sizing:border-box; transform:translateY(110%); transition:transform .3s ease;}
   #mini-chart.show{transform:none;}
-  #mini-chart svg{display:block; width:100%; max-width:100%; height:auto; min-height:88px; max-height:28vh; margin-inline:0;}
+  #mini-chart svg{display:block; width:calc(100% * 440 / 560); max-width:calc(100% * 440 / 560); height:auto; min-height:88px; max-height:28vh; margin-left:auto; margin-right:0;}
   #mini-chart #stage-name-m{font-size:18px!important; font-weight:500!important;}
   #mini-chart #stage-chip-m{font-size:16px!important; letter-spacing:1px!important;}
   #mini-chart svg text.figtext{dominant-baseline:middle;}
@@ -3126,6 +3126,9 @@ table.worked td:first-child{padding-right:1.4em;}
 figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
   border-radius:0!important;box-shadow:none!important;mix-blend-mode:darken;
 }
+@media (min-width:1000px){
+  #scrolly.scrolly{column-gap:1.75em;gap:1.75em;}
+}
 
 </style>
 <script src="navigation.js"></script>
@@ -3236,7 +3239,7 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
       </div>
     </div>
     <div class="scrolly-chart">
-      <svg viewBox="0 0 560 500" role="img" aria-label="Tokens consumed, 2023 to beyond 2027, rising gently through chatbots and agents, then going vertical for always-on agents.">
+      <svg viewBox="0 0 440 500" role="img" aria-label="Tokens consumed, 2023 to beyond 2027, rising gently through chatbots and agents, then going vertical for always-on agents.">
         <defs>
           <symbol id="agent-icon-chatbots" viewBox="0 0 44 44" fill="none">
             <path d="M44 42H0L22 2L44 42Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
@@ -3259,7 +3262,7 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
           <line x1="54" y1="440" x2="440" y2="440"/>
         </g>
         <text class="figtext" x="54" y="18" font-size="14.5" letter-spacing="1" fill="var(--ink-soft)" style="text-transform:uppercase">Tokens consumed</text>
-        <text class="figtext" id="stage-chip" x="556" y="18" font-size="17" letter-spacing="2" text-anchor="end" font-weight="400" fill="var(--ink)">2023</text>
+        <text class="figtext" id="stage-chip" x="440" y="18" font-size="17" letter-spacing="2" text-anchor="end" font-weight="400" fill="var(--ink)">2023</text>
         <path id="tokcurve" d="M 54.0 437.0 C 62.8 436.2 83.6 434.5 101.8 432.7 C 120.0 430.9 134.5 429.4 153.0 427.1 C 171.5 424.8 184.1 423.1 202.5 420.0 C 220.9 416.9 235.5 414.0 253.1 410.3 C 270.7 406.6 283.2 403.9 298.4 399.8 C 313.6 395.7 324.4 392.8 336.1 388.0 C 347.8 383.2 353.4 381.3 362.2 373.7 C 371.0 366.1 377.7 356.1 383.9 346.5 C 390.1 336.9 392.7 329.6 396.2 321.1 C 401.5 310.0 405.0 291.0 409.2 272.5 C 414.0 250.0 420.0 210.0 425.2 170.0 C 430.5 128.0 435.0 75.0 440.0 30.0" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/>
         <g class="marker figtext" data-x="54" fill="var(--ink)">
           <circle cx="54" cy="437" r="3.15"/>
@@ -3662,14 +3665,14 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 
 <nav id="path-cards-nav" class="cap-cards path-cards" aria-label="The two paths">
   <button type="button" class="cap-card" data-cap="just-build-more">
-    <span class="cap-card-art" aria-hidden="true"><img src="../fig/paths/just-build-more.svg" width="210" height="210" alt=""></span>
+    <span class="cap-card-art" aria-hidden="true"><img src="fig/paths/just-build-more.svg" width="210" height="210" alt=""></span>
     <span class="cap-card-text">
       <span class="cap-card-title">Just Build More, Bro</span>
       <span class="cap-card-sub">Why AI will diffuse through society as a GPU per person.</span>
     </span>
   </button>
   <button type="button" class="cap-card" data-cap="put-them-into-space">
-    <span class="cap-card-art" aria-hidden="true"><img src="../fig/paths/put-them-into-space.svg" width="210" height="210" alt=""></span>
+    <span class="cap-card-art" aria-hidden="true"><img src="fig/paths/put-them-into-space.svg" width="210" height="210" alt=""></span>
     <span class="cap-card-text">
       <span class="cap-card-title">Put Them Into Space</span>
       <span class="cap-card-sub">Why AI will diffuse through society as a GPU per person.</span>
@@ -4642,13 +4645,13 @@ figure.t1-package-top img,figure.arc-tl img.arc-tl-photo{
 </nav>
 
 <div id="mini-chart" aria-hidden="true">
-  <svg viewBox="0 0 560 170">
+  <svg viewBox="0 0 440 170">
     <g transform="translate(0,8) scale(1,0.3)">
       <path id="tokcurve-m" d="M 54.0 437.0 C 62.8 436.2 83.6 434.5 101.8 432.7 C 120.0 430.9 134.5 429.4 153.0 427.1 C 171.5 424.8 184.1 423.1 202.5 420.0 C 220.9 416.9 235.5 414.0 253.1 410.3 C 270.7 406.6 283.2 403.9 298.4 399.8 C 313.6 395.7 324.4 392.8 336.1 388.0 C 347.8 383.2 353.4 381.3 362.2 373.7 C 371.0 366.1 377.7 356.1 383.9 346.5 C 390.1 336.9 392.7 329.6 396.2 321.1 C 401.5 310.0 405.0 291.0 409.2 272.5 C 414.0 250.0 420.0 210.0 425.2 170.0 C 430.5 128.0 435.0 75.0 440.0 30.0" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
     </g>
     <circle class="marker" cx="54.0" cy="139.1" r="2.8" fill="var(--ink)"/><circle class="marker" cx="202.5" cy="134.0" r="2.8" fill="var(--ink)"/><circle class="marker" cx="336.1" cy="124.4" r="2.8" fill="var(--ink)"/><circle class="marker" cx="396.0" cy="104.3" r="2.8" fill="var(--ink)"/>
     <text id="stage-name-m" class="figtext" x="16" y="28" font-size="23" font-weight="400" fill="var(--ink)">Chatbots</text>
-    <text id="stage-chip-m" class="figtext" x="544" y="28" font-size="17" letter-spacing="2" text-anchor="end" fill="var(--ink-soft)">2023</text>
+    <text id="stage-chip-m" class="figtext" x="440" y="28" font-size="17" letter-spacing="2" text-anchor="end" fill="var(--ink-soft)">2023</text>
   </svg>
 </div>
 
