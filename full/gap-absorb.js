@@ -1,7 +1,7 @@
 /**
  * "Where the unmet demand goes"
- * Chart draws, wedge fill appears, then a quick spread from graph to cloud,
- * then the dots wander for the remainder of DOTS_SEC before the sequence restarts.
+ * Chart draws, dots appear in the gap (no wedge fill tween), hold under the graph,
+ * then spread to the cloud; dots wander for the remainder of DOTS_SEC before restart.
  */
 (function () {
   'use strict';
@@ -26,26 +26,28 @@
   /** Seconds after the wedge fill finishes until the loop restarts (morph + spread + hang). */
   var DOTS_SEC = 10;
   var MORPH_IN_DOTS = 0.72;
+  /** Dots sit in the wedge before spreading to the full cloud. */
+  var HOLD_UNDER_GRAPH = 1;
   /** Time for the dot wave to fill the frame after morph (shorter = snappier graph→cloud transition). */
   var SPREAD_WINDOW = 2.15;
-  var hangWindow = Math.max(0, DOTS_SEC - MORPH_IN_DOTS - SPREAD_WINDOW);
-  var SEQ_PRE_DOTS = 4.6;
-  var LINE_SHARE = 0.62;
-  var FILL_SHARE = 0.38;
-  var lineWindow = SEQ_PRE_DOTS * LINE_SHARE;
-  var fillWindow = SEQ_PRE_DOTS * FILL_SHARE;
   var morphWindow = MORPH_IN_DOTS;
   var spreadWindow = SPREAD_WINDOW;
+  var hangWindow = Math.max(0, DOTS_SEC - morphWindow - HOLD_UNDER_GRAPH - spreadWindow);
+  var SEQ_PRE_DOTS = 4.6;
+  var lineWindow = SEQ_PRE_DOTS * 0.62;
   var lineEnd = lineWindow;
-  var fillEnd = lineEnd + fillWindow;
+  var fillEnd = lineEnd;
   var morphEnd = fillEnd + morphWindow;
-  var spreadEnd = morphEnd + spreadWindow;
+  var holdEnd = morphEnd + HOLD_UNDER_GRAPH;
+  var spreadEnd = holdEnd + spreadWindow;
   var cycleEnd = spreadEnd + hangWindow;
 
   var SUPPLY_DASH = '4 3';
   var TAU = Math.PI * 2;
   /** Dots move on a shared spatial field + slow drift; lower = calmer than the old fast jitter. */
   var FIELD_TIME_SCALE = 0.48;
+  /** Wedge (under-graph gap) dots only — 30% softer, then another 15% on that. */
+  var GAP_DOT_VIS = 0.7 * 0.85;
 
   var panel = figure.querySelector('.gap-chart-panel');
   if (!panel) {
@@ -348,7 +350,7 @@
     if (!fieldDots) return;
 
     var morphEase = elapsed <= fillEnd ? 0 : (elapsed >= morphEnd ? 1 : smootherstep((elapsed - fillEnd) / morphWindow));
-    var spreadEase = elapsed <= morphEnd ? 0 : (elapsed >= spreadEnd ? 1 : smootherstep((elapsed - morphEnd) / spreadWindow));
+    var spreadEase = elapsed <= holdEnd ? 0 : (elapsed >= spreadEnd ? 1 : smootherstep((elapsed - holdEnd) / spreadWindow));
     if (morphEase <= 0) return;
 
     var fieldT = Math.max(0, elapsed - fillEnd);
@@ -374,7 +376,7 @@
       pos = fieldMotion(dot, fieldT, cssW, cssH, capBottom);
       var cf = cloudFalloff(pos.x, pos.y, cssW, cssH, capBottom);
       if (cf < 0.03) continue;
-      var wander = dot.inFill ? spreadEase : appear;
+      var wander = dot.inFill ? morphEase * GAP_DOT_VIS : appear;
       var r = baseR * (0.75 + 0.5 * wander);
       var alpha = (0.12 + 0.88 * appear) * (0.5 + 0.5 * wander) * cf * (0.65 + 0.35 * (dot.mask0 || 1));
       if (alpha < 0.035) continue;
@@ -463,9 +465,8 @@
     }
 
     var lineEase = elapsed < lineEnd ? smootherstep(elapsed / lineWindow) : 1;
-    var fillEase = elapsed <= lineEnd ? 0 : (elapsed >= fillEnd ? 1 : smootherstep((elapsed - lineEnd) / fillWindow));
     var morphEase = elapsed <= fillEnd ? 0 : (elapsed >= morphEnd ? 1 : smootherstep((elapsed - fillEnd) / morphWindow));
-    var spreadEase = elapsed <= morphEnd ? 0 : (elapsed >= spreadEnd ? 1 : smootherstep((elapsed - morphEnd) / spreadWindow));
+    var spreadEase = elapsed <= holdEnd ? 0 : (elapsed >= spreadEnd ? 1 : smootherstep((elapsed - holdEnd) / spreadWindow));
 
     futurePaths.forEach(function (item) {
       var L = item.len;
@@ -484,8 +485,9 @@
       item.el.setAttribute('stroke-dashoffset', (L * (1 - lineEase)).toFixed(2));
     });
 
-    var fillOp = fillEase * (1 - morphEase);
-    if (fillGroup) fillGroup.setAttribute('opacity', (reduced.matches ? 1 : fillOp).toFixed(3));
+    if (fillGroup) {
+      fillGroup.setAttribute('opacity', reduced.matches ? '1' : '0');
+    }
 
     var chartFade = smootherstep(clamp((spreadEase - 0.42) / 0.58, 0, 1));
     if (svg) svg.style.opacity = chartFade > 0 ? String(1 - chartFade) : '';
