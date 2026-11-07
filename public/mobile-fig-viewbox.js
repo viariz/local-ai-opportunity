@@ -133,6 +133,34 @@
     });
   }
 
+  function applyChipBottleneck(mq) {
+    document.querySelectorAll('.chip-bottleneck-chart').forEach(function (svg) {
+      if (!svg.dataset.figVbFull) {
+        svg.dataset.figVbFull = svg.getAttribute('viewBox') || '0 0 700 260';
+      }
+      svg.setAttribute('viewBox', mq.matches ? '0 0 340 562' : svg.dataset.figVbFull);
+    });
+  }
+
+  function applyCapabilityCharts(mq) {
+    var capMobile = '0 0 320 592';
+    var capDesktop = '0 0 640 250';
+    var comMobile = '0 0 320 470';
+    var comDesktop = '0 0 640 260';
+    document.querySelectorAll('.capability-chart').forEach(function (svg) {
+      if (!svg.dataset.figVbFull) {
+        svg.dataset.figVbFull = svg.getAttribute('viewBox') || capDesktop;
+      }
+      svg.setAttribute('viewBox', mq.matches ? capMobile : svg.dataset.figVbFull);
+    });
+    document.querySelectorAll('.agentic-commerce').forEach(function (svg) {
+      if (!svg.dataset.figVbFull) {
+        svg.dataset.figVbFull = svg.getAttribute('viewBox') || comDesktop;
+      }
+      svg.setAttribute('viewBox', mq.matches ? comMobile : svg.dataset.figVbFull);
+    });
+  }
+
   function injectMobileFigCss() {
     var style = document.getElementById('mobile-fig-extra-css');
     if (!style) {
@@ -151,6 +179,8 @@
     injectMobileFigCss();
     applyViewBoxes(mq);
     applyNeighborDonuts(mq);
+    applyChipBottleneck(mq);
+    applyCapabilityCharts(mq);
   }
 
   function boot() {
@@ -158,6 +188,7 @@
     applyAll(mq);
     window.reflowMobileFigs = function () {
       applyAll(mq);
+      if (window.reflowCapabilityRadars) window.reflowCapabilityRadars();
       if (window.ichartRefresh) window.ichartRefresh();
     };
     if (mq.addEventListener) mq.addEventListener('change', applyAll);
