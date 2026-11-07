@@ -396,15 +396,31 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
   .chat{font-size:1em; margin:3.5em 0 4em; gap:1.55em;}
   .chat .tools{gap:.45em;}
   
-  .scrolly{display:block; margin-bottom:4em;}
-  .scrolly-chart{display:none;}
+  #scrolly.scrolly{
+    display:block;
+    grid-template-columns:unset;
+    column-gap:0;
+    gap:0;
+    margin-bottom:4em;
+  }
+  #scrolly .scrolly-steps{width:100%; max-width:100%;}
+  #scrolly .scrolly-chart{display:none!important;}
   #scrolly .step{min-height:auto; opacity:1; padding:4.5rem 0 5rem; box-sizing:border-box;}
   #scrolly .step + .step{margin-top:3.5rem; padding-top:6rem; border-top:1px solid color-mix(in srgb, var(--rule) 55%, transparent);}
   #scrolly .step .when{margin-bottom:1.15em;}
   #scrolly .step > p, #scrolly .step-content > p{margin-top:1em;}
-  #mini-chart{display:block; position:fixed; left:0; right:0; bottom:0; width:100%; z-index:30; background:var(--paper); border-top:1px solid var(--rule); padding:6px max(18px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); box-sizing:border-box; transform:translateY(110%); transition:transform .3s ease;}
+  #mini-chart{
+    display:flex; flex-direction:column; align-items:stretch; justify-content:flex-end;
+    position:fixed; left:0; right:0; bottom:0; width:100%; z-index:30;
+    background:var(--paper); border-top:1px solid var(--rule);
+    padding:6px max(18px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));
+    box-sizing:border-box; transform:translateY(110%); transition:transform .3s ease;
+  }
   #mini-chart.show{transform:none;}
-  #mini-chart svg{display:block; width:calc(100% * 440 / 560); max-width:calc(100% * 440 / 560); height:auto; min-height:88px; max-height:28vh; margin-left:auto; margin-right:0;}
+  #mini-chart svg{
+    display:block; width:100%; max-width:44em; height:auto; min-height:88px; max-height:28vh;
+    margin-inline:auto;
+  }
   #mini-chart #stage-name-m{font-size:18px!important; font-weight:500!important;}
   #mini-chart #stage-chip-m{font-size:16px!important; letter-spacing:1px!important;}
   #mini-chart svg text.figtext{dominant-baseline:middle;}

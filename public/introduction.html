@@ -3058,6 +3058,18 @@ figure.arc-tl[data-hover="3"] img.arc-tl-photo{
 @media (min-width:1000px){
   #scrolly.scrolly{column-gap:1.75em;gap:1.75em;}
 }
+@media (max-width:700px){
+  /* Intro scrolly: single column + bottom #mini-chart only (beats chapter .scrolly grid deltas) */
+  #scrolly.scrolly{
+    display:block!important;
+    grid-template-columns:unset!important;
+    column-gap:0!important;
+    gap:0!important;
+  }
+  #scrolly .scrolly-steps{width:100%;max-width:100%;}
+  #scrolly .scrolly-chart{display:none!important;}
+  #mini-chart svg{width:100%!important;max-width:44em!important;margin-left:auto!important;margin-right:auto!important;}
+}
 
 </style>
 <script src="navigation.js"></script>
