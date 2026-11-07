@@ -167,11 +167,12 @@
   }
 
   function setOpen(next) {
+    var wasOpen = open;
     open = next;
     if (open) {
       syncMobileNavState();
       lockPageScroll();
-    } else {
+    } else if (wasOpen) {
       unlockPageScroll();
     }
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -222,6 +223,6 @@
   });
 
   window.matchMedia('(max-width:999px)').addEventListener('change', function (mq) {
-    if (!mq.matches) setOpen(false);
+    if (!mq.matches && open) setOpen(false);
   });
 })();
