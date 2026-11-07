@@ -657,7 +657,13 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
   figure.fig-chart .figrow{flex-direction:column; gap:2.2em; align-items:stretch;}
   figure.fig-chart .figrow .figpanel{flex:1 1 auto; width:100%; max-width:100%; min-width:0;}
   figure.fig-chart .figrow .figpanel svg{width:100%; max-width:100%;}
-  figure.fig-chart .figrow .figpanel svg text{font-size:12px!important; letter-spacing:.03em!important;}
+  figure.fig-chart .figrow .figpanel svg.ichart-scrub g.figtext > text:not([paint-order="stroke"]){font-size:9px!important;letter-spacing:.02em!important;}
+  figure.fig-chart .figrow .figpanel svg.ichart-scrub text[paint-order="stroke"]{
+    font-size:10px!important;letter-spacing:.02em!important;
+    paint-order:fill!important;stroke:none!important;stroke-width:0!important;
+  }
+  figure.fig-chart .figrow .figpanel svg:not(.ichart-scrub) text{font-size:12px!important;letter-spacing:.03em!important;}
+  .cap-article-panel #the-state svg.ichart-bars text{font-size:15px!important;letter-spacing:.02em!important;}
   .cap-article-panel #the-neighbors svg.ichart-donuts{display:block;width:100%;max-width:min(100%,20rem);margin:0 auto;height:auto;min-height:0;touch-action:pan-y;}
   .cap-article-panel #the-neighbors figure{touch-action:pan-y;}
 }
@@ -994,6 +1000,8 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
   .scrolly-chart{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 38px); height:auto; background:var(--paper); z-index:2; padding-block:6px; border-bottom:1px solid var(--rule);}
   .scrolly-chart svg{max-height:40vh; width:auto; max-width:100%; margin-inline:auto;}
   .step{min-height:55vh;}
+  figure svg.ichart-scrub[data-ichart-y-format="logkg"] text{font-size:14.5px!important;letter-spacing:.03em!important;}
+  figure svg.ichart-scrub[data-ichart-y-format="logkg"] g.figtext{font-size:14.5px!important;}
 }
 
 /* ---- news cutouts ---- */
@@ -2379,7 +2387,7 @@ figure.sc-map{
 .chip-video-dialog p a{text-decoration:underline;text-underline-offset:3px;}
 @media(max-width:700px){
   .chip-bottleneck-chart{max-width:360px;margin-inline:auto;}
-  .chip-architecture--memory{transform:translateY(275px);}
+  .chip-architecture--memory{transform:translateY(302px);}
   .chip-architecture-title{font-size:10px;}
   .chip-unit-label{font-size:9px;}
   .chip-architecture-note{font-size:11px;}
@@ -2737,9 +2745,9 @@ table.worked td:first-child{padding-right:1.4em;}
 @media(max-width:700px){
   .capability-chart{max-width:350px;}
   .capability-radar--left{transform:translate(160px,110px);}
-  .capability-radar--right{transform:translate(160px,385px);}
+  .capability-radar--right{transform:translate(160px,418px);}
   .capability-payments--desktop{display:none;}
-  .capability-payments--mobile{display:block;}
+  .capability-payments--mobile{display:block;transform:translateY(33px);}
   .capability-payments--mobile text[text-anchor="end"]{text-anchor:end;}
   .capability-payments--mobile text[text-anchor="start"]{text-anchor:start;}
 }

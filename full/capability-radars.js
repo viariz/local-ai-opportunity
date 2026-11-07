@@ -6,7 +6,7 @@
   function resize() {
     if (commerce) commerce.setAttribute('viewBox', mobile.matches ? '0 0 320 470' : '0 0 640 260');
     charts.forEach(function (chart) {
-      chart.setAttribute('viewBox', mobile.matches ? '0 0 320 520' : '0 0 640 250');
+      chart.setAttribute('viewBox', mobile.matches ? '0 0 320 592' : '0 0 640 250');
     });
   }
   resize();

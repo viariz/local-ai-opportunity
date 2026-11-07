@@ -5,7 +5,7 @@
   var mobile = window.matchMedia('(max-width:700px)');
 
   function resizeChart() {
-    if (chart) chart.setAttribute('viewBox', mobile.matches ? '0 0 340 535' : '0 0 700 260');
+    if (chart) chart.setAttribute('viewBox', mobile.matches ? '0 0 340 562' : '0 0 700 260');
   }
   resizeChart();
   if (mobile.addEventListener) mobile.addEventListener('change', resizeChart);

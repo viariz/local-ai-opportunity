@@ -303,7 +303,13 @@ figure.fig-chart figcaption{margin-top:1.05em; margin-bottom:1.6em;}
   figure.fig-chart .figrow{flex-direction:column; gap:2.2em; align-items:stretch;}
   figure.fig-chart .figrow .figpanel{flex:1 1 auto; width:100%; max-width:100%; min-width:0;}
   figure.fig-chart .figrow .figpanel svg{width:100%; max-width:100%;}
-  figure.fig-chart .figrow .figpanel svg text{font-size:12px!important; letter-spacing:.03em!important;}
+  figure.fig-chart .figrow .figpanel svg.ichart-scrub g.figtext > text:not([paint-order="stroke"]){font-size:9px!important;letter-spacing:.02em!important;}
+  figure.fig-chart .figrow .figpanel svg.ichart-scrub text[paint-order="stroke"]{
+    font-size:10px!important;letter-spacing:.02em!important;
+    paint-order:fill!important;stroke:none!important;stroke-width:0!important;
+  }
+  figure.fig-chart .figrow .figpanel svg:not(.ichart-scrub) text{font-size:12px!important;letter-spacing:.03em!important;}
+  .cap-article-panel #the-state svg.ichart-bars text{font-size:15px!important;letter-spacing:.02em!important;}
   .cap-article-panel #the-neighbors svg.ichart-donuts{display:block;width:100%;max-width:min(100%,20rem);margin:0 auto;height:auto;min-height:0;touch-action:pan-y;}
   .cap-article-panel #the-neighbors figure{touch-action:pan-y;}
 }
