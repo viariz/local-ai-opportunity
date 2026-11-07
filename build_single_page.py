@@ -19,6 +19,11 @@ from site_pages import PAGES
 ROOT = Path(__file__).resolve().parent
 EDITIONS = ("full", "public")
 
+GENERATED_BANNER = (
+    "<!-- GENERATED FILE — do not edit for content. "
+    "Edit <edition>/_sources/*.html then run: python build_single_page.py -->\n"
+)
+
 BOOK_OPEN = re.compile(r'<div class="book"[^>]*>', re.I)
 LEFT_RAIL = "<!-- ============ LEFT RAIL ============ -->"
 
@@ -376,6 +381,10 @@ def build_edition(edition: str) -> None:
     out = prefix + "\n" + merged_book + "\n\n</div>\n\n" + LEFT_RAIL + "\n" + rail_html() + "\n\n" + rest
 
     out = inject_before_chart_interact(out, extra_scripts)
+    doctype = re.match(r"(?is)(<!doctype\s+html[^>]*>\s*)", out)
+    if doctype:
+        end = doctype.end()
+        out = out[:end] + GENERATED_BANNER + out[end:]
 
     intro_out = base / "introduction.html"
     intro_out.write_text(out, encoding="utf-8")
